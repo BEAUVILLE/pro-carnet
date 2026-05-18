@@ -1,1648 +1,301 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MON ARGENT — Accès</title>
-  <meta name="theme-color" content="#04110d" />
-  <meta
-    name="description"
-    content="Mon argent — Accès sécurisé pour ouvrir Accueil, Ajouter, Brouillons et Plus sans exposer les données dans l’adresse."
-  />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Accès • DIGIY</title>
+  <meta name="theme-color" content="#020617"/>
 
+  <!-- CONFIG — changer ces 5 lignes par module -->
   <script>
-    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_URL      = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-    window.DIGIY_MODULE = "PAY";
+    window.DIGIY_SUPABASE_ANON     = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE       = "PAY";
+window.DIGIY_MODULE_LABEL = "Mon argent";
+window.DIGIY_MODULE_ICON  = "💳";
+window.DIGIY_INDEX_URL    = "./index.html";
+window.DIGIY_SLUG_PREFIX  = "pay";
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./session.js"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --bg:#04110d;
-      --bg2:#071a13;
-      --card:#0b1f18;
-      --card2:#102820;
-      --line:rgba(255,255,255,.08);
-      --line-strong:rgba(255,255,255,.14);
-      --line-g:rgba(34,197,94,.22);
-      --text:#f3fff7;
-      --muted:rgba(243,255,247,.66);
-      --muted2:rgba(243,255,247,.48);
-      --green:#22c55e;
-      --green2:#16a34a;
-      --gold:#facc15;
-      --danger:#f87171;
-      --danger-soft:rgba(248,113,113,.09);
-      --shadow:0 24px 70px rgba(0,0,0,.45);
-      --max:1040px;
-      --ff-title:'Playfair Display', Georgia, serif;
-      --ff-body:'Nunito', system-ui, sans-serif;
-    }
-
-    *,*::before,*::after{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      min-height:100vh;
-      color:var(--text);
-      font-family:var(--ff-body);
-      background:
-        radial-gradient(circle at 10% 0%, rgba(34,197,94,.10), transparent 36%),
-        radial-gradient(circle at 100% 100%, rgba(250,204,21,.07), transparent 28%),
-        linear-gradient(180deg, var(--bg), #061710 58%, #04110d);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-      padding-bottom:calc(104px + env(safe-area-inset-bottom,0px));
-    }
-
-    a{text-decoration:none;color:inherit}
-    button,input{font-family:var(--ff-body)}
-
-    .wrap{
-      width:min(var(--max), calc(100% - 24px));
-      margin:0 auto;
-    }
-
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:40;
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      background:rgba(4,17,13,.82);
-      border-bottom:1px solid var(--line);
-      margin-bottom:18px;
-    }
-
-    .topbar-in{
-      width:min(var(--max), calc(100% - 24px));
-      margin:0 auto;
-      min-height:72px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:8px 0;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-
-    .brand-mark{
-      width:42px;height:42px;border-radius:14px;
-      background:linear-gradient(135deg,var(--green),var(--green2));
-      display:grid;place-items:center;
-      font-size:20px;font-weight:900;
-      color:#032215;
-      box-shadow:var(--shadow);
-      flex-shrink:0;
-    }
-
-    .brand-title{
-      font-family:var(--ff-title);
-      color:var(--gold);
-      font-size:18px;
-      line-height:1.05;
-    }
-
-    .brand-sub{
-      color:var(--muted);
-      font-size:11px;
-      font-weight:800;
-      margin-top:3px;
-      word-break:break-word;
-    }
-
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
-    }
-
-    .pill{
-      padding:9px 13px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-weight:800;
-      font-size:12px;
-      cursor:pointer;
-      transition:.18s ease;
-      white-space:nowrap;
-    }
-
-    .pill:hover{
-      color:var(--gold);
-      border-color:rgba(250,204,21,.28);
-      background:rgba(250,204,21,.07);
-    }
-
-    .hero{
-      display:grid;
-      gap:14px;
-      margin-bottom:18px;
-    }
-
-    .state{
-      min-height:64px;
-      padding:14px 16px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      display:grid;
-      gap:4px;
-      align-content:center;
-    }
-
-    .state.ok{
-      border-color:rgba(34,197,94,.24);
-      background:rgba(34,197,94,.08);
-    }
-
-    .state.bad{
-      border-color:rgba(248,113,113,.24);
-      background:var(--danger-soft);
-    }
-
-    .state-title{
-      font-size:12px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .state-txt{
-      font-size:13px;
-      color:var(--muted);
-      font-weight:800;
-      line-height:1.45;
-      word-break:break-word;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1.06fr .94fr;
-      gap:16px;
-      align-items:start;
-    }
-
-    .card{
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:linear-gradient(160deg, rgba(11,31,24,.96), rgba(8,24,18,.92));
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .card-head{
-      padding:18px 18px 14px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .card-title{
-      font-size:12px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#86efac;
-    }
-
-    .card-body{
-      padding:18px;
-    }
-
-    .intro{
-      display:grid;
-      gap:10px;
-    }
-
-    .big{
-      font-family:var(--ff-title);
-      font-size:clamp(30px, 4.8vw, 48px);
-      line-height:1.02;
-      color:var(--gold);
-      margin:0;
-    }
-
-    .lead{
-      margin:0;
-      font-size:15px;
-      line-height:1.6;
-      color:var(--muted);
-      font-weight:800;
-    }
-
-    .hud-read{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-    }
-
-    .hud-box{
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      padding:14px;
-      display:grid;
-      gap:5px;
-      align-content:start;
-      min-height:112px;
-    }
-
-    .hud-k{
-      font-size:11px;
-      color:var(--muted2);
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .hud-v{
-      font-size:20px;
-      line-height:1.05;
-      font-weight:900;
-      color:#fff8dc;
-    }
-
-    .hud-s{
-      font-size:12px;
-      line-height:1.45;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .points{
-      display:grid;
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .point{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:12px 14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-    }
-
-    .point-ico{
-      width:34px;height:34px;
-      border-radius:12px;
-      display:grid;place-items:center;
-      background:rgba(34,197,94,.11);
-      border:1px solid rgba(34,197,94,.2);
-      flex-shrink:0;
-    }
-
-    .point strong{
-      display:block;
-      font-size:13px;
-      margin-bottom:2px;
-      color:#fff;
-    }
-
-    .point span{
-      font-size:12px;
-      line-height:1.45;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .mini-line{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:14px;
-    }
-
-    .tag{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      font-size:11px;
-      font-weight:800;
-      color:var(--muted);
-      max-width:100%;
-      word-break:break-word;
-    }
-
-    .form{
-      display:grid;
-      gap:14px;
-    }
-
-    .focus-box{
-      border:1px solid var(--line);
-      border-radius:20px;
-      background:
-        radial-gradient(circle at right top, rgba(34,197,94,.08), transparent 42%),
-        linear-gradient(160deg, rgba(16,40,32,.9), rgba(8,24,18,.95));
-      padding:14px;
-      display:grid;
-      gap:8px;
-      margin-bottom:12px;
-    }
-
-    .focus-top{
-      font-size:11px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#bbf7d0;
-    }
-
-    .focus-main{
-      font-size:20px;
-      line-height:1.08;
-      font-weight:900;
-      color:#fff8dc;
-    }
-
-    .focus-sub{
-      font-size:13px;
-      line-height:1.5;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .field{
-      display:grid;
-      gap:7px;
-    }
-
-    .label{
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      color:var(--muted);
-    }
-
-    .input{
-      width:100%;
-      min-height:54px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:0 16px;
-      font-size:16px;
-      font-weight:800;
-      outline:none;
-      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
-    }
-
-    .input:focus{
-      border-color:rgba(34,197,94,.38);
-      box-shadow:0 0 0 4px rgba(34,197,94,.12);
-      background:rgba(255,255,255,.05);
-    }
-
-    .input::placeholder{
-      color:rgba(243,255,247,.35);
-      font-weight:700;
-    }
-
-    .pin-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      align-items:center;
-    }
-
-    .hint{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:700;
-      line-height:1.45;
-    }
-
-    .msg{
-      min-height:52px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      padding:12px 14px;
-      background:rgba(255,255,255,.03);
-      font-size:13px;
-      font-weight:800;
-      line-height:1.5;
-      color:var(--muted);
-      display:grid;
-      align-items:center;
-    }
-
-    .msg.ok{
-      color:#bbf7d0;
-      border-color:rgba(34,197,94,.24);
-      background:rgba(34,197,94,.08);
-    }
-
-    .msg.bad{
-      color:#fecaca;
-      border-color:rgba(248,113,113,.24);
-      background:var(--danger-soft);
-    }
-
-    .actions{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:4px;
-    }
-
-    .btn{
-      min-height:54px;
-      border:none;
-      border-radius:18px;
-      padding:0 16px;
-      font-size:15px;
-      font-weight:900;
-      cursor:pointer;
-      transition:transform .06s ease, opacity .18s ease, border-color .18s ease, background .18s ease, filter .18s ease;
-    }
-
-    .btn:active{transform:translateY(1px)}
-    .btn[disabled]{opacity:.55;cursor:not-allowed}
-
-    .btn-primary{
-      color:#052516;
-      background:linear-gradient(135deg,var(--gold),#fde68a);
-      box-shadow:var(--shadow);
-    }
-
-    .btn-primary:hover{filter:brightness(1.03)}
-
-    .btn-secondary{
-      color:var(--text);
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-    }
-
-    .btn-secondary:hover{
-      background:rgba(255,255,255,.06);
-      border-color:var(--line-strong);
-    }
-
-    .loader{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-    }
-
-    .spinner{
-      width:15px;height:15px;
-      border:2px solid rgba(255,255,255,.12);
-      border-top-color:var(--green);
-      border-radius:50%;
-      animation:spin .7s linear infinite;
-    }
-
-    @keyframes spin{
-      to{transform:rotate(360deg)}
-    }
-
-
-    .session-open-panel{
-      display:none;
-      margin:16px 0 14px;
-      padding:18px;
-      border-radius:24px;
-      border:1px solid rgba(34,197,94,.34);
-      background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(250,204,21,.10));
-      box-shadow:0 18px 40px rgba(0,0,0,.25);
-    }
-
-    body.session-open .session-open-panel{
-      display:block;
-    }
-
-    .session-open-badge{
-      display:inline-flex;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(34,197,94,.18);
-      color:#bbf7d0;
-      font-size:12px;
-      font-weight:950;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin-bottom:10px;
-    }
-
-    .session-open-title{
-      color:var(--gold);
-      font-size:26px;
-      line-height:1.05;
-      font-weight:1000;
-    }
-
-    .session-open-text{
-      color:rgba(243,255,247,.78);
-      font-size:14px;
-      line-height:1.5;
-      font-weight:850;
-      margin-top:6px;
-    }
-
-    .quick-links{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-
-    .quick-link{
-      min-height:78px;
-      border:1px solid rgba(34,197,94,.24);
-      border-radius:22px;
-      background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(255,255,255,.05));
-      padding:18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      transition:.18s ease;
-    }
-
-    .quick-link:hover{
-      border-color:rgba(250,204,21,.42);
-      background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(250,204,21,.08));
-      transform:translateY(-1px);
-    }
-
-    .quick-link.primary-action{
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      color:#032215;
-      border:none;
-      box-shadow:0 18px 38px rgba(34,197,94,.22);
-    }
-
-    .quick-link.primary-action .ql-k,
-    .quick-link.primary-action .ql-s,
-    .quick-link.primary-action .ql-arrow{
-      color:#032215;
-    }
-
-    .ql-left{
-      display:grid;
-      gap:4px;
-    }
-
-    .ql-k{
-      font-size:18px;
-      font-weight:1000;
-      color:#fff;
-    }
-
-    .ql-s{
-      color:var(--muted);
-      font-size:14px;
-      font-weight:850;
-      line-height:1.4;
-    }
-
-    .ql-arrow{
-      color:var(--gold);
-      font-size:26px;
-      font-weight:1000;
-      flex-shrink:0;
-    }
-
-    #toast{
-      position:fixed;
-      bottom:24px;
-      left:50%;
-      transform:translateX(-50%) translateY(20px);
-      z-index:9999;
-      padding:10px 20px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:800;
-      background:var(--card);
-      border:1px solid var(--line-g);
-      color:#bbf7d0;
-      opacity:0;
-      transition:opacity .25s, transform .25s;
-      pointer-events:none;
-      white-space:nowrap;
-      max-width:calc(100vw - 24px);
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    #toast.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(0);
-    }
-
-
-    .bottomNav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:99990;
-      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-      background:rgba(4,17,13,.94);
-      border-top:1px solid rgba(255,255,255,.10);
-      backdrop-filter:blur(16px);
-      -webkit-backdrop-filter:blur(16px);
-    }
-    .bottomNavInner{
-      width:min(100%,760px);
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:6px;
-    }
-    .bottomNav a{
-      min-height:58px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      align-content:center;
-      gap:3px;
-      color:rgba(243,255,247,.70);
-      font-size:11px;
-      font-weight:950;
-      text-align:center;
-      border:1px solid transparent;
-      text-decoration:none;
-    }
-    .bottomNav .icoBottom{font-size:18px;line-height:1}
-    .bottomNav a.active{
-      color:#032215;
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      border-color:rgba(250,204,21,.28);
-      box-shadow:0 12px 26px rgba(34,197,94,.18);
-    }
-    .mobileFastRow{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:14px;
-    }
-    .mobileFastRow a{
-      min-height:46px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      text-decoration:none;
-      font-weight:950;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 12px;
-    }
-    .mobileFastRow a.primary{
-      background:linear-gradient(135deg,var(--green),var(--green2));
-      color:#032215;
-      border:none;
-    }
-    @media(max-width:700px){
-      .mobileFastRow{grid-template-columns:1fr 1fr}
-      .nav{display:none}
-      #toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
-    }
-
-
-    @media (max-width:920px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    @media (max-width:760px){
-      .hud-read{grid-template-columns:1fr}
-      .actions{grid-template-columns:1fr}
-      .pin-row{grid-template-columns:1fr}
-    }
-
-    @media (max-width:700px){
-      .topbar-in,.wrap{
-        width:min(var(--max), calc(100% - 16px));
-      }
-      .topbar-in{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-      .nav{
-        width:100%;
-        justify-content:flex-start;
-      }
-    }
-
-    @media (max-width:480px){
-      .brand-title{font-size:16px}
-      .big{font-size:26px}
-    }
+    :root{--bg:#020617;--bg2:#0b1020;--line:rgba(148,163,184,.20);--ink:#f9fafb;--muted:#94a3b8;--gold:#facc15;--green:#22c55e;--red:#ef4444}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100dvh;display:grid;place-items:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:radial-gradient(ellipse 800px 500px at 15% -5%,rgba(250,204,21,.13),transparent 55%),radial-gradient(ellipse 700px 400px at 88% 5%,rgba(34,197,94,.10),transparent 55%),linear-gradient(180deg,var(--bg2),var(--bg))}
+    .card{width:min(420px,100%);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:28px;padding:28px 24px 24px;box-shadow:0 28px 70px rgba(0,0,0,.55)}
+    .header{text-align:center;margin-bottom:22px}
+    .ico{font-size:36px;line-height:1;display:block;margin-bottom:10px}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;border:1px solid rgba(250,204,21,.30);background:rgba(250,204,21,.08);color:#fde68a;font-size:11px;font-weight:950;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+    .title{font-size:1.25rem;font-weight:1100;line-height:1.2}
+    .steps{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 22px}
+    .step{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .step-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--line);background:transparent;display:grid;place-items:center;font-size:13px;font-weight:1000;color:var(--muted);transition:all .25s}
+    .step-dot.active{border-color:var(--gold);background:rgba(250,204,21,.12);color:var(--gold)}
+    .step-dot.done{border-color:var(--green);background:rgba(34,197,94,.15);color:var(--green)}
+    .step-lbl{font-size:10px;font-weight:900;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+    .step-lbl.active{color:var(--gold)}
+    .step-connector{width:32px;height:2px;background:var(--line);border-radius:2px;margin-bottom:14px;transition:background .3s}
+    .step-connector.done{background:var(--green)}
+    .panel{display:none}
+    .panel.active{display:block}
+    .label{display:block;font-size:.78rem;font-weight:950;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+    .phone-wrap{position:relative}
+    .phone-flag{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
+    .input{width:100%;padding:14px 15px 14px 42px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.22);color:var(--ink);font-size:1.05rem;font-weight:900;font-family:inherit;outline:none;-webkit-appearance:none;transition:border-color .15s,box-shadow .15s}
+    .input::placeholder{color:rgba(148,163,184,.45)}
+    .input:focus{border-color:rgba(250,204,21,.50);box-shadow:0 0 0 3px rgba(250,204,21,.09)}
+    .input.err-field{border-color:rgba(239,68,68,.50)!important}
+    .phone-recap{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-radius:12px;border:1px solid rgba(34,197,94,.25);background:rgba(34,197,94,.06);margin-bottom:18px}
+    .phone-recap-num{font-size:.9rem;font-weight:950;color:#86efac}
+    .phone-recap-btn{font-size:.75rem;font-weight:950;color:var(--muted);cursor:pointer;background:none;border:none;font-family:inherit;padding:0;text-decoration:underline;text-underline-offset:2px}
+    .phone-recap-btn:hover{color:var(--ink)}
+    .pin-dots{display:flex;justify-content:center;gap:16px;margin:8px 0 20px}
+    .dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(148,163,184,.30);background:transparent;transition:background .12s,border-color .12s,transform .10s}
+    .dot.filled{background:var(--gold);border-color:var(--gold);transform:scale(1.12)}
+    .dot.err{border-color:var(--red)!important;background:rgba(239,68,68,.2)!important}
+    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+    .key{appearance:none;border:1px solid rgba(148,163,184,.18);border-radius:14px;background:rgba(255,255,255,.04);color:var(--ink);font-size:1.3rem;font-weight:1000;font-family:inherit;min-height:58px;cursor:pointer;transition:background .12s,transform .08s,border-color .12s;touch-action:manipulation;user-select:none}
+    .key:hover{background:rgba(255,255,255,.08);border-color:rgba(250,204,21,.25)}
+    .key:active{transform:scale(.94);background:rgba(250,204,21,.12)}
+    .key.zero{grid-column:2}
+    .key.del{font-size:1rem;color:var(--muted)}
+    .key.del:hover{color:var(--red);border-color:rgba(239,68,68,.30)}
+    .btn{width:100%;min-height:52px;border-radius:16px;border:1px solid rgba(250,204,21,.35);background:linear-gradient(135deg,rgba(250,204,21,.22),rgba(34,197,94,.18));color:#fff;font-size:1rem;font-weight:1100;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s,transform .10s,background .15s;touch-action:manipulation}
+    .btn:hover:not(:disabled){background:linear-gradient(135deg,rgba(250,204,21,.32),rgba(34,197,94,.26))}
+    .btn:active:not(:disabled){transform:scale(.98)}
+    .btn:disabled{opacity:.40;cursor:not-allowed}
+    .status{margin-top:12px;min-height:0;padding:0;border-radius:12px;font-size:.84rem;font-weight:900;line-height:1.5;display:none;white-space:pre-wrap}
+    .status.show{display:block;padding:10px 13px;margin-top:12px}
+    .status.err{background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.30);color:#fca5a5}
+    .status.ok{background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.30);color:#86efac}
+    .status.spin{background:rgba(148,163,184,.07);border:1px solid var(--line);color:var(--muted)}
+    .note{margin-top:18px;text-align:center;color:rgba(148,163,184,.55);font-size:.74rem;font-weight:800;line-height:1.55}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+    .shake{animation:shake .35s ease}
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-in">
-      <div class="brand">
-        <div class="brand-mark">₣</div>
-        <div>
-          <div class="brand-title">MON ARGENT</div>
-          <div class="brand-sub">Accès protégé • session protégée • lecture rapide</div>
-        </div>
-      </div>
+<div class="card">
 
-      <nav class="nav">
-        <a class="pill" href="./index.html">← Accueil</a>
-        <a class="pill" href="https://digiy-hub.digiylyfe.com/">🧭 HUB</a>
-        <a class="pill" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">📦 Tarifs</a>
-        <a class="pill" id="navCockpitLink" href="./cockpit.html">🏠 Accueil</a>
-        <a class="pill" id="navAdminLink" href="./admin.html">➕ Ajouter</a>
-      </nav>
+  <div class="header">
+    <span class="ico" id="moduleIcon">🏠</span>
+    <div class="badge">🔑 Accès DIGIY</div>
+    <div class="title" id="moduleLabel">Je loue</div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-lbl active" id="lbl1">Numéro</div>
     </div>
-  </header>
-
-  <main class="wrap">
-    <section class="hero">
-      <div class="state" id="stateBox">
-        <div class="state-title">Entrée sécurisée</div>
-        <div class="state-txt">Vérification sécurisée avant ouverture de Mon argent.</div>
-      </div>
-    </section>
-
-    <section class="grid">
-      <article class="card">
-        <div class="card-head">
-          <div class="card-title">🔐 Accès sécurisé</div>
-        </div>
-
-        <div class="card-body">
-          <div class="intro">
-            <h1 class="big">Entre vite.<br>Lis clair.<br>Garde le cap.</h1>
-            <p class="lead">
-              Le code ouvre ta session Mon argent pour la journée de travail.
-              Une fois validé, tu accèdes à l’accueil : entrées, dépenses, épargne, net et activités.
-            </p>
-          </div>
-
-          <div class="hud-read">
-            <div class="hud-box">
-              <div class="hud-k">En 2 secondes</div>
-              <div class="hud-v">Voir le net</div>
-              <div class="hud-s">Ce qui reste vraiment après les mouvements utiles.</div>
-            </div>
-
-            <div class="hud-box">
-              <div class="hud-k">En 1 geste</div>
-              <div class="hud-v">Ajouter</div>
-              <div class="hud-s">Saisir une entrée, une dépense ou une épargne sans détour.</div>
-            </div>
-
-            <div class="hud-box">
-              <div class="hud-k">En 1 lecture</div>
-              <div class="hud-v">Voir le wagon fort</div>
-              <div class="hud-s">Comprendre quel module pousse réellement le business.</div>
-            </div>
-          </div>
-          <div class="mobileFastRow">
-            <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
-            <a id="fastMovements" href="./cockpit.html#resultList">📜 Mouvements</a>
-            <a id="fastAdd" href="./admin.html">➕ Ajouter</a>
-            <a id="fastMore" href="./brain-admin.html">⚙️ Plus</a>
-          </div>
-
-          <div class="points">
-            <div class="point">
-              <div class="point-ico">💼</div>
-              <div>
-                <strong>Pilotage pro</strong>
-                <span>Entrées, dépenses pro, net, modules, canaux et couche épargne dans le même rail PAY.</span>
-              </div>
-            </div>
-
-            <div class="point">
-              <div class="point-ico">🛟</div>
-              <div>
-                <strong>Épargne visible</strong>
-                <span>PAY aide à protéger l’activité. Il ne garde pas les fonds du client.</span>
-              </div>
-            </div>
-
-            <div class="point">
-              <div class="point-ico">♾️</div>
-              <div>
-                <strong>Rail réel DIGIY</strong>
-                <span>Zéro démo locale. Vérification sur le vrai accès PAY avec session protégée.</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mini-line">
-            <div class="tag" id="tagModule">MODULE : PAY</div>
-            <div class="tag" id="tagSlug">RÉFÉRENCE : —</div>
-            <div class="tag" id="tagPhone">SESSION : —</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card-head">
-          <div class="card-title">🔑 Vérification Code</div>
-        </div>
-
-        <div class="card-body">
-          <form class="form" id="pinForm" novalidate>
-            <div class="focus-box">
-              <div class="focus-top">Ce qu’il faut pour entrer</div>
-              <div class="focus-main">Compte reconnu + code = session ouverte</div>
-              <div class="focus-sub">
-                Les infos sensibles restent rangées en session locale après validation.
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label" for="phone">Téléphone abonné</label>
-              <input class="input" id="phone" type="tel" inputmode="numeric" autocomplete="off" placeholder="Numéro relié à l’abonnement" />
-              <div class="hint" id="phoneHint">Si la session est déjà reconnue, le numéro reste masqué. Sinon, entre le numéro relié à l’abonnement PAY.</div>
-            </div>
-
-            <div class="field">
-              <label class="label">Référence PAY</label>
-              <input id="référence" type="hidden" autocomplete="off" />
-              <div class="msg ok" style="min-height:auto;">
-                Référence protégée : elle reste en session locale après validation.
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label" for="pin">Code</label>
-              <div class="pin-row">
-                <input class="input" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="••••" />
-                <button class="btn btn-secondary" id="btnTogglePin" type="button">👁 Voir</button>
-              </div>
-              <div class="hint">Code DIGIY PAY pour ouvrir le cockpit protégé.</div>
-            </div>
-
-            <div class="msg" id="msgBox">
-              Entre le Code. Le téléphone reste masqué quand la session est déjà reconnue.
-            </div>
-
-            <div class="actions">
-              <button class="btn btn-primary" id="btnSubmit" type="submit">Ouvrir Mon argent</button>
-              <button class="btn btn-secondary" id="btnClear" type="button">Effacer</button>
-            </div>
-
-            <div class="loader" id="loader" style="display:none">
-              <div class="spinner"></div>
-              Vérification en cours…
-            </div>
-          </form>
-
-          <div class="session-open-panel" id="sessionOpenPanel">
-            <div class="session-open-badge">✅ Session ouverte</div>
-            <div class="session-open-title">Mon argent est déjà ouvert.</div>
-            <div class="session-open-text">
-              Pas besoin de retaper ton code. Choisis directement ce que tu veux faire.
-            </div>
-          </div>
-
-          <div class="quick-links">
-            <a class="quick-link primary-action" id="quickCockpitLink" href="./cockpit.html">
-              <div class="ql-left">
-                <div class="ql-k">💳 Entrer dans Mon argent</div>
-                <div class="ql-s">Voir ce qui entre, ce qui sort et ce qu’il reste vraiment.</div>
-              </div>
-              <div class="ql-arrow">→</div>
-            </a>
-
-            <a class="quick-link" id="quickMovementsLink" href="./cockpit.html#resultList">
-              <div class="ql-left">
-                <div class="ql-k">📜 Voir les mouvements</div>
-                <div class="ql-s">Retrouver l’historique des entrées, sorties et réserves.</div>
-              </div>
-              <div class="ql-arrow">→</div>
-            </a>
-
-            <a class="quick-link" id="quickAdminLink" href="./admin.html">
-              <div class="ql-left">
-                <div class="ql-k">➕ Ajouter une trace</div>
-                <div class="ql-s">Entrée, dépense, épargne ou brouillon utile.</div>
-              </div>
-              <div class="ql-arrow">→</div>
-            </a>
-
-            <a class="quick-link" id="quickDraftsLink" href="./admin.html#draftPrefillBox">
-              <div class="ql-left">
-                <div class="ql-k">🧾 Voir les brouillons</div>
-                <div class="ql-s">Reprendre une note préparée avant validation.</div>
-              </div>
-              <div class="ql-arrow">→</div>
-            </a>
-          </div>
-        </div>
-      </article>
-    </section>
-  </main>
-
-  <div id="toast"></div>
-
-  <nav class="bottomNav" aria-label="Navigation Mon argent">
-    <div class="bottomNavInner">
-      <a id="bottomHome" href="./cockpit.html"><span class="icoBottom">🏠</span><span>Accueil</span></a>
-      <a id="bottomMovements" href="./cockpit.html#resultList"><span class="icoBottom">📜</span><span>Mouvements</span></a>
-      <a id="bottomAdd" href="./admin.html"><span class="icoBottom">➕</span><span>Ajouter</span></a>
-      <a id="bottomDrafts" href="./admin.html#draftPrefillBox"><span class="icoBottom">🧾</span><span>Brouillons</span></a>
-      <a class="active" id="bottomAccess" href="./pin.html"><span class="icoBottom">🔐</span><span>Accès</span></a>
+    <div class="step-connector" id="conn"></div>
+    <div class="step">
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-lbl" id="lbl2">Code</div>
     </div>
-  </nav>
+  </div>
 
+  <!-- ETAPE 1 -->
+  <div class="panel active" id="step1">
+    <label class="label" for="phoneInput">📱 Ton numéro de téléphone</label>
+    <div class="phone-wrap">
+      <span class="phone-flag">🇸🇳</span>
+      <input id="phoneInput" class="input" type="tel" inputmode="numeric"
+             placeholder="221 77 XXX XX XX" autocomplete="tel" maxlength="15"/>
+    </div>
+    <div class="status" id="status1"></div>
+    <button class="btn" id="btnContinue" type="button" style="margin-top:16px" disabled>Continuer →</button>
+  </div>
 
-  <script>
-    const SESSION = window.DIGIY_SESSION || null;
-    const $ = (id) => document.getElementById(id);
-    let securePhoneFromSession = "";
+  <!-- ETAPE 2 -->
+  <div class="panel" id="step2">
+    <div class="phone-recap">
+      <span class="phone-recap-num" id="phoneDisplay"></span>
+      <button class="phone-recap-btn" id="btnBack" type="button">Modifier</button>
+    </div>
+    <label class="label">🔢 Ton code secret (4 chiffres)</label>
+    <div class="pin-dots" id="pinDots">
+      <div class="dot" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+    </div>
+    <div class="keypad" id="keypad">
+      <button class="key" data-v="1" type="button">1</button>
+      <button class="key" data-v="2" type="button">2</button>
+      <button class="key" data-v="3" type="button">3</button>
+      <button class="key" data-v="4" type="button">4</button>
+      <button class="key" data-v="5" type="button">5</button>
+      <button class="key" data-v="6" type="button">6</button>
+      <button class="key" data-v="7" type="button">7</button>
+      <button class="key" data-v="8" type="button">8</button>
+      <button class="key" data-v="9" type="button">9</button>
+      <button class="key zero" data-v="0" type="button">0</button>
+      <button class="key del" data-v="DEL" type="button">⌫</button>
+    </div>
+    <button class="btn" id="btnEnter" type="button" disabled>Entrer →</button>
+    <div class="status" id="status2"></div>
+  </div>
 
-    function esc(v){
-      return String(v == null ? "" : v)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+  <div class="note">Ton numéro et ton code ne sont jamais partagés.<br>DIGIY · 0% commission · 100% indépendance ∞</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const MODULE=((window.DIGIY_MODULE)||"LOC").toUpperCase();
+const MODULE_LABEL=window.DIGIY_MODULE_LABEL||MODULE;
+const MODULE_ICON=window.DIGIY_MODULE_ICON||"∞";
+const INDEX_URL=window.DIGIY_INDEX_URL||"./index.html";
+const SLUG_PREFIX=(window.DIGIY_SLUG_PREFIX||MODULE.toLowerCase()).replace(/_/g,"-");
+const MAX_AGE=8*60*60*1000;
+const mod=MODULE.toLowerCase();
+const SKEYS=[`digiy_${mod}_session`,`digiy_${mod}_guard_session`,`digiy_guard_${mod}_session`];
+const PKEYS=[`digiy_${mod}_phone`,`digiy_${mod}_last_phone`,"DIGIY_LOC_HUB_PHONE","digiy_phone"];
+const SLKEYS=[`digiy_${mod}_last_slug`,`digiy_${mod}_slug`,"digiy_last_slug"];
+
+const $=id=>document.getElementById(id);
+$("moduleLabel").textContent=MODULE_LABEL;
+$("moduleIcon").textContent=MODULE_ICON;
+document.title=`Accès ${MODULE_LABEL} • DIGIY`;
+
+let pin="",confirmedPhone="";
+
+function norm(p){return String(p||"").replace(/\D/g,"")}
+function fmt(d){if(d.length===12&&d.startsWith("221"))return`${d.slice(0,3)} ${d.slice(3,5)} ${d.slice(5,8)} ${d.slice(8,10)} ${d.slice(10)}`;return d}
+function slug(p){return SLUG_PREFIX&&p?`${SLUG_PREFIX}-${p}`:""}
+function qp(n){try{return new URL(location.href).searchParams.get(n)||""}catch(_){return""}}
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||"";localStorage.setItem(k,v)}catch(_){}}
+function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k)||"";sessionStorage.setItem(k,v)}catch(_){}}
+
+function showSt(id,msg,cls){const e=$(id);e.className="status show "+cls;e.textContent=msg}
+function clearSt(id){const e=$(id);e.className="status";e.textContent=""}
+function shake(el){el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");setTimeout(()=>el.classList.remove("shake"),400)}
+
+// prefill : géré par le module au déploiement via ?phone= dans l'URL
+
+function getSb(){
+  if(window._dsb)return window._dsb;
+  const url=window.DIGIY_SUPABASE_URL||"";
+  const key=window.DIGIY_SUPABASE_ANON_KEY||window.DIGIY_SUPABASE_ANON||"";
+  if(!url||!key)throw new Error("Supabase non configuré");
+  if(!window.supabase?.createClient)throw new Error("Librairie Supabase absente");
+  window._dsb=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+  return window._dsb;
+}
+
+function writeSession(phone,sl,token){
+  const now=Date.now();
+  const sess=JSON.stringify({slug:sl,phone,module:MODULE,validated_at:now,expires_at:now+MAX_AGE,session_token:token||"",access:true,access_ok:true});
+  SKEYS.forEach(k=>{ls(k,sess);ss(k,sess)});
+  PKEYS.forEach(k=>{ls(k,phone);ss(k,phone)});
+  if(sl){
+    SLKEYS.forEach(k=>ls(k,sl));
+    try{const m=JSON.parse(ls("digiy_module_slugs")||"{}")||{};m[MODULE]=sl;ls("digiy_module_slugs",JSON.stringify(m))}catch(_){}
+    ls("digiy_slug",sl);
+  }
+}
+
+function redirect(sl){
+  try{const u=new URL(INDEX_URL,location.href);if(sl)u.searchParams.set("slug",sl);u.searchParams.delete("phone");location.replace(u.toString())}
+  catch(_){location.replace(INDEX_URL)}
+}
+
+// ETAPE 1
+const phoneEl=$("phoneInput");
+const btnContinue=$("btnContinue");
+function updateContinueBtn(){btnContinue.disabled=norm(phoneEl.value).length<9}
+phoneEl.addEventListener("input",()=>{clearSt("status1");phoneEl.classList.remove("err-field");updateContinueBtn()});
+phoneEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!btnContinue.disabled)goStep2()});
+updateContinueBtn();
+
+async function goStep2(){
+  const raw=norm(phoneEl.value);
+  if(raw.length<9){
+    phoneEl.classList.add("err-field");
+    showSt("status1","❌ Numéro trop court.\nFormat attendu : 221 77 XXX XX XX","err");
+    shake(phoneEl);return;
+  }
+  btnContinue.disabled=true;
+  clearSt("status1");
+  confirmedPhone=raw;
+  showStep2();
+}
+btnContinue.addEventListener("click",goStep2);
+
+// ETAPE 2
+function showStep2(){
+  $("step1").classList.remove("active");$("step2").classList.add("active");
+  $("dot1").className="step-dot done";$("dot1").textContent="✓";$("lbl1").className="step-lbl";
+  $("dot2").className="step-dot active";$("lbl2").className="step-lbl active";
+  $("conn").classList.add("done");
+  $("phoneDisplay").textContent=fmt(confirmedPhone);
+  pin="";updateDots();updateEnterBtn();
+}
+function goStep1(){
+  $("step2").classList.remove("active");$("step1").classList.add("active");
+  $("dot1").className="step-dot active";$("dot1").textContent="1";$("lbl1").className="step-lbl active";
+  $("dot2").className="step-dot";$("lbl2").className="step-lbl";
+  $("conn").classList.remove("done");
+  pin="";clearSt("status2");btnContinue.disabled=false;updateDots();updateEnterBtn();
+}
+$("btnBack").addEventListener("click",goStep1);
+
+function updateDots(){
+  for(let i=0;i<4;i++){const d=$("d"+i);d.classList.toggle("filled",i<pin.length);d.classList.remove("err")}
+}
+function updateEnterBtn(){$("btnEnter").disabled=pin.length!==4}
+
+$("keypad").addEventListener("click",e=>{
+  const key=e.target.closest("[data-v]");if(!key)return;
+  const v=key.dataset.v;
+  if(v==="DEL"){pin=pin.slice(0,-1)}
+  else if(pin.length<4){pin+=v;if(pin.length===4)setTimeout(doLogin,120)}
+  updateDots();updateEnterBtn();clearSt("status2");
+});
+
+document.addEventListener("keydown",e=>{
+  if(document.activeElement===phoneEl)return;
+  if(!$("step2").classList.contains("active"))return;
+  if(/^[0-9]$/.test(e.key)&&pin.length<4){pin+=e.key;updateDots();updateEnterBtn();if(pin.length===4)setTimeout(doLogin,120)}
+  else if(e.key==="Backspace"){pin=pin.slice(0,-1);updateDots();updateEnterBtn()}
+});
+
+$("btnEnter").addEventListener("click",doLogin);
+
+async function doLogin(){
+  if(pin.length!==4)return;
+  $("btnEnter").disabled=true;
+  showSt("status2","⏳ Vérification du code…","spin");
+  try{
+    const sb=getSb();
+    const{data,error}=await sb.rpc("digiy_verify_pin",{p_phone:confirmedPhone,p_module:MODULE,p_pin:pin});
+    if(error)throw new Error(error.message||"Erreur serveur");
+    /* Le RPC retourne un tableau → on prend la première ligne */
+    const row=Array.isArray(data)?data[0]:data;
+    const ok=row===true||row?.ok===true||row?.access===true||row?.status==="ok";
+    if(!ok){
+      pin="";updateDots();updateEnterBtn();
+      for(let i=0;i<4;i++)$("d"+i).classList.add("err");
+      shake($("pinDots"));
+      showSt("status2","❌ Code incorrect.\nVérifie tes 4 chiffres et réessaie.","err");
+      return;
     }
-
-    function toast(msg, duration = 2200){
-      const t = $("toast");
-      if(!t) return;
-      t.textContent = String(msg || "");
-      t.classList.add("show");
-      window.clearTimeout(t._timer);
-      t._timer = window.setTimeout(() => t.classList.remove("show"), duration);
-    }
-
-    function setState(kind, title, txt){
-      const box = $("stateBox");
-      if(!box) return;
-      box.className = "state" + (kind ? " " + kind : "");
-      box.innerHTML = `
-        <div class="state-title">${esc(title || "État")}</div>
-        <div class="state-txt">${esc(txt || "")}</div>
-      `;
-    }
-
-    function setMsg(text, kind){
-      const box = $("msgBox");
-      if(!box) return;
-      box.className = "msg" + (kind ? " " + kind : "");
-      box.textContent = String(text || "");
-    }
-
-    function setLoading(on){
-      const loader = $("loader");
-      [ $("btnSubmit"), $("btnClear"), $("btnTogglePin"), $("phone"), $("référence"), $("pin") ]
-        .forEach(el => { if(el) el.disabled = !!on; });
-      if(loader) loader.style.display = on ? "inline-flex" : "none";
-    }
-
-    function applyPhoneMaskState(hasSecurePhone){
-      const input = $("phone");
-      const hint = $("phoneHint");
-      if(input){
-        input.placeholder = hasSecurePhone
-          ? "Compte reconnu — téléphone masqué"
-          : "Numéro relié à l’abonnement";
-      }
-      if(hint){
-        hint.textContent = hasSecurePhone
-          ? "Compte reconnu. Le téléphone n’est pas affiché sur cette porte d’accès. Entre seulement ton Code."
-          : "Entre le numéro relié à l’abonnement PAY. Il ne sera pas conservé dans l’adresse de la page.";
-      }
-    }
-
-    function cleanVisibleUrl(){
-      try{
-        const url = new URL(window.location.href);
-        let changed = false;
-
-        [
-          "phone",
-          "tel",
-          "owner_phone",
-          "owner_id",
-          "slug",
-          "pay_slug",
-          "subscription_slug",
-          "référence",
-          "pay_référence",
-          "subscription_référence",
-          "business_phone",
-          "wave_phone",
-          "wallet_phone",
-          "pay_phone",
-          "access_note",
-          "keybox_code",
-          "keybox_location"
-        ].forEach(function(key){
-          if(url.searchParams.has(key)){
-            url.searchParams.delete(key);
-            changed = true;
-          }
-        });
-
-        if(changed){
-          history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-        }
-      }catch(_){}
-    }
-
-    function cleanInternalHref(page){
-      try{
-        const url = new URL(page || "./cockpit.html", window.location.href);
-        [
-          "phone",
-          "tel",
-          "owner_phone",
-          "owner_id",
-          "slug",
-          "pay_slug",
-          "subscription_slug",
-          "référence",
-          "pay_référence",
-          "subscription_référence",
-          "business_phone",
-          "wave_phone",
-          "wallet_phone",
-          "pay_phone"
-        ].forEach(function(key){
-          url.searchParams.delete(key);
-        });
-
-        if(url.origin === window.location.origin){
-          return url.pathname.split("/").pop() + url.search + url.hash;
-        }
-
-        return "./cockpit.html";
-      }catch(_){
-        return "./cockpit.html";
-      }
-    }
-
-    function safeNextTarget(raw){
-      const value = String(raw || "").trim();
-      if(!value) return "";
-      try{
-        const url = new URL(value, window.location.href);
-        if(url.origin !== window.location.origin) return "";
-        return cleanInternalHref(url.pathname + url.search + url.hash);
-      }catch(_){
-        return "";
-      }
-    }
-
-    function updateTags(référence, phone){
-      const cleanSlug = SESSION.normalizeSlug(référence);
-      const cleanPhone = SESSION.normalizePhone(phone);
-      $("tagSlug").textContent = "RÉFÉRENCE : " + (cleanSlug ? "OK" : "—");
-      $("tagPhone").textContent = "SESSION : " + (cleanPhone ? "ouverte" : "—");
-    }
-
-
-    function inferSlugFromPhone(phone){
-      const clean = SESSION.normalizePhone(phone);
-      return clean ? ("pay-" + clean) : "";
-    }
-
-    function buildCtxHref(page){
-      return cleanInternalHref(page || "./cockpit.html");
-    }
-
-    function setContextLinks(référence, phone){
-      const cockpitHref = buildCtxHref("./cockpit.html");
-      const adminHref = buildCtxHref("./admin.html");
-      const brainHref = buildCtxHref("./brain-admin.html");
-      const movementsHref = cockpitHref + "#resultList";
-      const draftsHref = adminHref + "#draftPrefillBox";
-      const pinHref = buildCtxHref("./pin.html");
-
-      [ "navCockpitLink", "quickCockpitLink", "fastHome", "bottomHome" ].forEach(id => {
-        const el = $(id);
-        if(el) el.href = cockpitHref;
-      });
-
-      [ "navAdminLink", "quickAdminLink", "fastAdd", "bottomAdd" ].forEach(id => {
-        const el = $(id);
-        if(el) el.href = adminHref;
-      });
-
-      const map = {
-        quickMovementsLink: movementsHref,
-        quickDraftsLink: draftsHref,
-        fastMovements: movementsHref,
-        bottomMovements: movementsHref,
-        bottomDrafts: draftsHref,
-        fastMore: brainHref,
-        bottomAccess: pinHref
-      };
-
-      Object.entries(map).forEach(([id, href]) => {
-        const el = $(id);
-        if(el) el.href = href;
-      });
-    }
-
-
-    function syncContextUi(référence, phone){
-      const cleanSlug = SESSION.normalizeSlug(référence);
-      const cleanPhone = SESSION.normalizePhone(phone);
-      updateTags(cleanSlug, cleanPhone);
-      setContextLinks(cleanSlug, cleanPhone);
-    }
-
-    function readQuery(){
-      cleanVisibleUrl();
-      try{
-        const url = new URL(window.location.href);
-        return {
-          référence: "",
-          phone: "",
-          next: safeNextTarget(url.searchParams.get("next")),
-          redirect: String(url.searchParams.get("redirect") || "cockpit").trim().toLowerCase(),
-          reason: String(url.searchParams.get("reason") || "").trim()
-        };
-      }catch(_){
-        return { référence:"", phone:"", next:"", redirect:"cockpit", reason:"" };
-      }
-    }
-
-
-    function chooseRedirectTarget(name){
-      switch(String(name || "").trim().toLowerCase()){
-        case "admin":
-        case "admin.html":
-          return "./admin.html";
-        case "brain":
-        case "brain-admin":
-        case "brain-admin.html":
-          return "./brain-admin.html";
-        case "cockpit":
-        case "cockpit.html":
-        default:
-          return "./cockpit.html";
-      }
-    }
-
-    function focusBadField(el){
-      try{
-        if(!el) return;
-        el.focus({ preventScroll:false });
-        el.scrollIntoView({ behavior:"smooth", block:"center" });
-      }catch(_){}
-    }
-
-    function parsePostgresRecordString(txt, fallbackPhone){
-      const raw = String(txt || "").trim();
-      if(!raw.startsWith("(") || !raw.endsWith(")")) return null;
-
-      const inner = raw.slice(1, -1);
-      const parts = [];
-      let current = "";
-      let inQuotes = false;
-
-      for(let i = 0; i < inner.length; i++){
-        const ch = inner[i];
-
-        if(ch === '"' && inner[i - 1] !== "\\"){
-          inQuotes = !inQuotes;
-          current += ch;
-          continue;
-        }
-
-        if(ch === "," && !inQuotes){
-          parts.push(current.trim());
-          current = "";
-          continue;
-        }
-
-        current += ch;
-      }
-      parts.push(current.trim());
-
-      const first = String(parts[0] || "").trim().toLowerCase();
-      const module = String(parts[1] || "").trim().replace(/^"|"$/g, "");
-      const outPhone = String(parts[2] || "").trim().replace(/[^\d]/g, "");
-      const label = String(parts[3] || "").trim().replace(/^"|"$/g, "");
-      const id = String(parts[4] || "").trim().replace(/^"|"$/g, "");
-
-      if(first === "t" || first === "true"){
-        const finalPhone = outPhone || SESSION.normalizePhone(fallbackPhone);
-        return {
-          ok: true,
-          module: module || "PAY",
-          phone: finalPhone,
-          référence: inferSlugFromPhone(finalPhone),
-          label,
-          id,
-          raw
-        };
-      }
-
-      return { ok:false, raw };
-    }
-
-    if(!SESSION){
-      setState("bad", "Erreur session", "session.js n’a pas été chargé correctement.");
-      throw new Error("DIGIY_SESSION indisponible.");
-    }
-
-    if(!window.supabase || !window.supabase.createClient){
-      setState("bad", "Erreur technique", "La bibliothèque Supabase n’a pas pu être chargée.");
-      throw new Error("Supabase JS introuvable.");
-    }
-
-    const sb = window.supabase.createClient(
-      String(window.DIGIY_SUPABASE_URL || "").trim(),
-      String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim(),
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-          storage: {
-            getItem: () => null,
-            setItem: () => {},
-            removeItem: () => {}
-          }
-        }
-      }
-    );
-
-    async function resolvePayIdentity(phoneValue, référenceValue){
-      let phone = SESSION.normalizePhone(phoneValue || "");
-      let référence = SESSION.normalizeSlug(référenceValue || "");
-
-      if(!référence && phone){
-        référence = inferSlugFromPhone(phone);
-      }
-
-      if(référence){
-        const { data, error } = await sb
-          .from("digiy_subscriptions_public")
-          .select("phone,slug,module")
-          .eq("slug", référence)
-          .eq("module", "PAY")
-          .limit(1);
-
-        if(!error && Array.isArray(data) && data[0]){
-          return {
-            phone: SESSION.normalizePhone(data[0].phone || phone),
-            référence: SESSION.normalizeSlug(data[0].slug || référence)
-          };
-        }
-      }
-
-      if(phone){
-        const { data, error } = await sb
-          .from("digiy_subscriptions_public")
-          .select("phone,slug,module")
-          .eq("phone", phone)
-          .eq("module", "PAY")
-          .limit(1);
-
-        if(!error && Array.isArray(data) && data[0]){
-          return {
-            phone: SESSION.normalizePhone(data[0].phone || phone),
-            référence: SESSION.normalizeSlug(data[0].slug || inferSlugFromPhone(phone))
-          };
-        }
-      }
-
-      return {
-        phone: SESSION.normalizePhone(phone),
-        référence: SESSION.normalizeSlug(référence)
-      };
-    }
-
-    function normalizeVerifyPayload(payload, fallbackPhone){
-      let current = payload;
-
-      if(Array.isArray(current)){
-        current = current[0] || null;
-      }
-
-      if(typeof current === "string"){
-        const txt = current.trim();
-        const pgRecord = parsePostgresRecordString(txt, fallbackPhone);
-        if(pgRecord){
-          return pgRecord.ok ? pgRecord : null;
-        }
-        try{
-          current = JSON.parse(txt);
-        }catch(_){
-          return null;
-        }
-      }
-
-      if(current === true){
-        const finalPhone = SESSION.normalizePhone(fallbackPhone);
-        return {
-          ok: true,
-          phone: finalPhone,
-          référence: inferSlugFromPhone(finalPhone),
-          label: "MON ARGENT PRO",
-          raw: current
-        };
-      }
-
-      if(current && typeof current === "object"){
-        if(
-          current.ok === true ||
-          current.success === true ||
-          current.valid === true ||
-          current.is_valid === true ||
-          current.f1 === true
-        ){
-          const finalPhone = SESSION.normalizePhone(current.phone || fallbackPhone);
-          return {
-            ok: true,
-            phone: finalPhone,
-            référence: SESSION.normalizeSlug(current.slug || current.référence || inferSlugFromPhone(finalPhone)),
-            label: current.label || current.business_name || "MON ARGENT PRO",
-            raw: current
-          };
-        }
-      }
-
-      return null;
-    }
-
-    async function callVerifyPin(phone, pin){
-      const tries = [
-        { p_phone: phone, p_module: "PAY", p_pin: pin },
-        { p_phone: phone, p_module: "pay", p_pin: pin }
-      ];
-
-      for(const body of tries){
-        const { data, error } = await sb.rpc("digiy_verify_pin", body);
-        if(error) continue;
-
-        const parsed = normalizeVerifyPayload(data, phone);
-        if(parsed?.ok === true){
-          return parsed;
-        }
-      }
-
-      return null;
-    }
-
-    async function callHasAccess(phone){
-      const tries = [
-        { p_phone: phone, p_module: "PAY" },
-        { phone, module: "PAY" }
-      ];
-
-      for(const body of tries){
-        const { data, error } = await sb.rpc("digiy_has_access", body);
-        if(error) continue;
-
-        if(data === true) return true;
-        if(data && typeof data === "object" && (data.ok === true || data.access === true)) return true;
-      }
-
-      return false;
-    }
-
-    async function verifyPin(phoneValue, référenceValue, pinValue){
-      const pin = String(pinValue || "").trim();
-      if(!pin){
-        throw new Error("Code manquant.");
-      }
-
-      const resolved = await resolvePayIdentity(phoneValue, référenceValue);
-      const phone = SESSION.normalizePhone(resolved.phone);
-      const référence = SESSION.normalizeSlug(resolved.référence || inferSlugFromPhone(phone));
-
-      if(!référence){
-        throw new Error("Référence protégée manquant.");
-      }
-
-      if(!phone){
-        throw new Error("Téléphone PAY introuvable.");
-      }
-
-      const verify = await callVerifyPin(phone, pin);
-      if(!verify?.ok){
-        throw new Error("Code incorrect.");
-      }
-
-      const accessOk = await callHasAccess(phone);
-      if(!accessOk){
-        throw new Error("Accès PAY non valide.");
-      }
-
-      return {
-        ok: true,
-        phone,
-        référence: référence || SESSION.normalizeSlug(verify.référence || inferSlugFromPhone(phone)),
-        label: verify.label || "MON ARGENT PRO"
-      };
-    }
-
-    function buildNextUrl(result){
-      return "./cockpit.html";
-    }
-
-
-    async function openAccess(evt){
-      evt.preventDefault();
-
-      const typedPhone = SESSION.normalizePhone($("phone").value);
-      const phone = typedPhone || securePhoneFromSession;
-      const pin = String($("pin").value || "").trim();
-      const référence = SESSION.normalizeSlug($("référence").value) || inferSlugFromPhone(phone);
-
-      syncContextUi(référence, phone);
-
-      if(!phone && !référence){
-        setState("bad", "Contexte requis", "Le rail Code PAY a besoin du téléphone pro.");
-        setMsg("Entre d’abord le téléphone du pro.", "bad");
-        focusBadField($("phone"));
-        return;
-      }
-
-      if(!pin){
-        setState("bad", "Code requis", "Le code Code PAY est nécessaire pour déverrouiller l’accès.");
-        setMsg("Entre le Code PAY pour continuer.", "bad");
-        focusBadField($("pin"));
-        return;
-      }
-
-      let redirecting = false;
-
-      try{
-        setLoading(true);
-        setState("", "Vérification", "Contrôle du Code sur le vrai rail DIGIY PAY…");
-        setMsg("Vérification du Code en cours…", "");
-
-        const payload = await verifyPin(phone, référence, pin);
-        const finalPhone = SESSION.normalizePhone(payload.phone || phone);
-        const finalSlug = SESSION.normalizeSlug(payload.référence || référence) || inferSlugFromPhone(finalPhone);
-
-        SESSION.save(finalSlug, finalPhone);
-
-        securePhoneFromSession = finalPhone;
-        if($("référence")) $("référence").value = finalSlug;
-        if($("phone")) $("phone").value = "";
-        applyPhoneMaskState(true);
-
-        syncContextUi(finalSlug, finalPhone);
-
-        setState(
-  "ok",
-  "✅ Mon argent est ouvert",
-  "Bienvenue dans ton espace argent. Tu peux maintenant voir ce qui entre, ce qui sort, ce qu’il reste, puis ajouter une recette, une dépense ou une réserve."
-);
-
-setMsg("✅ Mon argent est ouvert. Entrée dans le cockpit dans quelques secondes…", "ok");
-toast("✅ Mon argent est ouvert");
-
-redirecting = true;
-window.setTimeout(() => {
-  window.location.assign("./cockpit.html");
-}, 2600);
-      }catch(err){
-        console.error("[PAY pin]", err);
-        const message = err && err.message ? err.message : "Vérification Code impossible.";
-        setState("bad", "Accès refusé", message);
-        setMsg(message, "bad");
-        focusBadField($("pin"));
-      }finally{
-        if(!redirecting){
-          setLoading(false);
-        }
-      }
-    }
-
-    function autofill(){
-      const q = readQuery();
-      const s = SESSION.get();
-
-      const phone = SESSION.normalizePhone((s && s.phone) || "");
-      const référence =
-        SESSION.normalizeSlug((s && s.référence) || "") ||
-        inferSlugFromPhone(phone) ||
-        "";
-
-      securePhoneFromSession = phone || "";
-      if(référence) $("référence").value = référence;
-      if($("phone")) $("phone").value = "";
-      applyPhoneMaskState(!!securePhoneFromSession);
-
-      syncContextUi(référence, securePhoneFromSession);
-
-      if(q.reason === "session_absente"){
-        setState("bad", "Session expirée", "La session PAY a expiré. Entre le Code pour repartir proprement.");
-        setMsg("Session expirée ou absente. Vérifie le téléphone et entre le Code.", "bad");
-      }else{
-        setState("", "Entrée sécurisée", "Vérification sécurisée avant ouverture de Mon argent.");
-      }
-    }
-
-
-    function bind(){
-      $("pinForm").addEventListener("submit", openAccess);
-
-      $("btnClear").addEventListener("click", () => {
-        securePhoneFromSession = "";
-        $("phone").value = "";
-        $("référence").value = "";
-        $("pin").value = "";
-        applyPhoneMaskState(false);
-        syncContextUi("", "");
-        setState("", "Entrée sécurisée", "Vérification sécurisée avant ouverture de Mon argent.");
-        setMsg("Champs effacés. Tu peux repartir proprement.", "");
-      });
-
-      $("btnTogglePin").addEventListener("click", () => {
-        const input = $("pin");
-        const isHidden = input.type === "password";
-        input.type = isHidden ? "text" : "password";
-        $("btnTogglePin").textContent = isHidden ? "🙈 Cacher" : "👁 Voir";
-      });
-
-      $("phone").addEventListener("input", () => {
-        const typedPhone = SESSION.normalizePhone($("phone").value);
-        const phone = typedPhone || securePhoneFromSession;
-        const currentSlug = SESSION.normalizeSlug($("référence").value);
-
-        if(typedPhone){
-          securePhoneFromSession = "";
-          applyPhoneMaskState(false);
-        }
-
-        if(!currentSlug || currentSlug.startsWith("pay-")){
-          $("référence").value = inferSlugFromPhone(phone);
-        }
-
-        syncContextUi(
-          SESSION.normalizeSlug($("référence").value),
-          phone
-        );
-      });
-
-      $("référence").addEventListener("input", () => {
-        syncContextUi(
-          SESSION.normalizeSlug($("référence").value),
-          SESSION.normalizePhone($("phone").value) || securePhoneFromSession
-        );
-      });
-    }
-
-    function boot(){
-      cleanVisibleUrl();
-      setContextLinks("", "");
-      bind();
-      autofill();
-
-      const existing = SESSION.get();
-      if(existing?.slug && existing?.phone){
-        securePhoneFromSession = SESSION.normalizePhone(existing.phone);
-        if($("phone")) $("phone").value = "";
-        applyPhoneMaskState(true);
-        document.body.classList.add("session-open");
-
-        setState(
-          "ok",
-          "✅ Mon argent est déjà ouvert",
-          "Pas besoin de retaper ton code. Utilise les gros boutons pour entrer, voir les mouvements, ajouter ou reprendre un brouillon."
-        );
-
-        setMsg("Session PAY déjà ouverte. Choisis directement ton action.", "ok");
-        syncContextUi(existing.slug, existing.phone);
-      }
-    }
-
-    boot();
-  </script>
+    const rpcSlug=row?.slug||row?.identifiant||"";
+    const finalSlug=rpcSlug||slug(confirmedPhone);
+    writeSession(confirmedPhone,finalSlug,row?.session_token||"");
+    showSt("status2","✅ Accès ouvert. Redirection…","ok");
+    setTimeout(()=>redirect(finalSlug),700);
+  }catch(err){
+    pin="";updateDots();updateEnterBtn();
+    $("btnEnter").disabled=false;
+    showSt("status2","❌ Erreur : "+(err?.message||"inattendue."),"err");
+  }
+}
+})();
+</script>
 </body>
 </html>
