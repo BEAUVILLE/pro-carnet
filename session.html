@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Mon argent — Ma session PAY</title>
+  <meta name="theme-color" content="#f4ead2"/><meta name="robots" content="noindex,nofollow"/>
+  <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
+  <script src="./session.js?v=pay-session-page-20260519"></script>
+  <link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+:root{
+  --bg:#f4ead2;--bg2:#ead9b7;--bg3:#dec99c;--bar:rgba(246,237,216,.97);
+  --gold:#facc15;--gold2:#fde68a;--green:#16a34a;--green2:#22c55e;--blue:#2563eb;
+  --text:#1f2a1f;--muted:rgba(31,42,31,.78);--line:rgba(83,58,26,.24);
+  --shadow:0 14px 34px rgba(77,52,22,.16);--r:22px;--hdrH:52px;--barH:78px;--max:980px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;min-height:100dvh;color:var(--text);
+  font-family:Outfit,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:950;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
+    radial-gradient(circle at 100% 100%,rgba(22,101,52,.10),transparent 30%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 58%,var(--bg3));
+  padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
+}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}
+.topHeader{
+  position:fixed;top:0;left:0;right:0;height:var(--hdrH);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;
+  background:var(--bar);border-bottom:1px solid rgba(83,58,26,.24);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.hdrBack{min-height:36px;display:inline-flex;align-items:center;justify-content:center;color:rgba(31,42,31,.70);font-size:14px;font-weight:1000;white-space:nowrap}
+.hdrTitle{font-size:12px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#6b4e09;white-space:nowrap}
+.hdrPill{min-height:32px;display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--muted);font-size:12px;font-weight:1000;white-space:nowrap;max-width:38vw;overflow:hidden;text-overflow:ellipsis}
+.hdrPill.ok{color:#14532d;border-color:rgba(22,101,52,.28);background:rgba(220,252,231,.72)}
+.hdrPill.warn{color:#6b4e09;border-color:rgba(250,204,21,.36);background:rgba(250,204,21,.18)}
+.wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:16px}
+.hubHead,.hero{padding:2px 2px 4px}
+.eyebrow,.kicker{color:#6b4e09;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:1000;margin-bottom:8px}
+h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:.94;letter-spacing:-.05em;color:#241a0d}
+.hubSub,.lead{color:var(--muted);font-size:18px;font-weight:1000;line-height:1.38;max-width:780px}
+.rule,.card,.panel{
+  border:2px solid var(--line);border-radius:var(--r);background:rgba(255,255,255,.60);
+  box-shadow:var(--shadow);
+}
+.rule{margin-top:10px;padding:14px 15px;border-style:dashed;color:#14532d;font-size:16px;font-weight:1000;line-height:1.38}
+.rule b{color:#6b4e09}
+.group{display:grid;gap:9px}
+.groupLabel{font-size:12px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(31,42,31,.60);padding:0 2px}
+.tileGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{
+  min-height:156px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:16px;border-radius:var(--r);
+  border:2px solid var(--line);background:rgba(255,255,255,.60);box-shadow:var(--shadow);
+  transition:transform .12s ease,background .12s ease,border-color .12s ease;-webkit-tap-highlight-color:transparent;
+}
+.tile:hover{transform:translateY(-1px);background:rgba(255,255,255,.75);border-color:rgba(121,83,12,.36)}
+.tileTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.tileIcon{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:rgba(250,204,21,.18);border:1px solid rgba(83,58,26,.22);font-size:30px;flex:0 0 auto}
+.tileTag{min-height:31px;display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:999px;border:1px solid rgba(83,58,26,.22);background:rgba(255,255,255,.58);color:#6b4e09;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.tile b{display:block;font-size:23px;font-weight:1000;line-height:1.02;letter-spacing:-.025em;color:#241a0d}
+.tile span{display:block;margin-top:6px;color:#3d3324;font-size:15px;font-weight:1000;line-height:1.28}
+.tile.primary{border-color:rgba(22,101,52,.34);background:linear-gradient(180deg,rgba(220,252,231,.72),rgba(255,255,255,.62))}
+.tile.gold{border-color:rgba(250,204,21,.48);background:linear-gradient(180deg,rgba(250,204,21,.24),rgba(255,255,255,.62))}
+.tile.blue{border-color:rgba(37,99,235,.24);background:linear-gradient(180deg,rgba(219,234,254,.72),rgba(255,255,255,.62))}
+.tile.pay{border-color:rgba(250,204,21,.56);background:linear-gradient(135deg,var(--green2),var(--gold))}
+.tile.pay b,.tile.pay span{color:#102014}
+.tileLogoImg{width:100px;height:100px;object-fit:contain;border-radius:25px;background:#fff;padding:8px;box-shadow:0 12px 26px rgba(77,52,22,.20);border:1px solid rgba(83,58,26,.22);flex:0 0 auto}
+.blasonTile{min-height:184px!important}
+.bottomBar{position:fixed;left:0;right:0;bottom:0;height:var(--barH);z-index:100;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(246,237,216,.97);border-top:1px solid rgba(83,58,26,.22);backdrop-filter:blur(18px)}
+.bottomInner{width:min(100%,760px);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.bottomInner a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(31,42,31,.70);font-size:11px;font-weight:1000;text-align:center;border:1px solid rgba(83,58,26,.12);background:rgba(255,255,255,.50)}
+.bottomInner a.active{color:#102014;background:linear-gradient(135deg,var(--green2),var(--gold));border-color:rgba(22,101,52,.24)}
+.bottomInner .bi{font-size:21px;line-height:1}
+.btn{min-height:62px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.70);display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:12px 16px;font-weight:1000;font-size:17px}
+.btn.primary{background:linear-gradient(135deg,var(--green2),var(--gold));color:#102014;border:0}
+.btn.warn{background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.30);color:#6b4e09}
+.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}
+@media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.tileGrid,.grid2{grid-template-columns:1fr}.actions .btn{width:100%}}
+@media(max-width:520px){
+  body{font-size:19px;padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px)}
+  .topHeader{padding:0 10px;gap:7px}.hdrBack{font-size:13px}.hdrTitle{font-size:11px;letter-spacing:.12em}.hdrPill{font-size:11px;padding:6px 8px;max-width:34vw}
+  h1{font-size:38px}.hubSub,.lead{font-size:17px}.tile{min-height:154px;padding:14px}.tileIcon{width:52px;height:52px;font-size:29px}
+  .tileLogoImg{width:94px;height:94px;border-radius:23px}.tile b{font-size:22px}.tile span{font-size:14.5px}.tileTag{font-size:10px}
+}
+.card{padding:18px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.log{white-space:pre-wrap;border:1px dashed var(--line);border-radius:18px;padding:13px;background:rgba(255,255,255,.48);color:#3d3324;font-size:13px;font-weight:900;line-height:1.45}</style>
+</head>
+<body>
+<header class="topHeader"><a class="hdrBack" href="./hub.html">← HUB</a><div class="hdrTitle">SESSION PAY</div><div class="hdrPill" id="sessionPill">session…</div></header>
+<main class="wrap">
+  <section class="card">
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><img class="tileLogoImg" src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/><div><div class="eyebrow">💰 Mon argent</div><h1>Ma session.</h1><div class="lead">Contrôle l’accès local PAY sans supprimer les mouvements, les dettes ou les réglages métier.</div></div></div>
+    <div class="rule" id="sessionStatus">Lecture de l’accès local…</div>
+  </section>
+  <section class="card"><div class="grid2">
+    <a class="btn primary" href="./hub.html">🧭 Retour HUB</a><a class="btn" href="./admin.html">➕ Ajouter</a>
+    <a class="btn" href="./cockpit.html">🌡️ Ma température</a><a class="btn" href="./fiche.html">🪪 Ma fiche PAY</a>
+    <a class="btn" href="./brain-admin.html">⚙️ Réglages</a><a class="btn warn" href="./pin.html">🔐 Mon accès</a>
+  </div></section>
+  <section class="card">
+    <h2 style="margin:0 0 8px;font-size:28px;color:#241a0d">Nettoyage local</h2>
+    <p class="lead" style="font-size:16px">Ferme seulement les clés de session PAY. Les mouvements et notes métier restent en place.</p>
+    <div class="grid2" style="margin-top:12px"><button class="btn danger" id="clearBtn" type="button">🧹 Fermer / nettoyer PAY</button><button class="btn" id="refreshBtn" type="button">🔄 Relire l’état</button></div>
+    <div class="log" id="logBox" style="margin-top:12px">—</div>
+  </section>
+</main>
+<nav class="bottomBar"><div class="bottomInner"><a href="./hub.html"><span>🧭</span><span>HUB</span></a><a href="./admin.html"><span>➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span>🌡️</span><span>Lecture</span></a><a href="./fiche.html"><span>🪪</span><span>Fiche</span></a><a class="active" href="./session.html"><span>🛡️</span><span>Session</span></a></div></nav>
+<script>
+(()=>{const $=id=>document.getElementById(id);const KEYS=["digiy_pay_session","DIGIY_PAY_PRO_SESSION","DIGIY_PAY_PIN_SESSION","DIGIY_PIN_SESSION","DIGIY_ACCESS","DIGIY_SESSION_PAY","digiy_pay_slug","digiy_pay_phone","digiy_pay_last_slug"];
+function readState(){let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}const found=[];KEYS.forEach(k=>{try{if(sessionStorage.getItem(k))found.push("sessionStorage:"+k)}catch(_ ){}try{if(localStorage.getItem(k))found.push("localStorage:"+k)}catch(_ ){}});const ok=!!s;$("sessionPill").textContent=ok?"session ouverte":"à vérifier";$("sessionStatus").textContent=ok?"Session PAY ouverte sur ce téléphone.":"Aucune session PAY claire détectée. Repasse par Mon accès."; $("logBox").textContent=found.length?found.join("\n"):"Aucune clé PAY détectée.";}
+function clearSession(){try{window.DIGIY_SESSION?.clear?.();}catch(_ ){}const removed=[];[sessionStorage,localStorage].forEach((store,i)=>{try{Object.keys(store).forEach(k=>{const low=k.toLowerCase();const match=low.includes("pay")||low.includes("digiy_access")||low.includes("digiy_pin_session");const keep=low.includes("movement")||low.includes("brain")||low.includes("debt")||low.includes("note");if(match&&!keep){store.removeItem(k);removed.push((i?"localStorage:":"sessionStorage:")+k)}})}catch(_ ){}});$("logBox").textContent=removed.length?"Clés retirées :\n"+removed.join("\n"):"Rien à retirer.";setTimeout(readState,60)}
+$("clearBtn").onclick=clearSession;$("refreshBtn").onclick=readState;readState();})();
+</script>
+</body>
+</html>
