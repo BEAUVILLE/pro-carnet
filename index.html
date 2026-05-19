@@ -3,17 +3,82 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MON ARGENT by DIGIY — PAY PRO</title>
+  <title>MON ARGENT by DIGIY — Entrée PAY</title>
   <meta name="theme-color" content="#f4ead2" />
-  <meta name="digiy-build" content="pay-index-20260515-porte-ajouter-voix" />
+  <meta name="digiy-build" content="pay-index-porte-hub-20260519" />
   <meta
     name="description"
-    content="PAY PRO by DIGIY — porte sécurisée pour dire un mouvement, ajouter au clic, lire la température et régler les repères."
+    content="PAY PRO by DIGIY — porte courte vers le HUB Mon argent."
   />
 
   <script>
     window.DIGIY_MODULE = "PAY";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+
+    (() => {
+      "use strict";
+
+      const TARGET = "./hub.html";
+      const SENSITIVE_KEYS = [
+        "phone",
+        "tel",
+        "owner_phone",
+        "owner_id",
+        "slug",
+        "pay_slug",
+        "subscription_slug",
+        "business_phone",
+        "wave_phone",
+        "wallet_phone",
+        "pay_phone",
+        "access_note",
+        "keybox_code",
+        "keybox_location",
+        "module",
+        "return",
+        "redirect",
+        "redirect_url",
+        "url",
+        "from",
+        "v",
+        "pin",
+        "token",
+        "session_token"
+      ];
+
+      function cleanVisibleUrl() {
+        try {
+          const url = new URL(window.location.href);
+          let changed = false;
+
+          SENSITIVE_KEYS.forEach((key) => {
+            if (url.searchParams.has(key)) {
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+
+          if (changed) {
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        } catch (_) {}
+      }
+
+      function goHub() {
+        try {
+          const hash = window.location.hash || "";
+          window.location.replace(TARGET + hash);
+        } catch (_) {
+          window.location.href = TARGET;
+        }
+      }
+
+      cleanVisibleUrl();
+      window.setTimeout(goHub, 650);
+    })();
   </script>
+
+  <link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" />
 
   <style>
     :root{
@@ -65,17 +130,23 @@
     }
 
     .mark{
-      width:74px;
-      height:74px;
+      width:96px;
+      height:96px;
       margin:0 auto;
-      border-radius:26px;
+      border-radius:28px;
       display:grid;
       place-items:center;
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      color:#102014;
-      font-size:36px;
-      font-weight:1000;
+      background:#fff;
+      padding:8px;
+      border:1px solid rgba(121,83,12,.22);
       box-shadow:0 12px 28px rgba(77,52,22,.16);
+    }
+
+    .mark img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
     }
 
     .kicker{
@@ -89,9 +160,9 @@
 
     h1{
       margin:0;
-      font-size:clamp(34px,8vw,58px);
-      line-height:1.02;
-      letter-spacing:-.04em;
+      font-size:clamp(38px,8vw,62px);
+      line-height:.96;
+      letter-spacing:-.05em;
       font-weight:1000;
       color:#241a0d;
     }
@@ -117,7 +188,7 @@
 
     .actions{
       display:grid;
-      grid-template-columns:1.15fr .85fr;
+      grid-template-columns:1fr 1fr;
       gap:12px;
       margin-top:2px;
     }
@@ -137,6 +208,7 @@
       border:1px solid rgba(121,83,12,.22);
       box-shadow:0 10px 22px rgba(77,52,22,.10);
       text-align:center;
+      font-weight:1000;
     }
 
     .btn strong{
@@ -157,15 +229,11 @@
       grid-column:1 / -1;
       background:linear-gradient(135deg,var(--green2),var(--gold));
       border:1px solid rgba(22,101,52,.28);
+      color:#102014;
     }
 
     .btn.primary strong{
       font-size:25px;
-    }
-
-    .btn:hover{
-      filter:brightness(1.03);
-      transform:translateY(-1px);
     }
 
     .notice{
@@ -193,34 +261,6 @@
       font-weight:900;
     }
 
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-    }
-
-    .mini{
-      border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(255,255,255,.52);
-      padding:12px;
-      display:grid;
-      gap:4px;
-    }
-
-    .mini b{
-      color:#241a0d;
-      font-size:15px;
-      font-weight:1000;
-    }
-
-    .mini span{
-      color:rgba(31,42,31,.68);
-      font-size:13px;
-      line-height:1.35;
-      font-weight:900;
-    }
-
     .small{
       color:rgba(31,42,31,.62);
       font-size:14px;
@@ -233,76 +273,52 @@
       .card{padding:18px;border-radius:28px}
       .actions{grid-template-columns:1fr}
       .btn.primary{grid-column:auto}
-      .mini-grid{grid-template-columns:1fr}
-      h1{font-size:40px}
+      h1{font-size:42px}
     }
   </style>
 </head>
 
 <body>
   <main class="card" aria-label="Entrée PAY PRO">
-    <div class="mark">₣</div>
+    <div class="mark">
+      <img src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro" />
+    </div>
 
     <p class="kicker">PAY PRO · MON ARGENT by DIGIY</p>
 
-    <h1>Parle, clique,<br>PAY range.</h1>
+    <h1>Ouverture<br>du HUB PAY.</h1>
 
     <p>
-      Ici, pas de tableau compliqué. Tu dis ou tu choisis le mouvement,
-      DIGIY prépare la ligne, puis tu valides.
+      Cette page est maintenant une porte courte. Elle t’envoie vers le HUB,
+      puis le HUB ouvre Ajouter, Température, Fiche, Oreille, Session et PIN.
     </p>
 
     <div class="doctrine">
-      La voix prépare. Le clic confirme. PAY enregistre seulement quand le professionnel valide.
+      Index = porte courte. HUB = navigation. PAY garde l’argent lisible, direct et validé par le professionnel.
     </div>
 
     <section class="actions" aria-label="Portes PAY">
-      <a class="btn primary" href="./admin.html#payVoicePanel" id="voiceLink">
-        <strong>🎙️ Dire un mouvement</strong>
-        <span>Ex. “J’ai encaissé 15000 Wave pour POS”</span>
+      <a class="btn primary" href="./hub.html" id="hubLink">
+        <strong>🧭 Ouvrir le HUB PAY</strong>
+        <span>La bonne maison de navigation</span>
+      </a>
+
+      <a class="btn" href="./pin.html" id="pinLink">
+        <strong>🔐 Mon accès</strong>
+        <span>Ouvrir ou renouveler la session PAY</span>
       </a>
 
       <a class="btn" href="./admin.html" id="addLink">
         <strong>➕ Ajouter</strong>
-        <span>Entrée, dépense, dette, crédit ou réserve</span>
-      </a>
-
-      <a class="btn" href="./cockpit.html" id="temperatureLink">
-        <strong>🌡️ Ma température</strong>
-        <span>Voir ce qui entre, sort, reste et pèse</span>
-      </a>
-
-      <a class="btn" href="./brain-admin.html" id="settingsLink">
-        <strong>⚙️ Réglages utiles</strong>
-        <span>Réserve, dettes, projets, repères du mois</span>
-      </a>
-
-      <a class="btn" href="./pin.html" id="pinLink">
-        <strong>🔐 Code sécurisé</strong>
-        <span>Ouvrir ou renouveler la session PAY</span>
+        <span>Secours direct vers un mouvement</span>
       </a>
     </section>
 
-    <section class="notice" aria-label="Clarification route technique">
-      <div class="notice-title">Nom humain d’abord</div>
+    <section class="notice" aria-label="Clarification route">
+      <div class="notice-title">Redirection propre</div>
       <div class="notice-text">
-        Dans l’interface, on dit <strong>Ajouter</strong>. La route technique peut rester
-        <strong>admin.html</strong>, mais le professionnel ne voit pas “admin” : il ajoute simplement sa réalité terrain.
-      </div>
-    </section>
-
-    <section class="mini-grid" aria-label="Doctrine PAY">
-      <div class="mini">
-        <b>1 · Tu parles</b>
-        <span>DIGIY comprend le geste terrain.</span>
-      </div>
-      <div class="mini">
-        <b>2 · Tu vérifies</b>
-        <span>Montant, canal, libellé et module.</span>
-      </div>
-      <div class="mini">
-        <b>3 · Tu valides</b>
-        <span>PAY garde la trace propre.</span>
+        Si le HUB est présent, cette page y va automatiquement. Les anciens liens restent visibles en secours,
+        mais la navigation principale est maintenant <strong>hub.html</strong>.
       </div>
     </section>
 
@@ -316,70 +332,33 @@
       "use strict";
 
       const SENSITIVE_KEYS = [
-        "phone",
-        "tel",
-        "owner_phone",
-        "owner_id",
-        "slug",
-        "pay_slug",
-        "subscription_slug",
-        "business_phone",
-        "wave_phone",
-        "wallet_phone",
-        "pay_phone",
-        "access_note",
-        "keybox_code",
-        "keybox_location",
-        "module",
-        "return",
-        "from",
-        "v"
+        "phone","tel","owner_phone","owner_id","slug","pay_slug","subscription_slug",
+        "business_phone","wave_phone","wallet_phone","pay_phone","access_note",
+        "keybox_code","keybox_location","module","return","redirect","redirect_url",
+        "url","from","v","pin","token","session_token"
       ];
-
-      function cleanVisibleUrl() {
-        try {
-          const url = new URL(window.location.href);
-          let changed = false;
-
-          SENSITIVE_KEYS.forEach((key) => {
-            if (url.searchParams.has(key)) {
-              url.searchParams.delete(key);
-              changed = true;
-            }
-          });
-
-          if (changed) {
-            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-          }
-        } catch (_) {}
-      }
 
       function cleanInternalHref(raw, fallback) {
         try {
-          const url = new URL(raw || fallback || "./cockpit.html", window.location.href);
-
-          SENSITIVE_KEYS.forEach((key) => {
-            url.searchParams.delete(key);
-          });
+          const url = new URL(raw || fallback || "./hub.html", window.location.href);
+          SENSITIVE_KEYS.forEach((key) => url.searchParams.delete(key));
 
           if (url.origin !== window.location.origin) {
-            return fallback || "./cockpit.html";
+            return fallback || "./hub.html";
           }
 
-          const file = url.pathname.split("/").pop() || "cockpit.html";
+          const file = url.pathname.split("/").pop() || "hub.html";
           return "./" + file + (url.search || "") + (url.hash || "");
         } catch (_) {
-          return fallback || "./cockpit.html";
+          return fallback || "./hub.html";
         }
       }
 
-      function protectLinks() {
+      {
         const map = {
-          voiceLink: "./admin.html#payVoicePanel",
-          addLink: "./admin.html",
-          temperatureLink: "./cockpit.html",
-          settingsLink: "./brain-admin.html",
-          pinLink: "./pin.html"
+          hubLink: "./hub.html",
+          pinLink: "./pin.html",
+          addLink: "./admin.html"
         };
 
         Object.entries(map).forEach(([id, href]) => {
@@ -387,9 +366,6 @@
           if (el) el.setAttribute("href", cleanInternalHref(href, href));
         });
       }
-
-      cleanVisibleUrl();
-      protectLinks();
     })();
   </script>
 </body>
