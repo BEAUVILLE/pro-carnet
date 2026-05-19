@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Mon argent — Ma fiche PAY</title><meta name="theme-color" content="#f4ead2"/><meta name="robots" content="noindex,nofollow"/>
+<script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
+<script src="./session.js?v=pay-fiche-20260519"></script>
+<link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f4ead2;--bg2:#ead9b7;--bg3:#dec99c;--bar:rgba(246,237,216,.97);
+  --gold:#facc15;--gold2:#fde68a;--green:#16a34a;--green2:#22c55e;--blue:#2563eb;
+  --text:#1f2a1f;--muted:rgba(31,42,31,.78);--line:rgba(83,58,26,.24);
+  --shadow:0 14px 34px rgba(77,52,22,.16);--r:22px;--hdrH:52px;--barH:78px;--max:980px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;min-height:100dvh;color:var(--text);
+  font-family:Outfit,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:950;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
+    radial-gradient(circle at 100% 100%,rgba(22,101,52,.10),transparent 30%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 58%,var(--bg3));
+  padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
+}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}
+.topHeader{
+  position:fixed;top:0;left:0;right:0;height:var(--hdrH);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;
+  background:var(--bar);border-bottom:1px solid rgba(83,58,26,.24);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.hdrBack{min-height:36px;display:inline-flex;align-items:center;justify-content:center;color:rgba(31,42,31,.70);font-size:14px;font-weight:1000;white-space:nowrap}
+.hdrTitle{font-size:12px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#6b4e09;white-space:nowrap}
+.hdrPill{min-height:32px;display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--muted);font-size:12px;font-weight:1000;white-space:nowrap;max-width:38vw;overflow:hidden;text-overflow:ellipsis}
+.hdrPill.ok{color:#14532d;border-color:rgba(22,101,52,.28);background:rgba(220,252,231,.72)}
+.hdrPill.warn{color:#6b4e09;border-color:rgba(250,204,21,.36);background:rgba(250,204,21,.18)}
+.wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:16px}
+.hubHead,.hero{padding:2px 2px 4px}
+.eyebrow,.kicker{color:#6b4e09;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:1000;margin-bottom:8px}
+h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:.94;letter-spacing:-.05em;color:#241a0d}
+.hubSub,.lead{color:var(--muted);font-size:18px;font-weight:1000;line-height:1.38;max-width:780px}
+.rule,.card,.panel{
+  border:2px solid var(--line);border-radius:var(--r);background:rgba(255,255,255,.60);
+  box-shadow:var(--shadow);
+}
+.rule{margin-top:10px;padding:14px 15px;border-style:dashed;color:#14532d;font-size:16px;font-weight:1000;line-height:1.38}
+.rule b{color:#6b4e09}
+.group{display:grid;gap:9px}
+.groupLabel{font-size:12px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(31,42,31,.60);padding:0 2px}
+.tileGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{
+  min-height:156px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:16px;border-radius:var(--r);
+  border:2px solid var(--line);background:rgba(255,255,255,.60);box-shadow:var(--shadow);
+  transition:transform .12s ease,background .12s ease,border-color .12s ease;-webkit-tap-highlight-color:transparent;
+}
+.tile:hover{transform:translateY(-1px);background:rgba(255,255,255,.75);border-color:rgba(121,83,12,.36)}
+.tileTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.tileIcon{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:rgba(250,204,21,.18);border:1px solid rgba(83,58,26,.22);font-size:30px;flex:0 0 auto}
+.tileTag{min-height:31px;display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:999px;border:1px solid rgba(83,58,26,.22);background:rgba(255,255,255,.58);color:#6b4e09;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.tile b{display:block;font-size:23px;font-weight:1000;line-height:1.02;letter-spacing:-.025em;color:#241a0d}
+.tile span{display:block;margin-top:6px;color:#3d3324;font-size:15px;font-weight:1000;line-height:1.28}
+.tile.primary{border-color:rgba(22,101,52,.34);background:linear-gradient(180deg,rgba(220,252,231,.72),rgba(255,255,255,.62))}
+.tile.gold{border-color:rgba(250,204,21,.48);background:linear-gradient(180deg,rgba(250,204,21,.24),rgba(255,255,255,.62))}
+.tile.blue{border-color:rgba(37,99,235,.24);background:linear-gradient(180deg,rgba(219,234,254,.72),rgba(255,255,255,.62))}
+.tile.pay{border-color:rgba(250,204,21,.56);background:linear-gradient(135deg,var(--green2),var(--gold))}
+.tile.pay b,.tile.pay span{color:#102014}
+.tileLogoImg{width:100px;height:100px;object-fit:contain;border-radius:25px;background:#fff;padding:8px;box-shadow:0 12px 26px rgba(77,52,22,.20);border:1px solid rgba(83,58,26,.22);flex:0 0 auto}
+.blasonTile{min-height:184px!important}
+.bottomBar{position:fixed;left:0;right:0;bottom:0;height:var(--barH);z-index:100;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(246,237,216,.97);border-top:1px solid rgba(83,58,26,.22);backdrop-filter:blur(18px)}
+.bottomInner{width:min(100%,760px);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.bottomInner a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(31,42,31,.70);font-size:11px;font-weight:1000;text-align:center;border:1px solid rgba(83,58,26,.12);background:rgba(255,255,255,.50)}
+.bottomInner a.active{color:#102014;background:linear-gradient(135deg,var(--green2),var(--gold));border-color:rgba(22,101,52,.24)}
+.bottomInner .bi{font-size:21px;line-height:1}
+.btn{min-height:62px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.70);display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:12px 16px;font-weight:1000;font-size:17px}
+.btn.primary{background:linear-gradient(135deg,var(--green2),var(--gold));color:#102014;border:0}
+.btn.warn{background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.30);color:#6b4e09}
+.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}
+@media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.tileGrid,.grid2{grid-template-columns:1fr}.actions .btn{width:100%}}
+@media(max-width:520px){
+  body{font-size:19px;padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px)}
+  .topHeader{padding:0 10px;gap:7px}.hdrBack{font-size:13px}.hdrTitle{font-size:11px;letter-spacing:.12em}.hdrPill{font-size:11px;padding:6px 8px;max-width:34vw}
+  h1{font-size:38px}.hubSub,.lead{font-size:17px}.tile{min-height:154px;padding:14px}.tileIcon{width:52px;height:52px;font-size:29px}
+  .tileLogoImg{width:94px;height:94px;border-radius:23px}.tile b{font-size:22px}.tile span{font-size:14.5px}.tileTag{font-size:10px}
+}
+
+.card{padding:18px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}label{display:block;margin:12px 0 6px;color:#6b4e09;font-size:13px;font-weight:1000;letter-spacing:.04em;text-transform:uppercase}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.72);color:var(--text);padding:14px;font-weight:900;outline:none}textarea{min-height:110px;resize:vertical}
+.previewBox{display:grid;gap:12px}.poster{border-radius:24px;border:2px solid rgba(250,204,21,.35);background:#fff;min-height:220px;display:grid;place-items:center;padding:14px;color:#102014;font-weight:1000;text-align:center}.poster img{max-width:100%;max-height:230px;object-fit:contain}
+.badgeRow{display:flex;gap:8px;flex-wrap:wrap}.badge{padding:8px 11px;border-radius:999px;background:rgba(250,204,21,.22);border:1px solid rgba(83,58,26,.22);font-size:12px;font-weight:1000;color:#6b4e09}
+.ficheTitle{font-size:32px;font-weight:1000;line-height:1.05;color:#241a0d}.ficheText{font-size:16px;font-weight:900;line-height:1.55;color:#3d3324}
+.qrPreview{border-radius:24px;background:#fff;display:grid;place-items:center;min-height:248px;padding:14px;border:2px solid rgba(83,58,26,.18)}.qrPreview img{width:220px;height:220px;object-fit:contain}
+.status{display:none;padding:13px;border-radius:18px;background:rgba(220,252,231,.72);color:#14532d;font-weight:1000}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="topHeader"><a class="hdrBack" href="./hub.html">← HUB</a><div class="hdrTitle">FICHE PAY</div><div class="hdrPill">fiche locale</div></header>
+<main class="wrap">
+<section class="card"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><img class="tileLogoImg" src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/><div><div class="eyebrow">💰 Mon argent</div><h1>Ma fiche PAY.</h1><div class="lead">Identité Mon argent : nom d’activité, contact, devise, lien public et QR. Plus propre pour partager PAY.</div></div></div></section>
+<section class="grid2">
+<article class="card">
+  <h2 style="margin:0 0 8px;font-size:28px;color:#241a0d">Identité PAY</h2>
+  <label>Nom activité</label><input id="bizName" placeholder="Ex : Astou Boutique"/>
+  <label>Activité</label><input id="bizType" placeholder="Ex : Commerce, chauffeur, logement, services"/>
+  <label>Devise</label><select id="currency"><option>XOF</option><option>EUR</option></select>
+  <label>Contact WhatsApp</label><input id="contact" placeholder="+221..."/>
+  <label>Lien public / fiche</label><input id="publicUrl" placeholder="https://..."/>
+  <label>Logo ou photo URL</label><input id="photoUrl" placeholder="https://..."/>
+  <label>Note courte</label><textarea id="note" placeholder="Ex : Mon argent garde mes recettes, dépenses, dettes et réserves."></textarea>
+  <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn primary" id="saveBtn">💾 Enregistrer</button><button class="btn" id="previewBtn">👁️ Aperçu</button><button class="btn danger" id="clearBtn">🧹 Vider</button></div>
+  <div class="status" id="statusBox"></div>
+</article>
+<aside class="card previewBox">
+  <h2 style="margin:0;font-size:28px;color:#241a0d">Aperçu pro</h2>
+  <div class="poster" id="posterBox">Blason ou logo PAY</div>
+  <div class="badgeRow"><span class="badge" id="badgeType">Activité</span><span class="badge" id="badgeCurrency">XOF</span></div>
+  <div class="ficheTitle" id="previewName">Nom activité</div>
+  <div class="ficheText" id="previewText">La note courte apparaîtra ici.</div>
+  <div class="qrPreview" id="qrPreview"><div>Ajoute un lien public pour afficher le QR.</div></div>
+  <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" id="waLink" href="#" target="_blank">💬 WhatsApp</a><button class="btn" id="copyBtn">📋 Copier lien</button><a class="btn" href="./hub.html">🧭 HUB</a></div>
+</aside>
+</section>
+</main>
+<nav class="bottomBar"><div class="bottomInner"><a href="./hub.html"><span>🧭</span><span>HUB</span></a><a href="./admin.html"><span>➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span>🌡️</span><span>Lecture</span></a><a class="active" href="./fiche.html"><span>🪪</span><span>Fiche</span></a><a href="./session.html"><span>🛡️</span><span>Session</span></a></div></nav>
+<script>
+(()=>{const KEY="digiy_pay_fiche";const $=id=>document.getElementById(id);function data(){return{name:$("bizName").value.trim(),type:$("bizType").value.trim(),currency:$("currency").value,contact:$("contact").value.trim(),publicUrl:$("publicUrl").value.trim(),photo:$("photoUrl").value.trim(),note:$("note").value.trim(),updated_at:new Date().toISOString()}}
+function set(d){$("bizName").value=d.name||"";$("bizType").value=d.type||"";$("currency").value=d.currency||"XOF";$("contact").value=d.contact||"";$("publicUrl").value=d.publicUrl||"";$("photoUrl").value=d.photo||"";$("note").value=d.note||""}
+function qr(v){return "https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=12&data="+encodeURIComponent(v)}
+function wa(v){const d=String(v||"").replace(/[^\d]/g,"");return d?"https://wa.me/"+d:"#"}
+function render(d=data()){$("previewName").textContent=d.name||"Nom activité";$("badgeType").textContent=d.type||"Activité";$("badgeCurrency").textContent=d.currency||"XOF";$("previewText").textContent=d.note||"La note courte apparaîtra ici.";$("waLink").href=wa(d.contact);$("posterBox").innerHTML=d.photo?'<img src="'+d.photo.replace(/"/g,"&quot;")+'" alt="Logo PAY"/>':"Blason ou logo PAY";$("qrPreview").innerHTML=d.publicUrl?'<img src="'+qr(d.publicUrl).replace(/"/g,"&quot;")+'" alt="QR PAY"/>':"<div>Ajoute un lien public pour afficher le QR.</div>"}
+function status(t){$("statusBox").textContent=t;$("statusBox").style.display="block";setTimeout(()=>$("statusBox").style.display="none",2500)}
+$("saveBtn").onclick=()=>{const d=data();localStorage.setItem(KEY,JSON.stringify(d));render(d);status("Fiche PAY gardée sur ce téléphone.")};$("previewBtn").onclick=()=>render();$("clearBtn").onclick=()=>{localStorage.removeItem(KEY);set({});render({});status("Fiche vidée.")};$("copyBtn").onclick=async()=>{const u=$("publicUrl").value.trim();if(!u){status("Ajoute un lien public.");return}try{await navigator.clipboard.writeText(u);status("Lien copié.")}catch(_ ){status("Lien : "+u)}};["bizName","bizType","currency","contact","publicUrl","photoUrl","note"].forEach(id=>$(id).addEventListener("input",()=>render()));try{const d=JSON.parse(localStorage.getItem(KEY)||"{}");set(d);render(d)}catch(_ ){render()}})();
+</script>
+</body>
+</html>
