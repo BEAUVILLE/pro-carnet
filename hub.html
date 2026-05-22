@@ -1,18 +1,41 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Mon argent — HUB PAY</title>
-  <meta name="theme-color" content="#f4ead2"/><meta name="robots" content="noindex,nofollow"/>
+  <meta name="theme-color" content="#f4ead2"/>
+  <meta name="robots" content="noindex,nofollow"/>
   <meta name="description" content="PAY PRO — HUB mobile terrain en pavés : ajouter, dire un mouvement, température, fiche, session et accès."/>
   <meta name="digiy-build" content="pay-hub-complet-20260519"/>
-  <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_SUPABASE_KEY = window.DIGIY_SUPABASE_ANON_KEY;
+
+    window.DIGIY_MODULE = "PAY";
+    window.DIGIY_ABOS_MODULE = "PAY";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+
+    /* PAY est transverse : il ne doit pas être bloqué comme un abonnement métier. */
+    window.DIGIY_TRANSVERSE_MODULE = true;
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
   <script src="./session.js?v=pay-hub-20260519"></script>
+
   <link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+
   <style>
-:root{
   --bg:#f4ead2;--bg2:#ead9b7;--bg3:#dec99c;--bar:rgba(246,237,216,.97);
   --gold:#facc15;--gold2:#fde68a;--green:#16a34a;--green2:#22c55e;--blue:#2563eb;
   --text:#1f2a1f;--muted:rgba(31,42,31,.78);--line:rgba(83,58,26,.24);
