@@ -25,7 +25,9 @@
     "pay": "PAY ne touche pas l’argent. PAY organise la preuve, la trace et la confiance.",
     "security": "Ce qui sert à payer peut être public si le pro l’a choisi. Ce qui sert à identifier, administrer ou sécuriser le compte ne doit jamais être exposé.",
     "human_confirmation": "DIGIY prépare le geste. Le professionnel valide toujours.",
-    "pay_temperature": "PAY ne lit pas seulement le business. PAY lit aussi la maison, les dettes, les crédits, les emprunts, les imprévus et la réserve pour donner la température à l’instant T."
+    "pay_temperature": "PAY ne lit pas seulement le business. PAY lit aussi la maison, les dettes, les crédits, les emprunts, les imprévus et la réserve pour donner la température à l’instant T.",
+    "client_debt": "Une dette client / crédit vendeur est une créance à recevoir. Elle ne compte jamais comme recette ni comme cash tant que l’argent n’est pas réellement encaissé et confirmé.",
+    "client_debt_settlement": "Quand une dette client est payée plus tard, PAY crée une vraie entrée de caisse séparée : encaissement dette client. Le pro précise si l’encaissement est partiel ou total. Le montant encaissé est déduit du reste à recevoir de la personne concernée. Si le reste devient zéro, la dette passe en soldé. Sinon, elle reste ouverte ou partielle."
   },
   "real_signal": {
     "enabled": true,
@@ -86,6 +88,26 @@
       "code": "pending",
       "label": "À prévoir",
       "public_text": "Une facture, échéance ou pression arrive. Le pro doit la garder en vue."
+    },
+    {
+      "code": "client_debt_open",
+      "label": "Créance ouverte",
+      "public_text": "Un client doit encore payer. Ce montant n’est pas en caisse."
+    },
+    {
+      "code": "client_debt_partial",
+      "label": "Payé en partie",
+      "public_text": "Un encaissement partiel a été reçu. Le reste à recevoir demeure ouvert."
+    },
+    {
+      "code": "client_debt_late",
+      "label": "Créance en retard",
+      "public_text": "Le client doit encore payer. Relance propre à prévoir."
+    },
+    {
+      "code": "client_debt_settled",
+      "label": "Soldé",
+      "public_text": "La dette client est entièrement soldée après encaissement réel."
     }
   ],
   "quick_actions": [
@@ -157,6 +179,124 @@
         "secondary_display": "EUR",
         "conversion_hint": "L’utilisateur saisit en FCFA ; DIGIY peut afficher l’équivalent euro."
       }
+    },
+    {
+      "code": "client_debt_open",
+      "label": "Dette client",
+      "emoji": "🧾",
+      "short_help": "Crédit vendeur ou somme due par un client. Ce n’est pas encore en caisse.",
+      "form_defaults": {
+        "direction": "receivable",
+        "scope": "pro",
+        "kind": "receivable",
+        "channel": "other",
+        "category": "client_debt_open",
+        "source_module": "PAY",
+        "label": "Dette client à recevoir",
+        "note_text": "Le client doit ce montant. Ne pas compter comme recette tant que l’argent n’est pas encaissé."
+      },
+      "count_as_cash": false,
+      "count_as_income": false,
+      "affects_cash_now": false,
+      "creates_receivable": true,
+      "default_status": "client_debt_open",
+      "confirmation_template": "J’ai compris : le client doit {amount_xof} FCFA. Ce n’est pas en caisse. Enregistrer comme créance à recevoir ?",
+      "amount_fields": {
+        "primary_input": "amount_xof",
+        "primary_currency": "XOF",
+        "secondary_display": "EUR",
+        "conversion_hint": "Montant dû en FCFA ; il ne devient une entrée que quand le client paie."
+      }
+    },
+    {
+      "code": "client_debt_payment",
+      "label": "Encaissement dette client",
+      "emoji": "✅",
+      "short_help": "Le client paie une dette ouverte. Choisir partiel ou total, puis déduire du reste à recevoir.",
+      "form_defaults": {
+        "direction": "in",
+        "scope": "pro",
+        "kind": "sale",
+        "channel": "wave",
+        "category": "client_debt_payment_received",
+        "source_module": "PAY",
+        "label": "Encaissement dette client",
+        "note_text": "Paiement réel reçu sur une dette client. Déduire le montant du reste à recevoir."
+      },
+      "count_as_cash": true,
+      "count_as_income": true,
+      "affects_cash_now": true,
+      "reduces_receivable": true,
+      "default_status": "payment_confirmed",
+      "confirmation_template": "J’ai compris : encaissement dette client de {amount_xof} FCFA pour {client_or_person}. Partiel ou total ? PAY déduira ce montant du reste à recevoir.",
+      "amount_fields": {
+        "primary_input": "amount_xof",
+        "primary_currency": "XOF",
+        "secondary_display": "EUR",
+        "conversion_hint": "Ici, le paiement est réel : il peut entrer dans la caisse après validation."
+      },
+      "settlement_required": true,
+      "settlement_fields": {
+        "linked_client": "Nom ou téléphone du client concerné",
+        "linked_receivable_id": "Dette liée si disponible",
+        "amount_paid_xof": "Montant réellement encaissé",
+        "remaining_before_xof": "Reste à recevoir avant paiement",
+        "remaining_after_xof": "Reste à recevoir après paiement",
+        "settlement_mode": [
+          "partial",
+          "total"
+        ]
+      },
+      "settlement_modes": [
+        {
+          "code": "partial",
+          "label": "Encaissement partiel",
+          "category": "client_debt_payment_partial",
+          "status_after": "client_debt_partial",
+          "rule": "Déduire le montant encaissé. Garder le reste à recevoir ouvert."
+        },
+        {
+          "code": "total",
+          "label": "Encaissement total",
+          "category": "client_debt_payment_total",
+          "status_after": "client_debt_settled",
+          "rule": "Déduire le montant encaissé. Mettre la dette en soldé."
+        }
+      ],
+      "deduction_formula": {
+        "remaining_after_payment": "max(0, remaining_before_payment - amount_paid_xof)",
+        "status_if_remaining_zero": "client_debt_settled",
+        "status_if_remaining_positive": "client_debt_partial"
+      }
+    },
+    {
+      "code": "reseau_digiy_payment",
+      "label": "RÉSEAU DIGIY",
+      "emoji": "📣",
+      "short_help": "Annonce qualifiée, visibilité 7j/15j/30j ou Mise en classe FIRST.",
+      "form_defaults": {
+        "direction": "in",
+        "scope": "pro",
+        "kind": "sale",
+        "channel": "wave",
+        "category": "reseau_digiy_visibility",
+        "source_module": "RESEAU_DIGIY",
+        "label": "Règlement RÉSEAU DIGIY",
+        "note_text": "Règlement RÉSEAU DIGIY à vérifier : 15 000, 25 000, 45 000 ou 150 000 FCFA selon la formule."
+      },
+      "confirmation_template": "J’ai compris : règlement RÉSEAU DIGIY de {amount_xof} FCFA par {channel}. Vérifier la formule et la preuve avant activation ?",
+      "amount_fields": {
+        "primary_input": "amount_xof",
+        "primary_currency": "XOF",
+        "secondary_display": "EUR",
+        "conversion_hint": "L’utilisateur saisit en FCFA ; DIGIY peut afficher l’équivalent euro."
+      },
+      "plans": [
+        "RESEAU_7J",
+        "RESEAU_15J",
+        "RESEAU_30J",
+        "RESEAU_FIRST"
+      ]
     },
     {
       "code": "verify",
@@ -272,43 +412,6 @@
         "secondary_display": "EUR",
         "conversion_hint": "L’utilisateur saisit en FCFA ; DIGIY peut afficher l’équivalent euro."
       }
-      {
-  "department": "Dettes clients",
-  "subtitle": "Crédit vendeur · Argent à recevoir",
-  "fields": [
-    "Nom",
-    "Tel",
-    "Somme due",
-    "Date"
-  ],
-  "rule": "Ce montant est à recevoir. Il n’entre dans la caisse que quand le client paie.",
-  "count_as_cash": false,
-  "cash_entry_only_when_paid": true,
-  "statuses": [
-    {
-      "code": "open",
-      "label": "À recevoir"
-    },
-    {
-      "code": "partial",
-      "label": "Payé en partie"
-    },
-    {
-      "code": "late",
-      "label": "En retard"
-    },
-    {
-      "code": "settled",
-      "label": "Soldé"
-    }
-  ],
-  "voice_examples": [
-    "POS Fatou dette client 50000 date fin du mois tel 771234567",
-    "DRIVER Moussa doit 12000 course vendredi tel 776000000",
-    "MARKET Astou crédit vendeur 35000 date 30 mai tel 778000000"
-  ],
-  "updated_for": "pay-dettes-clients-20260515"
-}
     },
     {
       "code": "debt_received",
@@ -473,6 +576,90 @@
     }
   ],
   "intentions": [
+    {
+      "code": "client_debt_open",
+      "label": "Dette client à recevoir",
+      "direction": "receivable",
+      "default_scope": "pro",
+      "default_kind": "receivable",
+      "default_status": "client_debt_open",
+      "count_as_cash": false,
+      "count_as_income": false,
+      "examples": [
+        "Client Fatou doit 50000 fin du mois",
+        "Moussa doit 12000 pour la course vendredi",
+        "Astou crédit vendeur 35000 date 30 mai",
+        "Awa doit encore 25000 sur la commande"
+      ],
+      "required_fields": [
+        "amount_xof",
+        "client_or_person"
+      ],
+      "needs_clarification_if_missing": [
+        "due_date",
+        "phone"
+      ],
+      "confirmation_template": "J’ai compris : {client_or_person} doit {amount_xof} FCFA. Ce n’est pas encore une recette. Enregistrer comme créance ?"
+    },
+    {
+      "code": "client_debt_payment",
+      "label": "Encaissement dette client",
+      "direction": "in",
+      "default_scope": "pro",
+      "default_kind": "sale",
+      "default_status": "payment_confirmed",
+      "count_as_cash": true,
+      "count_as_income": true,
+      "examples": [
+        "Fatou a payé 20000 sur sa dette",
+        "Moussa a soldé 12000 Wave",
+        "Awa a payé une partie 25000 cash",
+        "Astou a payé le reste de sa dette 35000"
+      ],
+      "required_fields": [
+        "amount_xof",
+        "client_or_person"
+      ],
+      "needs_clarification_if_missing": [
+        "channel",
+        "settlement_mode",
+        "remaining_before_xof"
+      ],
+      "confirmation_template": "J’ai compris : {client_or_person} a payé {amount_xof} FCFA sur sa dette. Est-ce un encaissement partiel ou total ?",
+      "settlement_required": true,
+      "settlement_modes": [
+        "partial",
+        "total"
+      ],
+      "reduces_receivable": true
+    },
+    {
+      "code": "reseau_digiy_payment",
+      "label": "Règlement RÉSEAU DIGIY",
+      "direction": "in",
+      "default_scope": "pro",
+      "default_kind": "sale",
+      "default_status": "payment_to_verify",
+      "default_source_module": "RESEAU_DIGIY",
+      "examples": [
+        "RÉSEAU DIGIY 15000 Wave sept jours",
+        "Annonce qualifiée 25000 Wave quinze jours",
+        "RÉSEAU DIGIY 45000 mois payé",
+        "Classe FIRST 150000 Wave un mois",
+        "Mise en classe FIRST 150000 reçu par Wave",
+        "Paiement RÉSEAU DIGIY à vérifier 25000"
+      ],
+      "required_fields": [
+        "amount_xof",
+        "channel"
+      ],
+      "needs_clarification_if_missing": [
+        "plan_code",
+        "pro_phone",
+        "fiche_url"
+      ],
+      "confirmation_template": "J’ai compris : règlement RÉSEAU DIGIY de {amount_xof} FCFA. Choisir la formule et vérifier la preuve avant activation."
+    },
     {
       "code": "income",
       "label": "J’ai encaissé",
@@ -820,7 +1007,8 @@
     "EXPLORE",
     "JOBS",
     "QR_PRO",
-    "OTHER"
+    "OTHER",
+    "RESEAU_DIGIY"
   ],
   "terrain_presets": {
     "commerce": {
@@ -1020,6 +1208,30 @@
         "xof_label": "100 000 FCFA",
         "eur_label": "152,45 €"
       }
+    },
+    "reseau_digiy": {
+      "label": "RÉSEAU DIGIY",
+      "safety_reserve_xof": 0,
+      "monthly_fixed_costs_xof": 0,
+      "rules": {
+        "verify_before_confirming": true,
+        "never_auto_post_real_signal": true,
+        "payment_money_path": "direct_to_professional",
+        "digiy_role": "proof_trace_trust_only",
+        "publication_rule": "Club privé visible au public : publication qualifiée, validation humaine avant activation."
+      },
+      "quick_categories": [
+        "reseau_digiy_visibility",
+        "payment_proof",
+        "payment_confirmed",
+        "client_relaunch"
+      ],
+      "plans": [
+        "RESEAU_7J",
+        "RESEAU_15J",
+        "RESEAU_30J",
+        "RESEAU_FIRST"
+      ]
     }
   },
   "analysis_rules": {
@@ -1038,7 +1250,8 @@
       "enabled": true,
       "include_bill_due": true,
       "include_debts": true,
-      "message": "Ton solde visible doit être lu avec les factures et dettes à venir."
+      "message": "Ton solde visible doit être lu avec les factures à payer, les dettes, et les créances clients à recevoir. Une créance n’est pas du cash.",
+      "include_client_receivables": true
     },
     "payment_proof": {
       "enabled": true,
@@ -1063,6 +1276,25 @@
       "include_bill_due": true,
       "include_emergency": true,
       "message": "La température PAY lit la vraie pression : maison, dettes, crédits, emprunts, imprévus et réserve."
+    },
+    "client_debt_tracking": {
+      "enabled": true,
+      "principle": "Une dette client est une créance, pas une recette.",
+      "count_as_cash": false,
+      "count_as_income_until_paid": false,
+      "include_in_cash_now": false,
+      "include_in_receivables": true,
+      "message": "Tu as de l’argent à recevoir, mais il n’est pas encore dans la caisse. Relance proprement et ne le compte pas comme recette."
+    },
+    "client_debt_settlement": {
+      "enabled": true,
+      "principle": "Un encaissement dette client est une vraie entrée seulement au moment du paiement réel.",
+      "requires_linked_client": true,
+      "requires_settlement_mode": true,
+      "deduct_from_receivable": true,
+      "partial_rule": "Si le paiement est partiel, réduire le reste à recevoir et garder la créance ouverte.",
+      "total_rule": "Si le paiement solde le reste dû, passer la créance en soldé.",
+      "message": "PAY encaisse la somme réelle, déduit le dû client, et garde le reste visible si la dette n’est pas soldée."
     }
   },
   "audio_guidance": {
@@ -1072,7 +1304,8 @@
     "cockpit": "Le chef de passe lit derrière et remonte seulement ce qui mérite ton action.",
     "brain_admin": "Choisis ton terrain. DIGIY prépare les réglages. Le professionnel ajuste avec sa vérité.",
     "currency": "Les montants du terrain restent en FCFA. DIGIY peut afficher l’équivalent en euro pour comprendre vite, sans mélanger les caisses.",
-    "temperature": "La température terrain lit ce qui entre, ce qui sort, ce qui reste, mais aussi la maison, les dettes, les crédits, les emprunts et les imprévus. PAY éclaire, l’humain décide."
+    "temperature": "La température terrain lit ce qui entre, ce qui sort, ce qui reste, mais aussi la maison, les dettes, les crédits, les emprunts et les imprévus. PAY éclaire, l’humain décide.",
+    "reseau_digiy": "RÉSEAU DIGIY est un club privé visible au public. PAY ne touche pas l’argent : PAY garde la preuve, la trace et la confiance. Les formules sont quinze mille, vingt-cinq mille, quarante-cinq mille, ou cent cinquante mille francs CFA pour la Mise en classe FIRST."
   },
   "currency_display": {
     "primary": {
@@ -1137,10 +1370,28 @@
       "eur": 228.67,
       "xof_label": "150 000 FCFA",
       "eur_label": "228,67 €"
+    },
+    "15000_xof": {
+      "xof": 15000,
+      "eur": 22.87,
+      "xof_label": "15 000 FCFA",
+      "eur_label": "22,87 €"
+    },
+    "25000_xof": {
+      "xof": 25000,
+      "eur": 38.11,
+      "xof_label": "25 000 FCFA",
+      "eur_label": "38,11 €"
+    },
+    "45000_xof": {
+      "xof": 45000,
+      "eur": 68.6,
+      "xof_label": "45 000 FCFA",
+      "eur_label": "68,60 €"
     }
   },
-  "updated_for": "pay-cockpit-voice-real-signal-grand-terrain-20260515",
-  "version": "pay-brain-grand-terrain-20260515",
+  "updated_for": "pay-brain-reseau-digiy-creances-clients-settlement-partiel-total-20260522",
+  "version": "pay-brain-grand-terrain-reseau-digiy-creances-settlement-20260522",
   "channels_catalog": [
     {
       "code": "wave",
@@ -1215,7 +1466,10 @@
       "credit_paid",
       "loan_received",
       "bill_due",
-      "emergency"
+      "emergency",
+      "reseau_digiy_payment",
+      "client_debt_open",
+      "client_debt_payment"
     ],
     "legacy_intention_aliases": {
       "debt_repayment": "debt_paid",
@@ -1225,7 +1479,15 @@
       "payment_to_verify": "verify",
       "payment_confirmed": "confirm",
       "client_relaunch": "relaunch",
-      "quick_note": "note"
+      "quick_note": "note",
+      "reseau_visibility": "reseau_digiy_payment",
+      "client_credit": "client_debt_open",
+      "credit_vendeur": "client_debt_open",
+      "client_debt_paid": "client_debt_payment",
+      "debt_client_cash_in": "client_debt_payment",
+      "client_debt_settlement": "client_debt_payment",
+      "partial_client_debt_payment": "client_debt_payment",
+      "total_client_debt_payment": "client_debt_payment"
     },
     "cockpit_note": "Le cockpit actuel lit channels et scopes comme des tableaux de codes simples. Les catalogues détaillés sont gardés dans channels_catalog et scopes_catalog."
   },
@@ -1401,6 +1663,21 @@
         "trace",
         "preuve",
         "paiement"
+      ],
+      "RESEAU_DIGIY": [
+        "réseau digiy",
+        "reseau digiy",
+        "réseau",
+        "reseau",
+        "com au clic",
+        "annonce qualifiée",
+        "annonce qualifiee",
+        "classe first",
+        "mise en classe first",
+        "first",
+        "visibilité qualifiée",
+        "visibilite qualifiee",
+        "implantation noble"
       ]
     },
     "intention_aliases": {
@@ -1554,6 +1831,50 @@
         "dépense surprise",
         "problème famille",
         "santé urgence"
+      ],
+      "reseau_digiy_payment": [
+        "réseau digiy payé",
+        "reseau digiy payé",
+        "paiement réseau",
+        "paiement reseau",
+        "annonce qualifiée payée",
+        "classe first payée",
+        "mise en classe first",
+        "règlement réseau digiy",
+        "reglement reseau digiy",
+        "j’ai payé réseau digiy",
+        "client a payé réseau digiy"
+      ],
+      "client_debt_open": [
+        "dette client",
+        "client doit",
+        "doit encore",
+        "crédit vendeur",
+        "à recevoir",
+        "reste à payer",
+        "payera plus tard",
+        "paiement prévu",
+        "ardoise client",
+        "commande à crédit"
+      ],
+      "client_debt_payment": [
+        "a payé le reste",
+        "a payé l’ardoise",
+        "a payé sa dette",
+        "a payé une partie",
+        "a remboursé sa dette client",
+        "a soldé",
+        "a soldé sa dette",
+        "déduire de sa dette",
+        "encaissement dette client",
+        "encaissement partiel",
+        "encaissement total",
+        "paiement dette client",
+        "paiement partiel dette",
+        "paiement total dette",
+        "remboursement crédit vendeur",
+        "reste soldé",
+        "sur sa dette"
       ]
     },
     "ambiguity_rules": [
@@ -1576,6 +1897,14 @@
       {
         "case": "montant_manquant",
         "rule": "Si aucun montant fiable n’est capté, rester en note brouillon et demander le montant."
+      },
+      {
+        "case": "dette_client",
+        "rule": "Si la phrase dit qu’un client doit encore payer, classer client_debt_open : direction receivable, count_as_cash false, count_as_income false. Ne jamais classer income tant qu’il n’y a pas paiement réel confirmé. Si la phrase dit que le client a payé tout ou partie de cette dette, classer client_debt_payment."
+      },
+      {
+        "case": "encaissement_dette_client",
+        "rule": "Si la phrase dit que le client a payé une partie, le reste, ou a soldé une dette, classer client_debt_payment et demander partiel ou total si absent. Créer une entrée cash réelle et déduire le montant de la créance liée."
       }
     ],
     "clarification_questions": {
@@ -1583,7 +1912,10 @@
       "channel": "C’était par Wave, cash, Orange Money, banque ou autre ?",
       "scope": "C’est pour l’activité ou la maison ?",
       "due_date": "C’est à payer quand ?",
-      "client_or_person": "C’est lié à quel client ou quelle personne ?"
+      "client_or_person": "C’est lié à quel client ou quelle personne ?",
+      "settlement_mode": "C’est un encaissement partiel ou total ?",
+      "remaining_before_xof": "Combien restait-il à recevoir avant ce paiement ?",
+      "linked_receivable_id": "Quelle dette client faut-il réduire ?"
     },
     "confidence_policy": {
       "high": "Préparer le brouillon avec montant, canal et catégorie.",
@@ -1636,7 +1968,237 @@
         "intention": "emergency",
         "amount_xof": 75000,
         "scope": "perso"
+      },
+      {
+        "phrase": "RÉSEAU DIGIY 15000 Wave sept jours",
+        "intention": "reseau_digiy_payment",
+        "amount_xof": 15000,
+        "channel": "wave",
+        "source_module": "RESEAU_DIGIY",
+        "scope": "pro",
+        "plan_code": "RESEAU_7J",
+        "status": "payment_to_verify"
+      },
+      {
+        "phrase": "Classe FIRST 150000 Wave un mois",
+        "intention": "reseau_digiy_payment",
+        "amount_xof": 150000,
+        "channel": "wave",
+        "source_module": "RESEAU_DIGIY",
+        "scope": "pro",
+        "plan_code": "RESEAU_FIRST",
+        "status": "payment_to_verify"
       }
     ]
-  }
+  },
+  "departments": [
+    {
+      "department": "Dettes clients",
+      "subtitle": "Crédit vendeur · Créance ouverte · Argent à recevoir",
+      "fields": [
+        "Nom client",
+        "Téléphone",
+        "Somme due",
+        "Date prévue",
+        "Montant déjà payé",
+        "Reste à recevoir"
+      ],
+      "rule": "Ce montant est dû par le client. Il n’entre pas dans la caisse, ne compte pas comme recette, et ne devient une entrée PAY que lorsque le client paie réellement.",
+      "count_as_cash": false,
+      "count_as_income": false,
+      "affects_cash_now": false,
+      "creates_receivable": true,
+      "cash_entry_only_when_paid": true,
+      "payment_trace_when_paid": {
+        "recommended_intention": "client_debt_payment",
+        "recommended_category": "client_debt_payment_received",
+        "rule": "Quand le client paie, créer une nouvelle trace d’encaissement réel et réduire le reste à recevoir."
+      },
+      "statuses": [
+        {
+          "code": "client_debt_open",
+          "label": "À recevoir"
+        },
+        {
+          "code": "client_debt_partial",
+          "label": "Payé en partie"
+        },
+        {
+          "code": "client_debt_late",
+          "label": "En retard"
+        },
+        {
+          "code": "client_debt_settled",
+          "label": "Soldé"
+        }
+      ],
+      "voice_examples": [
+        "POS Fatou dette client 50000 date fin du mois tel 771234567",
+        "DRIVER Moussa doit 12000 course vendredi tel 776000000",
+        "MARKET Astou crédit vendeur 35000 date 30 mai tel 778000000",
+        "Client Awa doit encore 25000 sur la commande, paiement prévu vendredi",
+        "Fatou a payé 20000 sur sa dette de 50000 Wave",
+        "Moussa a soldé sa dette de 12000 cash",
+        "Awa a payé une partie 25000 il reste 30000",
+        "Client Astou dette soldée 35000 Wave"
+      ],
+      "updated_for": "pay-dettes-clients-creance-non-cash-20260522",
+      "settlement_rule": "Chaque encaissement de dette client doit être lié à une personne et à une créance ouverte. PAY déduit le montant encaissé du reste à recevoir. Encaissement partiel : statut payé en partie. Encaissement total : statut soldé.",
+      "settlement_fields": [
+        "Client concerné",
+        "Dette liée",
+        "Montant initial",
+        "Montant encaissé",
+        "Mode de paiement",
+        "Type d’encaissement : partiel ou total",
+        "Reste à recevoir",
+        "Statut après encaissement"
+      ],
+      "settlement_modes": [
+        {
+          "code": "partial",
+          "label": "Encaissement partiel",
+          "rule": "Le montant encaissé entre en caisse. Le reste à recevoir reste ouvert."
+        },
+        {
+          "code": "total",
+          "label": "Encaissement total",
+          "rule": "Le montant encaissé entre en caisse. La dette passe en soldé."
+        }
+      ],
+      "deduction_formula": {
+        "remaining_after_payment": "max(0, remaining_before_payment - amount_paid)",
+        "if_remaining_zero": "status = client_debt_settled",
+        "if_remaining_positive": "status = client_debt_partial"
+      }
+    }
+  ],
+  "reseau_digiy": {
+    "label": "RÉSEAU DIGIY",
+    "public_positioning": "Club privé visible au public",
+    "doctrine": "PAY encaisse la preuve. Supabase garde la vérité. RÉSEAU DIGIY affiche seulement ce qui est validé.",
+    "money_path": "direct_to_professional",
+    "publication_rule": "Le public peut voir, cliquer, partager et contacter. La publication est réservée aux pros DIGIY validés ou à la Mise en classe FIRST.",
+    "plans": [
+      {
+        "code": "RESEAU_7J",
+        "label": "Annonce qualifiée · 7 jours",
+        "amount_xof": 15000,
+        "duration_days": 7,
+        "audience": "pro_digiy_valide",
+        "status_after_payment": "payment_to_verify",
+        "activation_rule": "Activer après validation humaine de la preuve."
+      },
+      {
+        "code": "RESEAU_15J",
+        "label": "Annonce qualifiée · 15 jours",
+        "amount_xof": 25000,
+        "duration_days": 15,
+        "audience": "pro_digiy_valide",
+        "status_after_payment": "payment_to_verify",
+        "activation_rule": "Activer après validation humaine de la preuve."
+      },
+      {
+        "code": "RESEAU_30J",
+        "label": "Annonce qualifiée · 30 jours",
+        "amount_xof": 45000,
+        "duration_days": 30,
+        "audience": "pro_digiy_valide",
+        "status_after_payment": "payment_to_verify",
+        "activation_rule": "Activer après validation humaine de la preuve."
+      },
+      {
+        "code": "RESEAU_FIRST",
+        "label": "Mise en classe FIRST · 1 mois",
+        "amount_xof": 150000,
+        "duration_days": 30,
+        "audience": "non_abonne_ou_non_valide",
+        "includes": [
+          "qualification DIGIY",
+          "fiche ou vitrine propre",
+          "QR",
+          "lien partageable",
+          "messages prêts à circuler",
+          "mise en lumière 1 mois"
+        ],
+        "status_after_payment": "payment_to_verify",
+        "activation_rule": "Activer après validation humaine et cadrage de la fiche."
+      }
+    ],
+    "statuses": [
+      "draft",
+      "payment_to_verify",
+      "payment_proof",
+      "payment_confirmed",
+      "validated",
+      "active",
+      "expired",
+      "rejected"
+    ],
+    "fields_to_trace": [
+      "pro_phone",
+      "pro_slug",
+      "offer_id",
+      "fiche_url",
+      "plan_code",
+      "amount_xof",
+      "channel",
+      "payment_ref",
+      "proof_note",
+      "starts_at",
+      "expires_at"
+    ],
+    "updated_for": "reseau-digiy-club-prive-first-20260522"
+  },
+  "categories_catalog": [
+    {
+      "code": "client_debt_open",
+      "label": "Dette client ouverte",
+      "direction": "receivable",
+      "cash_effect": "none",
+      "count_as_cash": false,
+      "count_as_income": false,
+      "description": "Somme due par un client, non encaissée."
+    },
+    {
+      "code": "client_debt_payment_received",
+      "label": "Paiement dette client reçu",
+      "direction": "in",
+      "cash_effect": "increase",
+      "count_as_cash": true,
+      "count_as_income": true,
+      "description": "Argent réellement reçu pour solder ou réduire une dette client."
+    },
+    {
+      "code": "client_debt_relaunch",
+      "label": "Relance dette client",
+      "direction": "neutral",
+      "cash_effect": "none",
+      "count_as_cash": false,
+      "count_as_income": false,
+      "description": "Relance propre sans mouvement de caisse."
+    },
+    {
+      "code": "client_debt_payment_partial",
+      "label": "Encaissement partiel dette client",
+      "direction": "in",
+      "cash_effect": "increase",
+      "count_as_cash": true,
+      "count_as_income": true,
+      "reduces_receivable": true,
+      "settlement_mode": "partial",
+      "description": "Paiement réel reçu sur une partie d’une dette client."
+    },
+    {
+      "code": "client_debt_payment_total",
+      "label": "Encaissement total dette client",
+      "direction": "in",
+      "cash_effect": "increase",
+      "count_as_cash": true,
+      "count_as_income": true,
+      "reduces_receivable": true,
+      "settlement_mode": "total",
+      "description": "Paiement réel reçu qui solde entièrement une dette client."
+    }
+  ]
 }
