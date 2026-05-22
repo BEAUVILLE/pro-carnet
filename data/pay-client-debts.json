@@ -1,15 +1,19 @@
 {
   "department": "Dettes clients",
-  "subtitle": "Crédit vendeur · Argent à recevoir",
+  "subtitle": "Crédit vendeur · Argent à recevoir · Créance ouverte",
   "fields": [
     "Nom",
     "Tel",
     "Somme due",
-    "Date"
+    "Date prévue",
+    "Montant encaissé",
+    "Reste à recevoir"
   ],
-  "rule": "Ce montant est à recevoir. Il n’entre dans la caisse que quand le client paie.",
+  "rule": "Ce montant est à recevoir. Il n’entre pas dans la caisse, ne compte pas comme recette, et ne devient une entrée PAY que lorsque le client paie réellement.",
   "count_as_cash": false,
+  "count_as_income": false,
   "cash_entry_only_when_paid": true,
+  "creates_receivable": true,
   "statuses": [
     {
       "code": "open",
@@ -28,19 +32,34 @@
       "label": "Soldé"
     }
   ],
+  "settlement_modes": [
+    {
+      "code": "partial",
+      "label": "Encaissement partiel",
+      "rule": "Le montant payé entre en caisse. PAY le déduit de la dette. Le reste demeure à recevoir."
+    },
+    {
+      "code": "total",
+      "label": "Encaissement total",
+      "rule": "Le montant payé entre en caisse. PAY solde la dette du client."
+    }
+  ],
+  "deduction_rule": {
+    "formula": "reste_a_recevoir = somme_due - total_deja_encaisse",
+    "if_remaining_positive": "status = partial",
+    "if_remaining_zero": "status = settled"
+  },
   "voice_examples": [
     "POS Fatou dette client 50000 date fin du mois tel 771234567",
     "DRIVER Moussa doit 12000 course vendredi tel 776000000",
     "MARKET Astou crédit vendeur 35000 date 30 mai tel 778000000",
-    "LOC client doit 80000 location date 30 mai tel 771112233"
+    "LOC client doit 80000 location date 30 mai tel 771112233",
+    "Fatou a payé 20000 sur sa dette de 50000 Wave",
+    "Moussa a soldé sa dette de 12000 cash"
   ],
-  "doctrine": "Dettes clients = argent attendu. Crédit vendeur = forme commerciale. PAY garde la mémoire sans gonfler la caisse réelle.",
-  "updated_for": "pay-dettes-clients-credit-vendeur-20260515"
+  "doctrine": "Dettes clients = argent attendu. Crédit vendeur = forme commerciale. PAY garde la mémoire sans gonfler la caisse réelle. La recette existe seulement quand l’argent est réellement encaissé.",
+  "updated_for": "pay-dettes-clients-credit-vendeur-partiel-total-20260522"
 }
-
-
-
-
 
 
 
