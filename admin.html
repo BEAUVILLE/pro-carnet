@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>MON ARGENT — Ajouter · Actions rapides PAY</title>
-  <meta name="digiy-build" content="pay-admin-20260517-langage-commun-v1" />
+  <meta name="digiy-build" content="pay-admin-reseau-digiy-club-prive-20260522" />
   <meta name="theme-color" content="#04110d" />
   <meta
     name="description"
@@ -1623,6 +1623,10 @@
               <button class="voice-example" type="button" data-voice-example="J’ai emprunté 50000 Wave">📥 Emprunt reçu</button>
               <button class="voice-example" type="button" data-voice-example="Course chauffeur 28000 cash">🚗 Course chauffeur</button>
               <button class="voice-example" type="button" data-voice-example="POS Fatou dette client 50000 tel 771234567 date fin du mois">📒 Dette Fatou</button>
+              <button class="voice-example" type="button" data-voice-example="RÉSEAU DIGIY 7 jours 15000 Wave annonce qualifiée">📣 RÉSEAU 7j</button>
+              <button class="voice-example" type="button" data-voice-example="RÉSEAU DIGIY quinzaine 25000 Wave annonce qualifiée">📣 RÉSEAU 15j</button>
+              <button class="voice-example" type="button" data-voice-example="RÉSEAU DIGIY mois 45000 Wave annonce qualifiée">📣 RÉSEAU 30j</button>
+              <button class="voice-example" type="button" data-voice-example="Mise en classe FIRST RÉSEAU DIGIY 150000 Wave">🌟 FIRST 150k</button>
             </div>
 
           <section class="quick-presets" id="payClientDebts" aria-label="Dettes clients PAY">
@@ -1697,6 +1701,32 @@
                   Choisis le geste. DIGIY remplit les mots. Toi, tu ajustes le montant et tu valides.
                 </div>
               </div>
+            </div>
+
+            <div style="margin:14px 0 10px;font-weight:1000;color:#6b4e09;text-transform:uppercase;letter-spacing:.06em;">
+              📣 RÉSEAU DIGIY · Club privé
+            </div>
+
+            <div class="quick-presets-grid">
+              <button class="quick-preset" type="button" data-pay-preset="reseau_7j">
+                <strong>📣 RÉSEAU 7 jours</strong>
+                <span>Annonce qualifiée pro validé · 15 000 FCFA.</span>
+              </button>
+
+              <button class="quick-preset" type="button" data-pay-preset="reseau_15j">
+                <strong>📣 RÉSEAU 15 jours</strong>
+                <span>Visibilité qualifiée quinzaine · 25 000 FCFA.</span>
+              </button>
+
+              <button class="quick-preset" type="button" data-pay-preset="reseau_30j">
+                <strong>📣 RÉSEAU 30 jours</strong>
+                <span>Présence mensuelle qualifiée · 45 000 FCFA.</span>
+              </button>
+
+              <button class="quick-preset" type="button" data-pay-preset="reseau_first">
+                <strong>🌟 Classe FIRST</strong>
+                <span>Mise en classe FIRST · 150 000 FCFA · 1 mois.</span>
+              </button>
             </div>
 
             <div style="margin:14px 0 10px;font-weight:1000;color:#6b4e09;text-transform:uppercase;letter-spacing:.06em;">
@@ -1875,6 +1905,7 @@
                 <label class="label" for="sourceModule">Activité source</label>
                 <select id="sourceModule">
                   <option value="PAY">PAY</option>
+                  <option value="RESEAU_DIGIY">RÉSEAU DIGIY</option>
                   <option value="DRIVER">DRIVER</option>
                   <option value="COMMERCE">COMMERCE</option>
                   <option value="POS">POS</option>
@@ -2121,7 +2152,7 @@
     function normalizePrefillSourceModule(value){
       const v = String(value || "PAY").toUpperCase();
       if(v === "CAISSE") return "POS";
-      if(["PAY","DRIVER","COMMERCE","POS","LOC","MARKET","BUILD","RESA","EXPLORE","JOBS","QR_PRO","OTHER"].includes(v)) return v;
+      if(["PAY","RESEAU_DIGIY","DRIVER","COMMERCE","POS","LOC","MARKET","BUILD","RESA","EXPLORE","JOBS","QR_PRO","OTHER"].includes(v)) return v;
       return "PAY";
     }
 
@@ -2466,7 +2497,17 @@
             intent: params.get("intent") || null,
             complement: params.get("complement") || null,
             source_slug: params.get("source_slug") || null,
-            draft_source_module: params.get("source_module") || null
+            draft_source_module: params.get("source_module") || null,
+            reseau_digiy: sourceModule === "RESEAU_DIGIY" ? {
+              category,
+              qualification: "club_prive_visible_public",
+              pricing: {
+                reseau_7j: 15000,
+                reseau_15j: 25000,
+                reseau_30j: 45000,
+                reseau_first: 150000
+              }
+            } : null
           }
         };
 
@@ -2526,6 +2567,58 @@
 
 
     const PAY_QUICK_PRESETS = {
+      reseau_7j: {
+        direction: "in",
+        scope: "pro",
+        kind: "sale",
+        channel: "wave",
+        category: "reseau_digiy_7j",
+        sourceModule: "RESEAU_DIGIY",
+        amount: 15000,
+        label: "RÉSEAU DIGIY — annonce qualifiée 7 jours",
+        note: "Règlement RÉSEAU DIGIY : pro validé, annonce qualifiée 7 jours, preuve à vérifier avant activation.",
+        preview: "RÉSEAU DIGIY 7 jours préparé : 15 000 FCFA, Wave par défaut, publication qualifiée."
+      },
+
+      reseau_15j: {
+        direction: "in",
+        scope: "pro",
+        kind: "sale",
+        channel: "wave",
+        category: "reseau_digiy_15j",
+        sourceModule: "RESEAU_DIGIY",
+        amount: 25000,
+        label: "RÉSEAU DIGIY — annonce qualifiée 15 jours",
+        note: "Règlement RÉSEAU DIGIY : pro validé, visibilité qualifiée 15 jours, preuve à vérifier avant activation.",
+        preview: "RÉSEAU DIGIY 15 jours préparé : 25 000 FCFA, Wave par défaut, publication qualifiée."
+      },
+
+      reseau_30j: {
+        direction: "in",
+        scope: "pro",
+        kind: "sale",
+        channel: "wave",
+        category: "reseau_digiy_30j",
+        sourceModule: "RESEAU_DIGIY",
+        amount: 45000,
+        label: "RÉSEAU DIGIY — annonce qualifiée 30 jours",
+        note: "Règlement RÉSEAU DIGIY : pro validé, visibilité qualifiée 30 jours, preuve à vérifier avant activation.",
+        preview: "RÉSEAU DIGIY 30 jours préparé : 45 000 FCFA, Wave par défaut, publication qualifiée."
+      },
+
+      reseau_first: {
+        direction: "in",
+        scope: "pro",
+        kind: "sale",
+        channel: "wave",
+        category: "reseau_digiy_first",
+        sourceModule: "RESEAU_DIGIY",
+        amount: 150000,
+        label: "RÉSEAU DIGIY — Mise en classe FIRST",
+        note: "Mise en classe FIRST RÉSEAU DIGIY : 150 000 FCFA, 1 mois, fiche propre, QR, lien partageable, messages prêts et mise en lumière.",
+        preview: "Classe FIRST préparée : 150 000 FCFA, 1 mois, entrée noble pour pro non encore validé."
+      },
+
       income: {
         direction: "in",
         scope: "pro",
@@ -2719,6 +2812,12 @@
       setFieldValue("sourceModule", preset.sourceModule);
       setFieldValue("labelText", preset.label);
       setFieldValue("noteText", preset.note);
+      if(preset.amount){
+        setFieldValue("amount", String(preset.amount));
+      }
+      if(preset.sourceId){
+        setFieldValue("sourceId", preset.sourceId);
+      }
       setFieldValue("movementDate", todayStr());
 
       syncKindByScope();
@@ -2834,6 +2933,7 @@
       const wordHit = w => padded.includes(" " + w + " ");
 
       const checks = [
+        ["RESEAU_DIGIY", ["reseau", "réseau", "reseau digiy", "réseau digiy", "com au clic", "annonce qualifiee", "annonce qualifiée", "classe first", "first"]],
         ["POS",     ["pos", "caisse", "ticket", "addition", "stock", "boutique caisse"]],
         ["DRIVER",  ["driver", "chauffeur", "course chauffeur", "taxi", "transport", "vehicule"]],
         ["MARKET",  ["market", "vente market", "annonce", "boutique"]],
@@ -2853,6 +2953,12 @@
     }
 
     function detectVoicePreset(t){
+      if(t.includes("reseau") || t.includes("réseau") || t.includes("com au clic") || t.includes("annonce qualifiee") || t.includes("annonce qualifiée") || t.includes("classe first") || t.includes("first")){
+        if(t.includes("first") || t.includes("150000") || t.includes("150 000") || t.includes("cent cinquante")) return "reseau_first";
+        if(t.includes("30 jours") || t.includes("trente jours") || t.includes("mois") || t.includes("45000") || t.includes("45 000")) return "reseau_30j";
+        if(t.includes("15 jours") || t.includes("quinzaine") || t.includes("25000") || t.includes("25 000")) return "reseau_15j";
+        return "reseau_7j";
+      }
       if(t.includes("on m a rembourse") || t.includes("m a rembourse") || t.includes("remboursement recu")) return "debt_received";
       if(t.includes("j ai rembourse") || t.includes("dette rembourse") || t.includes("tontine")) return "debt_paid";
       if(t.includes("j ai emprunte") || t.includes("emprunt recu") || t.includes("pret recu") || t.includes("avance recu")) return "loan_received";
@@ -3540,26 +3646,38 @@
       }
 
       const realReceived = Math.min(received, remaining);
-      item.paid_xof = paid + realReceived;
+      const remainingAfter = Math.max(0, remaining - realReceived);
+      let mode = remainingAfter <= 0 ? "total" : "partial";
+      if(remainingAfter > 0){
+        const askMode = window.confirm("Encaissement total ?\nOK = total / Annuler = partiel");
+        mode = askMode ? "total" : "partial";
+      }
+
+      item.paid_xof = mode === "total" ? total : paid + realReceived;
       item.status = item.paid_xof >= total ? "settled" : "partial";
       writeClientDebts(items);
       renderClientDebts();
 
+      const after = Math.max(0, total - item.paid_xof);
+      const modeLabel = item.status === "settled" ? "encaissement total" : "encaissement partiel";
+
       setFieldValue("direction", "in");
       setFieldValue("scope", "pro");
-      setFieldValue("amount", String(realReceived));
+      setFieldValue("amount", String(mode === "total" ? Math.max(realReceived, remaining) : realReceived));
       setFieldValue("kind", "sale");
       setFieldValue("channel", "wave");
-      setFieldValue("category", "client_debt_payment");
+      setFieldValue("category", item.status === "settled" ? "client_debt_payment_total" : "client_debt_payment_partial");
       setFieldValue("sourceModule", "PAY");
-      setFieldValue("labelText", "Paiement dette client — " + String(item.name || "Client"));
+      setFieldValue("labelText", "Encaissement dette client — " + String(item.name || "Client"));
       setFieldValue(
         "noteText",
-        "Paiement reçu sur dette client. Client : " +
+        "Encaissement dette client (" + modeLabel + "). Client : " +
         String(item.name || "") +
         (item.phone ? " · Tel : " + item.phone : "") +
         " · Somme due initiale : " + money(total) +
-        " · Reste après paiement : " + money(Math.max(0, total - item.paid_xof))
+        " · Déjà payé avant : " + money(paid) +
+        " · Montant encaissé maintenant : " + money(mode === "total" ? Math.max(realReceived, remaining) : realReceived) +
+        " · Reste après paiement : " + money(after)
       );
       setFieldValue("movementDate", todayStr());
 
@@ -3691,6 +3809,61 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
