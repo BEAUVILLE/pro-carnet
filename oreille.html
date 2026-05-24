@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Oreille PAY — Mon argent</title>
+  <meta name="theme-color" content="#f4ead2"/>
+  <meta name="robots" content="noindex,nofollow"/>
+
+  <script>
+    window.DIGIY_MODULE = "PAY";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    window.DIGIY_TRANSVERSE_MODULE = true;
+  </script>
+
+  <script src="./session.js?v=pay-oreille-page-20260524"></script>
+
+  <style>
+    :root{
+      --bg:#f4ead2;
+      --bg2:#ead9b7;
+      --text:#1f2a1f;
+      --muted:rgba(31,42,31,.78);
+      --line:rgba(83,58,26,.24);
+      --gold:#facc15;
+      --green:#16a34a;
+      --green2:#22c55e;
+      --shadow:0 14px 34px rgba(77,52,22,.16);
+      --r:22px;
+      --hdrH:52px;
+      --barH:78px;
+      --max:980px;
+      --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
+
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      min-height:100dvh;
+      color:var(--text);
+      font-family:var(--font);
+      font-size:19px;
+      font-weight:900;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
+        radial-gradient(circle at 100% 100%,rgba(22,101,52,.10),transparent 30%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input,textarea{font:inherit}
+
+    .topHeader{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:var(--hdrH);
+      z-index:100;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:0 14px;
+      background:rgba(246,237,216,.97);
+      border-bottom:1px solid rgba(83,58,26,.24);
+      backdrop-filter:blur(18px);
+    }
+
+    .hdrBack{
+      min-height:36px;
+      display:inline-flex;
+      align-items:center;
+      color:rgba(31,42,31,.70);
+      font-size:14px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .hdrTitle{
+      font-size:12px;
+      font-weight:1000;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#6b4e09;
+      white-space:nowrap;
+    }
+
+    .hdrPill{
+      min-height:32px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.55);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:1000;
+      white-space:nowrap;
+      max-width:38vw;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .wrap{
+      width:min(var(--max),100%);
+      margin:0 auto;
+      display:grid;
+      gap:16px;
+    }
+
+    .card,.guide{
+      border:2px solid var(--line);
+      border-radius:var(--r);
+      background:rgba(255,255,255,.68);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+
+    .eyebrow{
+      color:#6b4e09;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:1000;
+      margin-bottom:8px;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(38px,8.5vw,64px);
+      font-weight:1000;
+      line-height:.92;
+      letter-spacing:-.06em;
+      color:#241a0d;
+    }
+
+    .lead{
+      color:var(--muted);
+      font-size:18px;
+      font-weight:950;
+      line-height:1.38;
+      max-width:780px;
+    }
+
+    .guide{
+      border-color:rgba(250,204,21,.42);
+      background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,248,220,.72));
+      display:grid;
+      gap:10px;
+    }
+
+    .guide h2{
+      margin:0;
+      font-size:clamp(24px,6vw,38px);
+      line-height:.98;
+      letter-spacing:-.04em;
+      color:#241a0d;
+    }
+
+    .guide p{
+      margin:0;
+      color:rgba(31,42,31,.78);
+      font-size:16px;
+      line-height:1.42;
+      font-weight:950;
+    }
+
+    .actions{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+
+    .btn{
+      min-height:58px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.70);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px 16px;
+      font-weight:1000;
+      font-size:17px;
+      cursor:pointer;
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg,var(--green2),var(--gold));
+      color:#102014;
+      border:0;
+    }
+
+    .btn.danger{
+      background:rgba(239,68,68,.12);
+      border-color:rgba(159,18,57,.30);
+      color:#9f1239;
+    }
+
+    .bottomBar{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      height:var(--barH);
+      z-index:100;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(246,237,216,.97);
+      border-top:1px solid rgba(83,58,26,.22);
+      backdrop-filter:blur(18px);
+    }
+
+    .bottomInner{
+      width:min(100%,760px);
+      height:100%;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomInner a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(31,42,31,.70);
+      font-size:11px;
+      font-weight:1000;
+      text-align:center;
+      border:1px solid rgba(83,58,26,.12);
+      background:rgba(255,255,255,.50);
+    }
+
+    .bottomInner a.active{
+      color:#102014;
+      background:linear-gradient(135deg,var(--green2),var(--gold));
+      border-color:rgba(22,101,52,.24);
+    }
+
+    @media(max-width:520px){
+      body{
+        font-size:18px;
+        padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px);
+      }
+
+      .actions .btn{
+        width:100%;
+      }
+
+      h1{
+        font-size:40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topHeader">
+    <a class="hdrBack" href="./hub.html">← HUB</a>
+    <div class="hdrTitle">OREILLE PAY</div>
+    <div class="hdrPill" id="sessionPill">session…</div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="eyebrow">💰 MON ARGENT · OREILLE</div>
+      <h1>Dire, formuler, ranger.</h1>
+      <div class="lead">
+        Ici, le pro parle ou clique. DIGIY prépare une trace PAY complète :
+        montant, mode, provenance libre, client/source, téléphone, détail et preuve.
+      </div>
+    </section>
+
+    <section class="guide" aria-label="Lecteur guide Oreille PAY">
+      <h2>🎧 Lecteur-guide PAY</h2>
+      <p>
+        Écoute le guide avant de parler : PAY prépare, mais le pro valide toujours.
+        Une dette ne devient pas du cash tant qu’un vrai paiement n’est pas confirmé.
+      </p>
+
+      <div class="actions">
+        <button class="btn primary" type="button" id="payGuidePlay">🎧 Écouter le guide</button>
+        <button class="btn danger" type="button" id="payGuideStop">⏹ Arrêter</button>
+      </div>
+    </section>
+
+    <section id="oreille-pay-section" class="card">
+      <div id="digiy-oreille-pay"></div>
+    </section>
+  </main>
+
+  <nav class="bottomBar">
+    <div class="bottomInner">
+      <a href="./hub.html"><span>🧭</span><span>HUB</span></a>
+      <a href="./admin.html"><span>➕</span><span>Ajouter</span></a>
+      <a href="./cockpit.html"><span>🌡️</span><span>Lecture</span></a>
+      <a class="active" href="./oreille.html"><span>🎙️</span><span>Oreille</span></a>
+      <a href="./session.html"><span>🛡️</span><span>Session</span></a>
+    </div>
+  </nav>
+
+  <script>
+    (() => {
+      "use strict";
+
+      try {
+        if (window.DIGIY_SESSION?.cleanVisibleUrl) window.DIGIY_SESSION.cleanVisibleUrl();
+      } catch (_) {}
+
+      const pill = document.getElementById("sessionPill");
+      let session = null;
+
+      try {
+        session = window.DIGIY_SESSION?.get?.();
+      } catch (_) {}
+
+      if (pill) {
+        pill.textContent = session ? "session ouverte" : "à vérifier";
+      }
+
+      const PAY_GUIDE_TEXT =
+        "Bienvenue dans Oreille PAY DIGIYLYFE. " +
+        "Ici, tu peux parler ou cliquer pour préparer une note d’argent complète. " +
+        "PAY demande le montant, le mode de paiement, la provenance libre, le client ou la source, le téléphone, le détail et la preuve. " +
+        "La provenance reste libre, car chaque professionnel a ses propres activités. " +
+        "PAY peut garder une fiche client locale avec le nom, le téléphone et la dernière trace utile. " +
+        "Mais PAY ne confirme jamais seul un paiement. " +
+        "Une dette client ne devient pas du cash tant qu’un vrai paiement n’est pas reçu et vérifié. " +
+        "L’Oreille prépare. DIGIY formule. Le pro relit. Le pro valide. PAY range. " +
+        "Le terrain garde la main.";
+
+      function loadVoices(callback){
+        if(!("speechSynthesis" in window)){ callback([]); return; }
+
+        let voices = window.speechSynthesis.getVoices();
+
+        if(voices && voices.length){
+          callback(voices);
+          return;
+        }
+
+        let tries = 0;
+        const timer = window.setInterval(() => {
+          tries += 1;
+          voices = window.speechSynthesis.getVoices();
+
+          if((voices && voices.length) || tries > 12){
+            window.clearInterval(timer);
+            callback(voices || []);
+          }
+        }, 120);
+      }
+
+      function speakGuide(){
+        if(!("speechSynthesis" in window)){
+          alert("Lecture vocale non disponible sur ce navigateur.");
+          return;
+        }
+
+        window.speechSynthesis.cancel();
+
+        loadVoices((voices) => {
+          const u = new SpeechSynthesisUtterance(PAY_GUIDE_TEXT);
+          u.lang = "fr-FR";
+          u.rate = 0.86;
+          u.pitch = 1.02;
+          u.volume = 1;
+
+          const preferred =
+            voices.find(v => /fr/i.test(v.lang || "") && /Google|Thomas|Daniel|Amelie|Audrey|Pauline/i.test(v.name || "")) ||
+            voices.find(v => /fr/i.test(v.lang || "")) ||
+            voices[0];
+
+          if(preferred) u.voice = preferred;
+
+          window.speechSynthesis.speak(u);
+        });
+      }
+
+      function stopGuide(){
+        if("speechSynthesis" in window) window.speechSynthesis.cancel();
+      }
+
+      const play = document.getElementById("payGuidePlay");
+      const stop = document.getElementById("payGuideStop");
+
+      if(play) play.addEventListener("click", speakGuide);
+      if(stop) stop.addEventListener("click", stopGuide);
+
+      if("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = function(){};
+    })();
+  </script>
+
+  <script src="./assets/js/oreille-metier-core.js?v=20260524" defer></script>
+  <script src="./assets/js/oreille-pay.js?v=20260524-grid3" defer></script>
+</body>
+</html>
