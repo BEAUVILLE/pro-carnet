@@ -1,7 +1,7 @@
 /* ==========================================================================
    DIGIYLYFE — OREILLE PAY V2
    Fichier : assets/js/oreille-pay.js
-   Version : 2026-05-24 · V2 pavés + client/source + téléphone
+   Version : 2026-05-24 · V2 pavés + client/source + téléphone + lieu + mode
    Dépendance : assets/js/oreille-metier-core.js
 
    Doctrine :
@@ -17,38 +17,39 @@
 (function () {
   "use strict";
 
-  var VERSION = "oreille-pay-v2-20260524-paves-client-tel";
+  var VERSION = "oreille-pay-v2-20260524-paves-client-tel-lieu-mode";
 
   var CLIENTS_KEY = "DIGIY_PAY_CLIENTS_LOCAL_V1";
 
   var PAY_GUIDE =
     "Bienvenue dans Oreille PAY DIGIYLYFE. " +
     "Ici, le professionnel peut parler ou cliquer pour préparer une note d’argent plus complète. " +
-    "Un montant seul ne suffit pas. PAY aide à préciser le montant, le mode de paiement, la provenance, le client ou la source, le téléphone, le détail et la preuve. " +
+    "Un montant seul ne suffit pas. PAY aide à préciser le montant, le mode de paiement cash, Wave ou autre, le lieu, la provenance, le client ou la source, le téléphone, le détail et la preuve. " +
     "La provenance reste libre, car chaque professionnel a ses propres activités. " +
-    "PAY peut aussi garder une fiche client locale avec le nom, le téléphone et la dernière trace utile. " +
+    "Le lieu permet de savoir où l’action s’est passée : boutique, maison, marché, chantier, trajet, livraison ou autre endroit. " +
+    "PAY peut aussi garder une fiche client locale avec le nom, le téléphone, le lieu et la dernière trace utile. " +
     "Mais PAY ne confirme jamais seul un paiement. " +
     "Une dette client ne devient pas du cash tant qu’un vrai paiement n’est pas reçu et vérifié. " +
     "L’Oreille prépare. DIGIY formule. Le pro relit. Le pro valide. PAY range. " +
     "Le terrain garde la main.";
 
   var PAY_TEMPLATES = [
-    "💰 Vente reçue — montant · mode · client/source · téléphone · provenance libre · détail · preuve.",
-    "💸 Dépense — montant · catégorie · fournisseur/source · téléphone si utile · raison · preuve.",
-    "📒 Dette client — client · téléphone · montant dû · date prévue · détail · statut.",
-    "🌊 Encaissement Wave — montant · client/source · téléphone · provenance · reçu/preuve.",
-    "💵 Paiement cash — montant · client/source · téléphone · provenance · détail.",
-    "🤝 Avance client — montant reçu · client · téléphone · solde restant · date prévue.",
-    "✅ Règlement dette — client · téléphone · montant payé · partiel ou total · reste à recevoir.",
-    "📦 Achat fournisseur — fournisseur · téléphone · montant · catégorie · mode · preuve.",
-    "🚕 Frais transport — montant · raison · activité/provenance libre · preuve.",
-    "⚠️ Doute / brouillon — garder en note, demander les détails, ne pas valider la caisse."
+    "💰 Vente reçue — montant · mode cash/Wave/autre · lieu · client/source · téléphone · provenance libre · détail · preuve.",
+    "💸 Dépense — montant · mode cash/Wave/autre · lieu · catégorie · fournisseur/source · téléphone si utile · raison · preuve.",
+    "📒 Dette client — client · téléphone · lieu · montant dû · date prévue · détail · statut.",
+    "🌊 Encaissement Wave — montant · lieu · client/source · téléphone · provenance libre · reçu/preuve.",
+    "💵 Paiement cash — montant · lieu · client/source · téléphone · provenance libre · détail.",
+    "🤝 Avance client — montant reçu · mode cash/Wave/autre · lieu · client · téléphone · solde restant · date prévue.",
+    "✅ Règlement dette — client · téléphone · lieu · montant payé · mode cash/Wave/autre · partiel ou total · reste à recevoir.",
+    "📦 Achat fournisseur — fournisseur · téléphone · lieu · montant · mode cash/Wave/autre · catégorie · preuve.",
+    "🚕 Frais transport — montant · mode cash/Wave/autre · lieu · raison · provenance libre · preuve.",
+    "⚠️ Doute / brouillon — garder en note, demander mode, lieu, client, téléphone, détail et preuve."
   ];
 
   var PAY_CONFIG = {
     module: "PAY",
     title: "Oreille PAY",
-    subtitle: "Montant · provenance libre · client/source · téléphone · détail · preuve.",
+    subtitle: "Montant · mode cash/Wave/autre · lieu · client/source · téléphone · détail · preuve.",
     storagePrefix: "DIGIY_OREILLE_METIER",
     guideText: PAY_GUIDE,
     templates: PAY_TEMPLATES
@@ -124,7 +125,7 @@
       var re = new RegExp(
         "(?:^|[\\s;,.|—-])" +
           label +
-          "\\s*[:\\-]?\\s*([^;|\\n]+?)(?=\\s+(?:client|source|tel|tél|telephone|téléphone|provenance|activité|activite|détail|detail|preuve|montant|mode)\\s*[:\\-]|$)",
+          "\\s*[:\\-]?\\s*([^;|\\n]+?)(?=\\s+(?:client|source|tel|tél|telephone|téléphone|provenance|activité|activite|lieu|endroit|adresse|zone|place|localisation|détail|detail|preuve|montant|mode|catégorie|categorie|date|statut)\\s*[:\\-]|$)",
         "i"
       );
 
@@ -171,6 +172,17 @@
       "module",
       "source argent",
       "source d'argent"
+    ]);
+  }
+
+  function extractLocation(text) {
+    return extractField(text, [
+      "lieu",
+      "endroit",
+      "adresse",
+      "zone",
+      "place",
+      "localisation"
     ]);
   }
 
@@ -228,15 +240,17 @@
     if (/cash|espèce|espece|liquide/.test(t)) return "cash";
     if (/orange money|om\b/.test(t)) return "orange_money";
     if (/virement|banque/.test(t)) return "banque";
+    if (/autre|carte|chèque|cheque|mobile money/.test(t)) return "autre";
 
-    return "inconnu";
+    return "a_choisir";
   }
 
   function missingFields(draft) {
     var missing = [];
 
     if (!draft.amount) missing.push("montant");
-    if (!draft.channel || draft.channel === "inconnu") missing.push("mode");
+    if (!draft.channel || draft.channel === "a_choisir") missing.push("mode cash/Wave/autre");
+    if (!draft.location) missing.push("lieu/endroit");
     if (!draft.provenance) missing.push("provenance libre");
     if (!draft.client_name) missing.push("client/source");
     if (!draft.client_phone) missing.push("téléphone");
@@ -260,6 +274,7 @@
       amount: amountData.amount,
       currency: amountData.currency,
       provenance: extractProvenance(clean),
+      location: extractLocation(clean),
       client_name: extractClientName(clean),
       client_phone: extractPhone(clean),
       detail: extractDetail(clean),
@@ -284,7 +299,7 @@
 
   function formatPayDraftMessage(draft) {
     if (!draft || !draft.raw_text) {
-      return "PAY · Note vide : préciser montant, mode, provenance, client/source, téléphone, détail et preuve avant validation.";
+      return "PAY · Note vide : préciser montant, mode cash/Wave/autre, lieu, provenance, client/source, téléphone, détail et preuve avant validation.";
     }
 
     var amountPart = draft.amount
@@ -292,11 +307,12 @@
       : "Montant : à préciser";
 
     var channelPart =
-      draft.channel && draft.channel !== "inconnu"
+      draft.channel && draft.channel !== "a_choisir"
         ? "Mode : " + draft.channel
-        : "Mode : à préciser";
+        : "Mode : à choisir cash / Wave / autre";
 
     var provenancePart = "Provenance : " + (draft.provenance || "à préciser librement");
+    var locationPart = "Lieu : " + (draft.location || "à indiquer");
     var clientPart = "Client/source : " + (draft.client_name || "à préciser");
     var phonePart = "Téléphone : " + (draft.client_phone || "à préciser");
     var detailPart = "Détail : " + (draft.detail || "à préciser");
@@ -322,6 +338,8 @@
       channelPart +
       " · " +
       provenancePart +
+      " · " +
+      locationPart +
       " · " +
       clientPart +
       " · " +
@@ -385,6 +403,7 @@
       found.name = found.name || name;
       found.phone = found.phone || phone;
       found.last_provenance = draft.provenance || found.last_provenance || "";
+      found.last_location = draft.location || found.last_location || "";
       found.last_detail = draft.detail || found.last_detail || "";
       found.last_category = draft.category || found.last_category || "note";
       found.last_channel = draft.channel || found.last_channel || "";
@@ -397,6 +416,7 @@
         phone: phone,
         type: draft.category === "sortie" ? "fournisseur/source" : "client/source",
         last_provenance: draft.provenance || "",
+        last_location: draft.location || "",
         last_detail: draft.detail || "",
         last_category: draft.category || "note",
         last_channel: draft.channel || "",
@@ -521,7 +541,7 @@
     help.className = "digiy-pay-help";
     help.innerHTML =
       "<b>PAY demande une trace complète.</b><br>" +
-      "Montant · mode · provenance libre · client/source · téléphone · détail · preuve. " +
+      "Montant · mode cash/Wave/autre · lieu · provenance libre · client/source · téléphone · détail · preuve. " +
       "La provenance n’est pas figée : chaque pro écrit la sienne.";
 
     status.insertAdjacentElement("afterend", help);
