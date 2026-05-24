@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Oreille PAY — Mon argent</title>
+  <title>Oreille RESA — Je réserve</title>
   <meta name="theme-color" content="#f4ead2"/>
   <meta name="robots" content="noindex,nofollow"/>
 
   <script>
-    window.DIGIY_MODULE = "PAY";
+    window.DIGIY_MODULE = "RESA";
     window.DIGIY_LOGIN_URL = "./pin.html";
-    window.DIGIY_TRANSVERSE_MODULE = true;
   </script>
 
-  <script src="./session.js?v=pay-oreille-page-20260524"></script>
+  <script src="./session.js?v=resa-oreille-page-20260524"></script>
 
   <style>
     :root{
@@ -56,19 +55,9 @@
       padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
     }
 
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-
-    button,input,textarea,select{
-      font:inherit;
-    }
-
-    button{
-      cursor:pointer;
-      color:inherit;
-    }
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer;color:inherit}
 
     .topHeader{
       position:fixed;
@@ -180,8 +169,8 @@
     }
 
     .guide{
-      border-color:rgba(250,204,21,.42);
-      background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,248,220,.72));
+      border-color:rgba(34,197,94,.34);
+      background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(220,252,231,.56));
       display:grid;
       gap:10px;
     }
@@ -290,28 +279,11 @@
         padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px);
       }
 
-      h1{
-        font-size:40px;
-      }
-
-      .actions .btn{
-        width:100%;
-      }
-
-      .hdrBack{
-        font-size:13px;
-      }
-
-      .hdrTitle{
-        font-size:11px;
-        letter-spacing:.12em;
-      }
-
-      .hdrPill{
-        font-size:11px;
-        padding:6px 8px;
-        max-width:34vw;
-      }
+      h1{font-size:40px}
+      .actions .btn{width:100%}
+      .hdrBack{font-size:13px}
+      .hdrTitle{font-size:11px;letter-spacing:.12em}
+      .hdrPill{font-size:11px;padding:6px 8px;max-width:34vw}
     }
   </style>
 </head>
@@ -319,43 +291,43 @@
 <body>
   <header class="topHeader">
     <a class="hdrBack" href="./hub.html">← HUB</a>
-    <div class="hdrTitle">OREILLE PAY</div>
+    <div class="hdrTitle">OREILLE RESA</div>
     <div class="hdrPill warn" id="sessionPill">session…</div>
   </header>
 
   <main class="wrap">
     <section class="card">
-      <div class="eyebrow">💰 MON ARGENT · OREILLE</div>
-      <h1>Dire, formuler, ranger.</h1>
+      <div class="eyebrow">📅 RESA · OREILLE MÉTIER</div>
+      <h1>Demande, date, client.</h1>
       <div class="lead">
-        Ici, le pro parle ou clique. DIGIY prépare une trace PAY complète :
-        montant, mode, provenance libre, client/source, téléphone, détail et preuve.
+        Ici, le pro parle ou clique. DIGIY prépare une demande RESA complète :
+        client, téléphone, date, heure, nombre, lieu ou service, détail et statut.
       </div>
     </section>
 
-    <section class="guide" aria-label="Lecteur guide Oreille PAY">
-      <h2>🎧 Lecteur-guide PAY</h2>
+    <section class="guide" aria-label="Lecteur guide Oreille RESA">
+      <h2>🎧 Lecteur-guide RESA</h2>
       <p>
-        Écoute le guide avant de parler : PAY prépare, mais le pro valide toujours.
-        Une dette ne devient pas du cash tant qu’un vrai paiement n’est pas confirmé.
+        Écoute le guide avant de confirmer : RESA prépare, mais le pro valide toujours.
+        Une réservation ne doit jamais être confirmée sans vérifier planning, disponibilité ou fermeture.
       </p>
 
       <div class="actions">
-        <button class="btn primary" type="button" id="payGuidePlay">🎧 Écouter le guide</button>
-        <button class="btn danger" type="button" id="payGuideStop">⏹ Arrêter</button>
+        <button class="btn primary" type="button" id="resaGuidePlay">🎧 Écouter le guide</button>
+        <button class="btn danger" type="button" id="resaGuideStop">⏹ Arrêter</button>
       </div>
     </section>
 
-    <section class="card oreilleShell" id="oreille-pay-section">
-      <div id="digiy-oreille-pay"></div>
+    <section class="card oreilleShell" id="oreille-resa-section">
+      <div id="digiy-oreille-resa"></div>
     </section>
   </main>
 
   <nav class="bottomBar">
     <div class="bottomInner">
       <a href="./hub.html"><span>🧭</span><span>HUB</span></a>
-      <a href="./admin.html"><span>➕</span><span>Ajouter</span></a>
-      <a href="./cockpit.html"><span>🌡️</span><span>Lecture</span></a>
+      <a href="./planning.html"><span>📅</span><span>Planning</span></a>
+      <a href="./dispo.html"><span>🕐</span><span>Dispo</span></a>
       <a class="active" href="./oreille.html"><span>🎙️</span><span>Oreille</span></a>
       <a href="./session.html"><span>🛡️</span><span>Session</span></a>
     </div>
@@ -383,15 +355,13 @@
         pill.className = session ? "hdrPill ok" : "hdrPill warn";
       }
 
-      const PAY_GUIDE_TEXT =
-        "Bienvenue dans Oreille PAY DIGIYLYFE. " +
-        "Ici, tu peux parler ou cliquer pour préparer une note d’argent complète. " +
-        "PAY demande le montant, le mode de paiement, la provenance libre, le client ou la source, le téléphone, le détail et la preuve. " +
-        "La provenance reste libre, car chaque professionnel a ses propres activités. " +
-        "PAY peut garder une fiche client locale avec le nom, le téléphone et la dernière trace utile. " +
-        "Mais PAY ne confirme jamais seul un paiement. " +
-        "Une dette client ne devient pas du cash tant qu’un vrai paiement n’est pas reçu et vérifié. " +
-        "L’Oreille prépare. DIGIY formule. Le pro relit. Le pro valide. PAY range. " +
+      const RESA_GUIDE_TEXT =
+        "Bienvenue dans Oreille RESA DIGIYLYFE. " +
+        "Ici, tu peux parler ou cliquer pour préparer une demande de réservation. " +
+        "RESA demande le client, le téléphone, la date, l’heure, le nombre de personnes, le lieu ou service, le détail et le statut. " +
+        "RESA ne confirme jamais seule une réservation. " +
+        "Le professionnel doit vérifier le planning, la disponibilité, les fermetures et les conditions avant de répondre au client. " +
+        "L’Oreille prépare. DIGIY formule. Le pro relit. Le pro valide. RESA range. " +
         "Le terrain garde la main.";
 
       function loadVoices(callback){
@@ -428,7 +398,7 @@
         window.speechSynthesis.cancel();
 
         loadVoices((voices) => {
-          const u = new SpeechSynthesisUtterance(PAY_GUIDE_TEXT);
+          const u = new SpeechSynthesisUtterance(RESA_GUIDE_TEXT);
           u.lang = "fr-FR";
           u.rate = 0.86;
           u.pitch = 1.02;
@@ -451,8 +421,8 @@
         }
       }
 
-      const play = document.getElementById("payGuidePlay");
-      const stop = document.getElementById("payGuideStop");
+      const play = document.getElementById("resaGuidePlay");
+      const stop = document.getElementById("resaGuideStop");
 
       if(play) play.addEventListener("click", speakGuide);
       if(stop) stop.addEventListener("click", stopGuide);
@@ -464,6 +434,6 @@
   </script>
 
   <script src="./assets/js/oreille-metier-core.js?v=20260524-core2" defer></script>
-  <script src="./assets/js/oreille-pay.js?v=20260524-grid7" defer></script>
+  <script src="./assets/js/oreille-resa.js?v=20260524-resa1" defer></script>
 </body>
 </html>
