@@ -73,15 +73,6 @@
     return normalizeText(value).toLowerCase();
   }
 
-  function escapeHtml(value) {
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
   function findMountTarget() {
     return (
       document.querySelector("#digiy-oreille-pay") ||
@@ -311,12 +302,10 @@
     var detailPart = "Détail : " + (draft.detail || "à préciser");
     var proofPart = "Preuve : " + (draft.proof || "à vérifier");
 
-    var warning =
-      "Le pro doit relire et valider avant rangement dans Mon argent.";
+    var warning = "Le pro doit relire et valider avant rangement dans Mon argent.";
 
     if (draft.category === "dette_client") {
-      warning =
-        "Cette somme reste à recevoir. Elle ne devient pas du cash tant qu’un vrai paiement n’est pas confirmé.";
+      warning = "Cette somme reste à recevoir. Elle ne devient pas du cash tant qu’un vrai paiement n’est pas confirmé.";
     }
 
     var missing =
@@ -424,106 +413,103 @@
     return found;
   }
 
- function injectPayStyles() {
-  if (document.getElementById("digiyOreillePayV2Styles")) return;
+  function injectPayStyles() {
+    if (document.getElementById("digiyOreillePayV2Styles")) return;
 
-  var style = document.createElement("style");
-  style.id = "digiyOreillePayV2Styles";
-  style.textContent =
-    ".digiy-pay-help{" +
-      "margin:10px 0 0;" +
-      "border:1px dashed rgba(83,58,26,.24);" +
-      "border-radius:16px;" +
-      "background:rgba(250,204,21,.13);" +
-      "padding:10px;" +
-      "color:#3d3324;" +
-      "font-weight:950;" +
-      "line-height:1.32;" +
-      "font-size:14px;" +
-    "}" +
+    var style = document.createElement("style");
+    style.id = "digiyOreillePayV2Styles";
+    style.textContent =
+      ".digiy-pay-help{" +
+        "margin:10px 0 0;" +
+        "border:1px dashed rgba(83,58,26,.24);" +
+        "border-radius:16px;" +
+        "background:rgba(250,204,21,.13);" +
+        "padding:10px;" +
+        "color:#3d3324;" +
+        "font-weight:950;" +
+        "line-height:1.32;" +
+        "font-size:14px;" +
+      "}" +
 
-    ".digiy-pay-help b{color:#6b4e09;font-weight:1000}" +
+      ".digiy-pay-help b{color:#6b4e09;font-weight:1000}" +
 
-    ".digiy-oreille-templates{" +
-      "display:grid!important;" +
-      "grid-template-columns:repeat(2,minmax(0,1fr))!important;" +
-      "gap:7px!important;" +
-      "max-height:220px!important;" +
-      "overflow-y:auto!important;" +
-      "padding-right:5px!important;" +
-      "scroll-snap-type:y proximity!important;" +
-      "-webkit-overflow-scrolling:touch!important;" +
-      "border:1px solid rgba(83,58,26,.18)!important;" +
-      "border-radius:18px!important;" +
-      "background:rgba(255,255,255,.38)!important;" +
-      "padding:8px!important;" +
-    "}" +
-
-    ".digiy-oreille-templates::-webkit-scrollbar{width:6px}" +
-    ".digiy-oreille-templates::-webkit-scrollbar-thumb{" +
-      "background:rgba(83,58,26,.34);" +
-      "border-radius:999px;" +
-    "}" +
-
-    ".digiy-oreille-template{" +
-      "min-height:52px!important;" +
-      "display:flex!important;" +
-      "align-items:center!important;" +
-      "justify-content:flex-start!important;" +
-      "border-radius:14px!important;" +
-      "font-size:12px!important;" +
-      "font-weight:1000!important;" +
-      "line-height:1.14!important;" +
-      "padding:8px!important;" +
-      "letter-spacing:-.01em!important;" +
-      "scroll-snap-align:start!important;" +
-      "overflow:hidden!important;" +
-    "}" +
-
-    ".digiy-pay-client-mini{" +
-      "margin-top:10px;" +
-      "border:1px solid rgba(24,32,20,.14);" +
-      "border-radius:16px;" +
-      "background:#fffdf4;" +
-      "padding:10px;" +
-      "font-weight:900;" +
-      "color:#182014;" +
-      "line-height:1.32;" +
-      "font-size:14px;" +
-    "}" +
-
-    ".digiy-pay-client-mini b{" +
-      "display:block;" +
-      "margin-bottom:4px;" +
-      "color:#14532d;" +
-      "font-weight:1000;" +
-    "}" +
-
-    "@media(min-width:760px){" +
       ".digiy-oreille-templates{" +
-        "max-height:245px!important;" +
+        "display:grid!important;" +
+        "grid-template-columns:repeat(2,minmax(0,1fr))!important;" +
+        "gap:7px!important;" +
+        "max-height:220px!important;" +
+        "overflow-y:auto!important;" +
+        "padding-right:5px!important;" +
+        "scroll-snap-type:y proximity!important;" +
+        "-webkit-overflow-scrolling:touch!important;" +
+        "border:1px solid rgba(83,58,26,.18)!important;" +
+        "border-radius:18px!important;" +
+        "background:rgba(255,255,255,.38)!important;" +
+        "padding:8px!important;" +
       "}" +
+
+      ".digiy-oreille-templates::-webkit-scrollbar{width:6px}" +
+      ".digiy-oreille-templates::-webkit-scrollbar-thumb{" +
+        "background:rgba(83,58,26,.34);" +
+        "border-radius:999px;" +
+      "}" +
+
       ".digiy-oreille-template{" +
-        "min-height:56px!important;" +
-        "font-size:12.5px!important;" +
+        "min-height:52px!important;" +
+        "display:flex!important;" +
+        "align-items:center!important;" +
+        "justify-content:flex-start!important;" +
+        "border-radius:14px!important;" +
+        "font-size:12px!important;" +
+        "font-weight:1000!important;" +
+        "line-height:1.14!important;" +
+        "padding:8px!important;" +
+        "letter-spacing:-.01em!important;" +
+        "scroll-snap-align:start!important;" +
+        "overflow:hidden!important;" +
       "}" +
-    "}" +
 
-    "@media(max-width:360px){" +
-      ".digiy-oreille-templates{" +
-        "max-height:205px!important;" +
+      ".digiy-pay-client-mini{" +
+        "margin-top:10px;" +
+        "border:1px solid rgba(24,32,20,.14);" +
+        "border-radius:16px;" +
+        "background:#fffdf4;" +
+        "padding:10px;" +
+        "font-weight:900;" +
+        "color:#182014;" +
+        "line-height:1.32;" +
+        "font-size:14px;" +
       "}" +
-      ".digiy-oreille-template{" +
-        "min-height:49px!important;" +
-        "font-size:11.5px!important;" +
+
+      ".digiy-pay-client-mini b{" +
+        "display:block;" +
+        "margin-bottom:4px;" +
+        "color:#14532d;" +
+        "font-weight:1000;" +
       "}" +
-    "}";
 
-  document.head.appendChild(style);
-}
+      "@media(min-width:760px){" +
+        ".digiy-oreille-templates{" +
+          "max-height:245px!important;" +
+        "}" +
+        ".digiy-oreille-template{" +
+          "min-height:56px!important;" +
+          "font-size:12.5px!important;" +
+        "}" +
+      "}" +
 
-  document.head.appendChild(style);
-}
+      "@media(max-width:360px){" +
+        ".digiy-oreille-templates{" +
+          "max-height:205px!important;" +
+        "}" +
+        ".digiy-oreille-template{" +
+          "min-height:49px!important;" +
+          "font-size:11.5px!important;" +
+        "}" +
+      "}";
+
+    document.head.appendChild(style);
+  }
 
   function addPayHelp(target) {
     if (!target || target.querySelector(".digiy-pay-help")) return;
