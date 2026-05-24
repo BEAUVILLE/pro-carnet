@@ -78,7 +78,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
 .btn{min-height:62px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.70);display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:12px 16px;font-weight:1000;font-size:17px}
 .btn.primary{background:linear-gradient(135deg,var(--green2),var(--gold));color:#102014;border:0}
 .btn.warn{background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.30);color:#6b4e09}
-.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}
+.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}.btn.pay{background:linear-gradient(135deg,var(--green2),var(--gold));color:#102014;border:0}
 @media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.tileGrid,.grid2{grid-template-columns:1fr}.actions .btn{width:100%}}
 @media(max-width:520px){
@@ -97,9 +97,10 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     <div class="rule" id="sessionStatus">Lecture de l’accès local…</div>
   </section>
   <section class="card"><div class="grid2">
-    <a class="btn primary" href="./hub.html">🧭 Retour HUB</a><a class="btn" href="./admin.html">➕ Ajouter</a>
-    <a class="btn" href="./cockpit.html">🌡️ Ma température</a><a class="btn" href="./fiche.html">🪪 Ma fiche PAY</a>
-    <a class="btn" href="./brain-admin.html">⚙️ Réglages</a><a class="btn warn" href="./pin.html">🔐 Mon accès</a>
+    <a class="btn primary" href="./hub.html">🧭 Retour HUB</a><a class="btn pay" href="./hub.html#oreille-pay-section">🎙️ Oreille PAY</a>
+    <a class="btn" href="./admin.html">➕ Ajouter</a><a class="btn" href="./cockpit.html">🌡️ Ma température</a>
+    <a class="btn" href="./fiche.html">🪪 Ma fiche PAY</a><a class="btn" href="./brain-admin.html">⚙️ Réglages</a>
+    <a class="btn warn" href="./pin.html">🔐 Mon accès</a>
   </div></section>
   <section class="card">
     <h2 style="margin:0 0 8px;font-size:28px;color:#241a0d">Nettoyage local</h2>
@@ -117,3 +118,4 @@ $("clearBtn").onclick=clearSession;$("refreshBtn").onclick=readState;readState()
 </script>
 </body>
 </html>
+
