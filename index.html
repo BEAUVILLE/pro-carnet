@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>MON ARGENT by DIGIY — Entrée PAY</title>
   <meta name="theme-color" content="#f4ead2" />
-  <meta name="digiy-build" content="pay-index-porte-hub-20260519" />
+  <meta name="digiy-build" content="pay-index-porte-hub-20260524-clean" />
   <meta
     name="description"
     content="PAY PRO by DIGIY — porte courte vers le HUB Mon argent."
@@ -19,6 +19,8 @@
       "use strict";
 
       const TARGET = "./hub.html";
+      const REDIRECT_DELAY = 650;
+
       const SENSITIVE_KEYS = [
         "phone",
         "tel",
@@ -74,7 +76,7 @@
       }
 
       cleanVisibleUrl();
-      window.setTimeout(goHub, 650);
+      window.setTimeout(goHub, REDIRECT_DELAY);
     })();
   </script>
 
@@ -236,6 +238,12 @@
       font-size:25px;
     }
 
+    .btn.pay{
+      background:linear-gradient(135deg,rgba(34,197,94,.82),rgba(250,204,21,.78));
+      color:#102014;
+      border-color:rgba(22,101,52,.22);
+    }
+
     .notice{
       border:1px solid rgba(83,58,26,.18);
       border-radius:24px;
@@ -289,20 +297,23 @@
     <h1>Ouverture<br>du HUB PAY.</h1>
 
     <p>
-      Cette page est maintenant une porte courte. Elle t’envoie vers le HUB,
+      Cette page est une porte courte. Elle t’envoie vers le HUB PAY,
       puis le HUB ouvre Ajouter, Température, Fiche, Oreille, Session et PIN.
     </p>
 
     <div class="doctrine">
-      Index = porte courte. HUB = navigation. PAY garde l’argent lisible, direct et validé par le professionnel.
+      Index = porte courte. HUB = navigation. Oreille = parler, formuler, ranger. PAY garde l’argent lisible, direct et validé par le professionnel.
     </div>
-
-    <div id="digiy-oreille-pay"></div>
 
     <section class="actions" aria-label="Portes PAY">
       <a class="btn primary" href="./hub.html" id="hubLink">
         <strong>🧭 Ouvrir le HUB PAY</strong>
         <span>La bonne maison de navigation</span>
+      </a>
+
+      <a class="btn pay" href="./oreille.html" id="oreilleLink">
+        <strong>🎙️ Oreille PAY</strong>
+        <span>Dire, formuler, ranger une trace</span>
       </a>
 
       <a class="btn" href="./pin.html" id="pinLink">
@@ -319,8 +330,8 @@
     <section class="notice" aria-label="Clarification route">
       <div class="notice-title">Redirection propre</div>
       <div class="notice-text">
-        Si le HUB est présent, cette page y va automatiquement. Les anciens liens restent visibles en secours,
-        mais la navigation principale est maintenant <strong>hub.html</strong>.
+        Si le HUB est présent, cette page y va automatiquement. Les portes restent visibles en secours.
+        L’Oreille PAY n’est plus montée dans l’index : elle vit dans <strong>oreille.html</strong>.
       </div>
     </section>
 
@@ -356,23 +367,19 @@
         }
       }
 
-      {
-        const map = {
-          hubLink: "./hub.html",
-          pinLink: "./pin.html",
-          addLink: "./admin.html"
-        };
+      const map = {
+        hubLink: "./hub.html",
+        oreilleLink: "./oreille.html",
+        pinLink: "./pin.html",
+        addLink: "./admin.html"
+      };
 
-        Object.entries(map).forEach(([id, href]) => {
-          const el = document.getElementById(id);
-          if (el) el.setAttribute("href", cleanInternalHref(href, href));
-        });
-      }
+      Object.entries(map).forEach(([id, href]) => {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute("href", cleanInternalHref(href, href));
+      });
     })();
   </script>
-  <script src="./assets/js/oreille-metier-core.js?v=20260524" defer></script>
- <script src="./assets/js/oreille-pay.js?v=20260524-grid6" defer></script>
 </body>
 </html>
-
 
