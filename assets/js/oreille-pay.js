@@ -448,29 +448,33 @@
       "display:grid!important;" +
       "grid-template-columns:repeat(2,minmax(0,1fr))!important;" +
       "gap:7px!important;" +
-      "max-height:245px!important;" +
+      "max-height:220px!important;" +
       "overflow-y:auto!important;" +
-      "padding-right:4px!important;" +
+      "padding-right:5px!important;" +
       "scroll-snap-type:y proximity!important;" +
       "-webkit-overflow-scrolling:touch!important;" +
+      "border:1px solid rgba(83,58,26,.18)!important;" +
+      "border-radius:18px!important;" +
+      "background:rgba(255,255,255,.38)!important;" +
+      "padding:8px!important;" +
     "}" +
 
     ".digiy-oreille-templates::-webkit-scrollbar{width:6px}" +
     ".digiy-oreille-templates::-webkit-scrollbar-thumb{" +
-      "background:rgba(83,58,26,.25);" +
+      "background:rgba(83,58,26,.34);" +
       "border-radius:999px;" +
     "}" +
 
     ".digiy-oreille-template{" +
-      "min-height:56px!important;" +
+      "min-height:52px!important;" +
       "display:flex!important;" +
       "align-items:center!important;" +
       "justify-content:flex-start!important;" +
-      "border-radius:15px!important;" +
-      "font-size:12.5px!important;" +
+      "border-radius:14px!important;" +
+      "font-size:12px!important;" +
       "font-weight:1000!important;" +
-      "line-height:1.16!important;" +
-      "padding:8px 9px!important;" +
+      "line-height:1.14!important;" +
+      "padding:8px!important;" +
       "letter-spacing:-.01em!important;" +
       "scroll-snap-align:start!important;" +
       "overflow:hidden!important;" +
@@ -495,17 +499,13 @@
       "font-weight:1000;" +
     "}" +
 
-    "@media(max-width:620px){" +
+    "@media(min-width:760px){" +
       ".digiy-oreille-templates{" +
-        "grid-template-columns:repeat(2,minmax(0,1fr))!important;" +
-        "max-height:220px!important;" +
-        "gap:6px!important;" +
+        "max-height:245px!important;" +
       "}" +
       ".digiy-oreille-template{" +
-        "min-height:52px!important;" +
-        "font-size:12px!important;" +
-        "padding:8px!important;" +
-        "border-radius:14px!important;" +
+        "min-height:56px!important;" +
+        "font-size:12.5px!important;" +
       "}" +
     "}" +
 
@@ -514,10 +514,13 @@
         "max-height:205px!important;" +
       "}" +
       ".digiy-oreille-template{" +
-        "min-height:50px!important;" +
+        "min-height:49px!important;" +
         "font-size:11.5px!important;" +
       "}" +
     "}";
+
+  document.head.appendChild(style);
+}
 
   document.head.appendChild(style);
 }
