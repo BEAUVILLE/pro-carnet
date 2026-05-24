@@ -19,40 +19,56 @@
     :root{
       --bg:#f4ead2;
       --bg2:#ead9b7;
-      --text:#1f2a1f;
-      --muted:rgba(31,42,31,.78);
-      --line:rgba(83,58,26,.24);
+      --bg3:#dec99c;
+      --bar:rgba(246,237,216,.97);
       --gold:#facc15;
       --green:#16a34a;
       --green2:#22c55e;
+      --text:#1f2a1f;
+      --muted:rgba(31,42,31,.78);
+      --line:rgba(83,58,26,.24);
       --shadow:0 14px 34px rgba(77,52,22,.16);
       --r:22px;
       --hdrH:52px;
       --barH:78px;
       --max:980px;
-      --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     }
 
     *{box-sizing:border-box}
 
-    html{scroll-behavior:smooth}
+    html{
+      scroll-behavior:smooth;
+      -webkit-text-size-adjust:100%;
+      text-size-adjust:100%;
+    }
 
     body{
       margin:0;
       min-height:100dvh;
       color:var(--text);
-      font-family:var(--font);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
       font-size:19px;
-      font-weight:900;
+      font-weight:950;
       background:
         radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
         radial-gradient(circle at 100% 100%,rgba(22,101,52,.10),transparent 30%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
+        linear-gradient(180deg,var(--bg),var(--bg2) 58%,var(--bg3));
       padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
     }
 
-    a{color:inherit;text-decoration:none}
-    button,input,textarea{font:inherit}
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    button,input,textarea,select{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+      color:inherit;
+    }
 
     .topHeader{
       position:fixed;
@@ -66,15 +82,17 @@
       justify-content:space-between;
       gap:10px;
       padding:0 14px;
-      background:rgba(246,237,216,.97);
+      background:var(--bar);
       border-bottom:1px solid rgba(83,58,26,.24);
       backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
     }
 
     .hdrBack{
       min-height:36px;
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       color:rgba(31,42,31,.70);
       font-size:14px;
       font-weight:1000;
@@ -106,6 +124,18 @@
       max-width:38vw;
       overflow:hidden;
       text-overflow:ellipsis;
+    }
+
+    .hdrPill.ok{
+      color:#14532d;
+      border-color:rgba(22,101,52,.28);
+      background:rgba(220,252,231,.72);
+    }
+
+    .hdrPill.warn{
+      color:#6b4e09;
+      border-color:rgba(250,204,21,.36);
+      background:rgba(250,204,21,.18);
     }
 
     .wrap{
@@ -162,6 +192,7 @@
       line-height:.98;
       letter-spacing:-.04em;
       color:#241a0d;
+      font-weight:1000;
     }
 
     .guide p{
@@ -206,6 +237,10 @@
       color:#9f1239;
     }
 
+    .oreilleShell{
+      scroll-margin-top:72px;
+    }
+
     .bottomBar{
       position:fixed;
       left:0;
@@ -214,7 +249,7 @@
       height:var(--barH);
       z-index:100;
       padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-      background:rgba(246,237,216,.97);
+      background:var(--bar);
       border-top:1px solid rgba(83,58,26,.22);
       backdrop-filter:blur(18px);
     }
@@ -255,12 +290,27 @@
         padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px);
       }
 
+      h1{
+        font-size:40px;
+      }
+
       .actions .btn{
         width:100%;
       }
 
-      h1{
-        font-size:40px;
+      .hdrBack{
+        font-size:13px;
+      }
+
+      .hdrTitle{
+        font-size:11px;
+        letter-spacing:.12em;
+      }
+
+      .hdrPill{
+        font-size:11px;
+        padding:6px 8px;
+        max-width:34vw;
       }
     }
   </style>
@@ -270,7 +320,7 @@
   <header class="topHeader">
     <a class="hdrBack" href="./hub.html">← HUB</a>
     <div class="hdrTitle">OREILLE PAY</div>
-    <div class="hdrPill" id="sessionPill">session…</div>
+    <div class="hdrPill warn" id="sessionPill">session…</div>
   </header>
 
   <main class="wrap">
@@ -296,7 +346,7 @@
       </div>
     </section>
 
-    <section id="oreille-pay-section" class="card">
+    <section class="card oreilleShell" id="oreille-pay-section">
       <div id="digiy-oreille-pay"></div>
     </section>
   </main>
@@ -316,7 +366,9 @@
       "use strict";
 
       try {
-        if (window.DIGIY_SESSION?.cleanVisibleUrl) window.DIGIY_SESSION.cleanVisibleUrl();
+        if (window.DIGIY_SESSION?.cleanVisibleUrl) {
+          window.DIGIY_SESSION.cleanVisibleUrl();
+        }
       } catch (_) {}
 
       const pill = document.getElementById("sessionPill");
@@ -328,6 +380,7 @@
 
       if (pill) {
         pill.textContent = session ? "session ouverte" : "à vérifier";
+        pill.className = session ? "hdrPill ok" : "hdrPill warn";
       }
 
       const PAY_GUIDE_TEXT =
@@ -342,7 +395,10 @@
         "Le terrain garde la main.";
 
       function loadVoices(callback){
-        if(!("speechSynthesis" in window)){ callback([]); return; }
+        if(!("speechSynthesis" in window)){
+          callback([]);
+          return;
+        }
 
         let voices = window.speechSynthesis.getVoices();
 
@@ -390,7 +446,9 @@
       }
 
       function stopGuide(){
-        if("speechSynthesis" in window) window.speechSynthesis.cancel();
+        if("speechSynthesis" in window){
+          window.speechSynthesis.cancel();
+        }
       }
 
       const play = document.getElementById("payGuidePlay");
@@ -399,11 +457,13 @@
       if(play) play.addEventListener("click", speakGuide);
       if(stop) stop.addEventListener("click", stopGuide);
 
-      if("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = function(){};
+      if("speechSynthesis" in window){
+        window.speechSynthesis.onvoiceschanged = function(){};
+      }
     })();
   </script>
 
-  <script src="./assets/js/oreille-metier-core.js?v=20260524" defer></script>
-  <script src="./assets/js/oreille-pay.js?v=20260524-grid3" defer></script>
+  <script src="./assets/js/oreille-metier-core.js?v=20260524-core2" defer></script>
+  <script src="./assets/js/oreille-pay.js?v=20260524-grid4" defer></script>
 </body>
 </html>
