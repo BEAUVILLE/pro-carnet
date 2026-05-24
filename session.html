@@ -97,7 +97,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     <div class="rule" id="sessionStatus">Lecture de l’accès local…</div>
   </section>
   <section class="card"><div class="grid2">
-    <a class="btn primary" href="./hub.html">🧭 Retour HUB</a><a class="btn pay" href="./hub.html#oreille-pay-section">🎙️ Oreille PAY</a>
+    <a class="btn primary" href="./hub.html">🧭 Retour HUB</a><a class="btn pay" href="./oreille.html">🎙️ Oreille PAY</a>
     <a class="btn" href="./admin.html">➕ Ajouter</a><a class="btn" href="./cockpit.html">🌡️ Ma température</a>
     <a class="btn" href="./fiche.html">🪪 Ma fiche PAY</a><a class="btn" href="./brain-admin.html">⚙️ Réglages</a>
     <a class="btn warn" href="./pin.html">🔐 Mon accès</a>
@@ -109,7 +109,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     <div class="log" id="logBox" style="margin-top:12px">—</div>
   </section>
 </main>
-<nav class="bottomBar"><div class="bottomInner"><a href="./hub.html"><span>🧭</span><span>HUB</span></a><a href="./admin.html"><span>➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span>🌡️</span><span>Lecture</span></a><a href="./fiche.html"><span>🪪</span><span>Fiche</span></a><a class="active" href="./session.html"><span>🛡️</span><span>Session</span></a></div></nav>
+<nav class="bottomBar"><div class="bottomInner"><a href="./hub.html"><span>🧭</span><span>HUB</span></a><a href="./admin.html"><span>➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span>🌡️</span><span>Lecture</span></a><a href="./oreille.html"><span>🎙️</span><span>Oreille</span></a><a class="active" href="./session.html"><span>🛡️</span><span>Session</span></a></div></nav>
 <script>
 (()=>{const $=id=>document.getElementById(id);const KEYS=["digiy_pay_session","DIGIY_PAY_PRO_SESSION","DIGIY_PAY_PIN_SESSION","DIGIY_PIN_SESSION","DIGIY_ACCESS","DIGIY_SESSION_PAY","digiy_pay_slug","digiy_pay_phone","digiy_pay_last_slug"];
 function readState(){let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}const found=[];KEYS.forEach(k=>{try{if(sessionStorage.getItem(k))found.push("sessionStorage:"+k)}catch(_ ){}try{if(localStorage.getItem(k))found.push("localStorage:"+k)}catch(_ ){}});const ok=!!s;$("sessionPill").textContent=ok?"session ouverte":"à vérifier";$("sessionStatus").textContent=ok?"Session PAY ouverte sur ce téléphone.":"Aucune session PAY claire détectée. Repasse par Mon accès."; $("logBox").textContent=found.length?found.join("\n"):"Aucune clé PAY détectée.";}
@@ -118,4 +118,5 @@ $("clearBtn").onclick=clearSession;$("refreshBtn").onclick=readState;readState()
 </script>
 </body>
 </html>
+
 
