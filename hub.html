@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#f4ead2"/>
   <meta name="robots" content="noindex,nofollow"/>
   <meta name="description" content="PAY PRO — HUB mobile terrain en pavés : ajouter, dire un mouvement, température, fiche, session et accès."/>
-  <meta name="digiy-build" content="pay-hub-complet-20260519"/>
+  <meta name="digiy-build" content="pay-hub-oreille-page-directe-20260524"/>
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -103,46 +103,6 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
 .btn.warn{background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.30);color:#6b4e09}
 .btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}
 
-.oreilleGuide{
-  border:2px solid rgba(250,204,21,.38);
-  border-radius:var(--r);
-  background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,248,220,.70));
-  box-shadow:var(--shadow);
-  padding:16px;
-  display:grid;
-  gap:10px;
-}
-.oreilleGuideTop{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.oreilleGuideTitle{
-  margin:0;
-  color:#241a0d;
-  font-size:clamp(24px,6vw,38px);
-  line-height:.98;
-  letter-spacing:-.04em;
-  font-weight:1000;
-}
-.oreilleGuideText{
-  margin:0;
-  color:rgba(31,42,31,.78);
-  font-size:16px;
-  line-height:1.42;
-  font-weight:1000;
-}
-.oreilleGuideActions{
-  display:flex;
-  gap:9px;
-  flex-wrap:wrap;
-}
-.oreilleGuideActions .btn{
-  min-height:56px;
-}
-@media(max-width:520px){.oreilleGuideActions .btn{width:100%}}
 @media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.tileGrid,.grid2{grid-template-columns:1fr}.actions .btn{width:100%}}
 @media(max-width:520px){
@@ -165,38 +125,15 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
 
     <section class="group"><div class="groupLabel">Action immédiate</div><div class="tileGrid">
       <a class="tile gold blasonTile" href="https://digiylyfe.com/"><div class="tileTop"><img class="tileLogoImg" src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/><div class="tileTag">DIGIY</div></div><div><b>Métiers pro</b><span>Le blason commun des portes métier.</span></div></a>
-      <a class="tile pay" href="#oreille-pay-section"><div class="tileTop"><div class="tileIcon">🎙️</div><div class="tileTag">Voix</div></div><div><b>Dire un mouvement</b><span>“J’ai encaissé 15000 Wave pour POS”.</span></div></a>
+      <a class="tile pay" href="./oreille.html"><div class="tileTop"><div class="tileIcon">🎙️</div><div class="tileTag">Voix</div></div><div><b>Dire un mouvement</b><span>“J’ai encaissé 15000 Wave pour POS”.</span></div></a>
       <a class="tile primary" href="./admin.html"><div class="tileTop"><div class="tileIcon">➕</div><div class="tileTag">Ajouter</div></div><div><b>Ajouter</b><span>Entrée, dépense, dette, réserve.</span></div></a>
       <a class="tile gold" href="./cockpit.html"><div class="tileTop"><div class="tileIcon">🌡️</div><div class="tileTag">Lecture</div></div><div><b>Ma température</b><span>Ce qui entre, sort, reste et pèse.</span></div></a>
     </div></section>
 
-    <section class="group" id="oreille-pay-section" style="scroll-margin-top:72px">
-      <div class="groupLabel">Oreille métier</div>
-      <div class="oreilleGuide" aria-label="Lecteur guide Oreille PAY">
-        <div class="oreilleGuideTop">
-          <div>
-            <h2 class="oreilleGuideTitle">🎧 Lecteur-guide PAY</h2>
-            <p class="oreilleGuideText">
-              Avant de parler ou de ranger une note, écoute le guide : PAY prépare, mais le pro valide toujours.
-            </p>
-          </div>
-          <div class="oreilleGuideActions">
-            <button class="btn primary" type="button" id="payGuidePlay">🎧 Écouter le guide</button>
-            <button class="btn danger" type="button" id="payGuideStop">⏹ Arrêter</button>
-          </div>
-        </div>
-        <p class="oreilleGuideText">
-          L’Oreille PAY sert à noter une vente, une dépense, une dette client, un paiement Wave ou cash.
-          Elle ne confirme jamais seule un paiement. Le terrain garde la main.
-        </p>
-      </div>
-      <div id="digiy-oreille-pay"></div>
-    </section>
-
     <section class="group"><div class="groupLabel">Gestion · repères</div><div class="tileGrid">
       <a class="tile blue" href="./brain-admin.html"><div class="tileTop"><div class="tileIcon">⚙️</div><div class="tileTag">Réglages</div></div><div><b>Réglages utiles</b><span>Réserve, dettes, projets, repères.</span></div></a>
       <a class="tile gold" href="./fiche.html"><div class="tileTop"><div class="tileIcon">🪪</div><div class="tileTag">Fiche</div></div><div><b>Ma fiche PAY</b><span>Identité, contact, QR et lien public.</span></div></a>
-      <a class="tile" href="#oreille-pay-section"><div class="tileTop"><div class="tileIcon">🎧</div><div class="tileTag">Oreille</div></div><div><b>Mon oreille PAY</b><span>Dicter, préparer, garder une trace.</span></div></a>
+      <a class="tile" href="./oreille.html"><div class="tileTop"><div class="tileIcon">🎧</div><div class="tileTag">Oreille</div></div><div><b>Mon oreille PAY</b><span>Dicter, préparer, garder une trace.</span></div></a>
       <a class="tile primary" href="./cockpit.html#modules"><div class="tileTop"><div class="tileIcon">📦</div><div class="tileTag">Modules</div></div><div><b>Modules liés</b><span>POS, MARKET, DRIVER, LOC, RESA.</span></div></a>
     </div></section>
 
@@ -207,113 +144,18 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
       <a class="tile gold" href="https://digiy-hub.digiylyfe.com/"><div class="tileTop"><div class="tileIcon">🧭</div><div class="tileTag">HUB</div></div><div><b>HUB général</b><span>Retour aux portes DIGIY.</span></div></a>
     </div></section>
   </main>
-  <nav class="bottomBar"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./admin.html"><span class="bi">➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span class="bi">🌡️</span><span>Lecture</span></a><a href="./fiche.html"><span class="bi">🪪</span><span>Fiche</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
+  <nav class="bottomBar"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./admin.html"><span class="bi">➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span class="bi">🌡️</span><span>Lecture</span></a><a href="./oreille.html"><span class="bi">🎙️</span><span>Oreille</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
   <script>
     (()=>{try{if(window.DIGIY_SESSION?.cleanVisibleUrl)window.DIGIY_SESSION.cleanVisibleUrl();}catch(_ ){}
     const p=document.getElementById("sessionPill");let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}
     if(p&&s){p.textContent="session ouverte";p.className="hdrPill ok";}else if(p){p.textContent="accès à vérifier";p.className="hdrPill warn";}})();
   </script>
-  <script>
-    (() => {
-      "use strict";
-
-      const PAY_GUIDE_TEXT =
-        "Bienvenue dans Oreille PAY DIGIYLYFE. " +
-        "Ici, tu peux parler ou cliquer pour préparer une note d’argent. " +
-        "Tu peux noter une vente, une dépense, une dette client, un encaissement Wave ou un paiement cash. " +
-        "Mais PAY ne confirme jamais seul un paiement. " +
-        "Une dette client ne devient pas du cash tant qu’un vrai paiement n’est pas reçu et vérifié. " +
-        "L’Oreille prépare la phrase. DIGIY formule. Le pro relit. Le pro valide. PAY range. " +
-        "Le terrain garde la main.";
-
-      function loadVoices(callback){
-        if(!("speechSynthesis" in window)){ callback([]); return; }
-        let voices = window.speechSynthesis.getVoices();
-        if(voices && voices.length){ callback(voices); return; }
-        let tries = 0;
-        const timer = window.setInterval(() => {
-          tries += 1;
-          voices = window.speechSynthesis.getVoices();
-          if((voices && voices.length) || tries > 12){
-            window.clearInterval(timer);
-            callback(voices || []);
-          }
-        }, 120);
-      }
-
-      function speakGuide(){
-        if(!("speechSynthesis" in window)){
-          alert("Lecture vocale non disponible sur ce navigateur.");
-          return;
-        }
-        window.speechSynthesis.cancel();
-        loadVoices((voices) => {
-          const u = new SpeechSynthesisUtterance(PAY_GUIDE_TEXT);
-          u.lang = "fr-FR";
-          u.rate = 0.86;
-          u.pitch = 1.02;
-          u.volume = 1;
-          const preferred =
-            voices.find(v => /fr/i.test(v.lang || "") && /Google|Thomas|Daniel|Amelie|Audrey|Pauline/i.test(v.name || "")) ||
-            voices.find(v => /fr/i.test(v.lang || "")) ||
-            voices[0];
-          if(preferred) u.voice = preferred;
-          window.speechSynthesis.speak(u);
-        });
-      }
-
-      function stopGuide(){
-        if("speechSynthesis" in window) window.speechSynthesis.cancel();
-      }
-
-      const play = document.getElementById("payGuidePlay");
-      const stop = document.getElementById("payGuideStop");
-      if(play) play.addEventListener("click", speakGuide);
-      if(stop) stop.addEventListener("click", stopGuide);
-      if("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = function(){};
-    })();
-  </script>
-  <script>
-    (() => {
-      "use strict";
-
-      function scrollToOreille() {
-        const hash = window.location.hash || "";
-        const asked =
-          hash === "#oreille-pay-section" ||
-          hash === "#digiy-oreille-pay" ||
-          hash === "#payVoicePanel";
-
-        if (!asked) return;
-
-        const target =
-          document.getElementById("oreille-pay-section") ||
-          document.getElementById("digiy-oreille-pay");
-
-        if (!target) return;
-
-        window.setTimeout(() => {
-          try {
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          } catch (_) {
-            target.scrollIntoView(true);
-          }
-        }, 550);
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", scrollToOreille);
-      } else {
-        scrollToOreille();
-      }
-
-      window.addEventListener("hashchange", scrollToOreille);
-    })();
-  </script>
-  <script src="./assets/js/oreille-metier-core.js?v=20260524" defer></script>
-  <script src="./assets/js/oreille-pay.js?v=20260524-grid2" defer></script>
 </body>
 </html>
+
+
+
+
 
 
 
