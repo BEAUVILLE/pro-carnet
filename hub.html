@@ -170,7 +170,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
       <a class="tile gold" href="./cockpit.html"><div class="tileTop"><div class="tileIcon">🌡️</div><div class="tileTag">Lecture</div></div><div><b>Ma température</b><span>Ce qui entre, sort, reste et pèse.</span></div></a>
     </div></section>
 
-    <section class="group" id="oreille-pay-section">
+    <section class="group" id="oreille-pay-section" style="scroll-margin-top:72px">
       <div class="groupLabel">Oreille métier</div>
       <div class="oreilleGuide" aria-label="Lecteur guide Oreille PAY">
         <div class="oreilleGuideTop">
@@ -273,8 +273,47 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
       if("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = function(){};
     })();
   </script>
+  <script>
+    (() => {
+      "use strict";
+
+      function scrollToOreille() {
+        const hash = window.location.hash || "";
+        const asked =
+          hash === "#oreille-pay-section" ||
+          hash === "#digiy-oreille-pay" ||
+          hash === "#payVoicePanel";
+
+        if (!asked) return;
+
+        const target =
+          document.getElementById("oreille-pay-section") ||
+          document.getElementById("digiy-oreille-pay");
+
+        if (!target) return;
+
+        window.setTimeout(() => {
+          try {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          } catch (_) {
+            target.scrollIntoView(true);
+          }
+        }, 550);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", scrollToOreille);
+      } else {
+        scrollToOreille();
+      }
+
+      window.addEventListener("hashchange", scrollToOreille);
+    })();
+  </script>
   <script src="./assets/js/oreille-metier-core.js?v=20260524" defer></script>
-  <script src="./assets/js/oreille-pay.js?v=20260524" defer></script>
+  <script src="./assets/js/oreille-pay.js?v=20260524-grid2" defer></script>
 </body>
 </html>
+
+
 
