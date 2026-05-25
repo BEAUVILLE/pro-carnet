@@ -111,6 +111,88 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
   h1{font-size:38px}.hubSub,.lead{font-size:17px}.tile{min-height:154px;padding:14px}.tileIcon{width:52px;height:52px;font-size:29px}
   .tileLogoImg{width:94px;height:94px;border-radius:23px}.tile b{font-size:22px}.tile span{font-size:14.5px}.tileTag{font-size:10px}
 }
+
+/* ══ LECTEUR DIGIY — PAY ══ */
+.digiyReader{
+  display:grid;
+  gap:12px;
+  padding:16px;
+  border-radius:var(--r);
+  border:2px solid rgba(250,204,21,.42);
+  background:
+    radial-gradient(520px 190px at 100% 0%,rgba(250,204,21,.24),transparent 70%),
+    linear-gradient(135deg,rgba(34,197,94,.18),rgba(255,255,255,.66));
+  box-shadow:var(--shadow);
+}
+.digiyReaderTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.digiyReaderKicker{
+  color:#6b4e09;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.digiyReader h2{
+  margin:0;
+  color:#241a0d;
+  font-size:clamp(25px,6vw,40px);
+  line-height:.98;
+  letter-spacing:-.045em;
+  font-weight:1000;
+}
+.digiyReaderText{
+  color:#14532d;
+  font-size:16px;
+  font-weight:1000;
+  line-height:1.45;
+  max-width:800px;
+}
+.digiyReaderActions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+.digiyReaderActions button{
+  min-height:54px;
+  border-radius:999px;
+  border:1px solid rgba(83,58,26,.22);
+  background:rgba(255,255,255,.72);
+  color:#241a0d;
+  padding:0 15px;
+  font:inherit;
+  font-size:14px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.digiyReaderActions .main{
+  background:linear-gradient(135deg,var(--green2),var(--gold));
+  color:#102014;
+  border-color:rgba(22,101,52,.24);
+  box-shadow:0 12px 28px rgba(77,52,22,.14);
+}
+.digiyReaderActions .stop{
+  background:rgba(239,68,68,.12);
+  color:#9f1239;
+  border-color:rgba(159,18,57,.30);
+}
+.digiyReaderStatus{
+  min-height:20px;
+  color:#6b4e09;
+  font-size:13px;
+  font-weight:1000;
+}
+@media(max-width:520px){
+  .digiyReaderActions{display:grid;grid-template-columns:1fr 1fr}
+  .digiyReaderActions button{width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -121,6 +203,25 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
       <div class="hubSub">PAY est la caisse centrale : tu parles, tu cliques, DIGIY prépare, puis tu valides.</div>
       <div class="rule"><b>Index</b> = porte courte. <b>HUB</b> = navigation. <b>Ajouter</b> = mouvement. <b>Température</b> = lecture. <b>Fiche</b> = identité PAY. <b>Oreille</b> = parole rangée.</div>
     </section>
+
+    <section class="digiyReader" aria-label="Lecteur DIGIY PAY">
+      <div class="digiyReaderTop">
+        <div>
+          <div class="digiyReaderKicker">🎧 Lecteur DIGIY · PAY</div>
+          <h2>Comprendre le cerveau argent.</h2>
+        </div>
+        <div class="digiyReaderActions">
+          <button class="main" id="digiyPayAudioPlay" type="button">▶ Écouter</button>
+          <button class="stop" id="digiyPayAudioStop" type="button">⏹ Stop</button>
+        </div>
+      </div>
+      <div class="digiyReaderText" id="digiyPayAudioText">
+        PAY est la caisse centrale : chaque recette, dépense, dette, acompte, réserve ou reste à recevoir
+        doit laisser une trace. Le pro parle ou clique, DIGIY prépare, puis le terrain valide avec vérité.
+      </div>
+      <div class="digiyReaderStatus" id="digiyPayAudioStatus">Prêt à lire · indications courtes</div>
+    </section>
+
 
 
     <section class="group"><div class="groupLabel">Action immédiate</div><div class="tileGrid">
@@ -150,8 +251,123 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     const p=document.getElementById("sessionPill");let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}
     if(p&&s){p.textContent="session ouverte";p.className="hdrPill ok";}else if(p){p.textContent="accès à vérifier";p.className="hdrPill warn";}})();
   </script>
+
+<script>
+/* ══ DIGIY VOICE — PAY ══ */
+(function(){
+  "use strict";
+
+  var SPEAK =
+    "Bienvenue dans PAY, le cerveau argent de Di-ji-laïf. " +
+    "Ici, le pro garde la trace de ce qui entre, de ce qui sort, de ce qui reste, et de ce qui pèse sur la caisse. " +
+    "Ajouter sert à poser un mouvement : recette, dépense, dette client, réserve, acompte ou solde. " +
+    "Dire un mouvement permet de parler simplement : par exemple, j’ai encaissé quinze mille francs avec Wave pour une vente POS, ou j’ai payé du carburant en cash pour DRIVER. " +
+    "La température lit l’activité : argent reçu, argent sorti, dettes ouvertes, restes à recevoir, réserve et pression du mois. " +
+    "Oreille PAY prépare une trace claire, mais le pro vérifie et valide. Rien ne devient cash sans paiement réel confirmé. Une promesse, une réservation ou un devis reste une trace à suivre, pas une recette encaissée. " +
+    "Les modules travaillent : POS vend, MARKET annonce, DRIVER roule, LOC loue, RESA réserve, JOBS relie, Mes services intervient. PAY comprend. " +
+    "Règle importante : si l’activité ne remonte pas à PAY, il n’y a pas de lecture. Pas de lecture, pas de contrôle. Le terrain agit, PAY enregistre, DIGIY lit, le pro décide.";
+
+  var play = document.getElementById("digiyPayAudioPlay");
+  var stop = document.getElementById("digiyPayAudioStop");
+  var status = document.getElementById("digiyPayAudioStatus");
+
+  function digiySpeakText(text){
+    return String(text || "")
+      .replace(/\bWave\b/g, "Wéïv")
+      .replace(/\bWhatsApp\b/g, "Ouatsap")
+      .replace(/\bDIGIYLYFE\b/g, "Di-ji-laïf");
+  }
+
+  function setStatus(message){
+    if(status) status.textContent = message;
+  }
+
+  function canSpeak(){
+    return "speechSynthesis" in window;
+  }
+
+  function pickVoice(){
+    if(!canSpeak()) return null;
+    var voices = window.speechSynthesis.getVoices() || [];
+    return voices.find(function(v){ return /^fr/i.test(v.lang || "") && /FR/i.test(v.lang || ""); })
+        || voices.find(function(v){ return /^fr/i.test(v.lang || ""); })
+        || voices[0]
+        || null;
+  }
+
+  function stopSpeech(){
+    if(canSpeak()) window.speechSynthesis.cancel();
+    if(play) play.textContent = "▶ Écouter";
+    setStatus("Lecture arrêtée");
+  }
+
+  function speak(){
+    if(!canSpeak()){
+      setStatus("Lecture vocale non disponible ici");
+      return;
+    }
+
+    if(window.speechSynthesis.paused){
+      window.speechSynthesis.resume();
+      if(play) play.textContent = "⏸ Pause";
+      setStatus("▶ Reprise…");
+      return;
+    }
+
+    if(window.speechSynthesis.speaking){
+      window.speechSynthesis.pause();
+      if(play) play.textContent = "▶ Reprendre";
+      setStatus("⏸ En pause");
+      return;
+    }
+
+    stopSpeech();
+
+    var u = new SpeechSynthesisUtterance(digiySpeakText(SPEAK));
+    u.lang = "fr-FR";
+    u.rate = 0.86;
+    u.pitch = 1.02;
+    u.volume = 1;
+
+    var voice = pickVoice();
+    if(voice) u.voice = voice;
+
+    u.onstart = function(){
+      if(play) play.textContent = "⏸ Pause";
+      setStatus("▶ DIGIY explique PAY…");
+    };
+    u.onend = function(){
+      if(play) play.textContent = "▶ Écouter";
+      setStatus("✓ Lecture terminée");
+    };
+    u.onerror = function(){
+      if(play) play.textContent = "▶ Écouter";
+      setStatus("Lecture interrompue");
+    };
+
+    window.speechSynthesis.speak(u);
+  }
+
+  if(play) play.addEventListener("click", speak);
+  if(stop) stop.addEventListener("click", stopSpeech);
+
+  if(canSpeak()){
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+
+  window.addEventListener("pagehide", stopSpeech);
+})();
+</script>
+
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 
