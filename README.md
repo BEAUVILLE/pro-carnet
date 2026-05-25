@@ -1,333 +1,213 @@
-# MON ARGENT by DIGIY ♾️ — README PAY HUD
+# DIGIY PAY PRO — Mon argent · Oreille Métier
 
-## Vision
+Module PRO DIGIYLYFE pour la lecture financière terrain : entrées, sorties, dettes client, remboursements, épargne, imprévus, preuves et notes d’argent.
 
-MON ARGENT by DIGIY est le cockpit financier transversal de DIGIYLYFE.
+PAY n’est ni une banque, ni un wallet custodial, ni une monnaie électronique.
 
-PAY n’est **ni une banque**, ni un **wallet custodial**, ni une **monnaie électronique**.
-
-PAY sert à :
-
-- lire les entrées
-- lire les dépenses pro
-- lire l’épargne
-- lire le net
-- voir les modules qui poussent le business
-- voir les canaux utilisés
-- aider le professionnel à décider vite et proprement
-
-## Doctrine simple
-
-### 1. L’argent reste chez le pro
-Le client paie directement le professionnel.  
-DIGIY ne garde pas les fonds.
-
-### 2. PAY éclaire
-PAY organise la lecture financière.  
-Il ne “capture” pas l’argent, il montre le mouvement.
-
-### 3. Le net d’abord
-La lecture prioritaire n’est pas le décor.  
-La lecture prioritaire est :
-
-- net pro
-- épargne
-- disponible pro
-- reste après perso visible
-
-### 4. Lecture HUD
-Le front PAY doit toujours tendre vers une lecture **2 secondes** :
-
-- voir vite
-- comprendre vite
-- agir vite
-
-### 5. Zéro démo si le rail réel existe
-Le module doit lire les vraies données du rail PAY existant.  
-Pas de données fictives si le backend réel est posé.
+L’argent reste chez le pro. PAY apporte la vue, la mémoire et la décision rapide.
 
 ---
 
-## Pages du module
+## Doctrine du jour
 
-### `index.html`
-Rôle :
-- page d’entrée publique
-- présentation claire de la doctrine PAY
-- orientation rapide vers PIN / cockpit / saisie
+### Une page = un sujet
 
-Objectif :
-- faire comprendre PAY en quelques secondes
-- préparer la logique HUD
+Chaque page garde son rôle. On ne mélange pas navigation, session, saisie, cockpit financier et travail vocal.
 
----
+- `index.html` : porte courte d’entrée / compatibilité.
+- `hub.html` : navigation principale en pavés terrain.
+- `session.html` : accès, session, nettoyage local, retour sécurisé.
+- `oreille.html` : seule vraie page de travail vocal.
+- `admin.html` : saisie et gestion des mouvements.
+- `cockpit.html` : lecture financière / HUD.
+- `fiche.html` : fiche PAY / présentation selon usage.
+- `brain-admin.html` : règles et cerveau PAY.
 
-### `pin.html`
-Rôle :
-- entrée protégée du pro
-- vérification du PIN PAY
-- ouverture de session terrain
-
-Objectif :
-- téléphone + PIN = accès rapide
-- zéro confusion
-- redirection propre vers cockpit ou saisie
-
-Rail utilisé :
-- `digiy_verify_pin`
-- `session.js`
+Le hub oriente. La page agit.
 
 ---
 
-### `cockpit.html`
-Rôle :
-- lecture réelle du cockpit PAY
-- vision financière synthétique
-- lecture du business
+## Règle Oreille Métier PAY
 
-Lecture prioritaire :
-- net pro
-- épargne du mois
-- disponible pro
-- reste après perso visible
-- modules qui poussent le business
-- canaux visibles
+L’Oreille PAY ne doit pas être chargée partout.
 
-Rail utilisé :
-- `digiy_pay_get_cockpit_by_slug`
-- `digiy_pay_movements`
-- `session.js`
+### Autorisé
 
----
+`oreille.html` charge les scripts Oreille :
 
-### `admin.html`
-Rôle :
-- saisie manuelle des mouvements PAY
-- lecture rapide de l’historique
-- alimentation du cockpit
+```html
+<script src="./assets/js/oreille-metier-core.js" defer></script>
+<script src="./assets/js/oreille-pay.js" defer></script>
+```
 
-Types de mouvements :
-- entrée
-- sortie
-- épargne
+### Interdit
 
-Rail utilisé :
-- table `digiy_pay_movements`
-- `session.js`
+Ne jamais charger les scripts Oreille dans :
+
+- `hub.html`
+- `session.html`
+- `index.html`
+- `admin.html`
+- `cockpit.html`
+- `fiche.html`
+- `brain-admin.html`
+
+Ces pages peuvent seulement ouvrir l’Oreille avec un lien clair :
+
+```html
+<a href="./oreille.html">🎙️ Oreille PAY</a>
+```
+
+L’ancien fichier `oreille-metier-pay-old.js` reste une archive. Il ne doit pas être appelé dans les pages.
 
 ---
 
-## Structure mentale PAY HUD
+## Moule technique validé
 
-Le module doit toujours être pensé comme un **cockpit de décision**, pas comme un simple formulaire.
+Chaque module DIGIYLYFE suit ce moule :
 
-### Ce qu’on veut voir d’abord
-- combien entre
-- combien sort
-- combien est protégé
-- combien reste
-- quel module pousse
-- quel canal domine
+```txt
+assets/js/oreille-metier-core.js
+assets/js/oreille-[module].js
+oreille.html
+hub.html
+session.html
+```
 
-### Ce qu’on veut éviter
-- bruit visuel
-- jargon inutile
-- logique administrative froide
-- navigation confuse
-- démo parasite
+Pour PAY :
 
----
-
-## Langage front recommandé
-
-Toujours privilégier un langage :
-
-- simple
-- direct
-- terrain
-- lisible vite
-- utile au pro
-
-Exemples d’axe :
-- “Vois vite”
-- “Comprends vite”
-- “Agis juste”
-- “Le net d’abord”
-- “Le pro reste maître”
-- “PAY éclaire”
-
-Éviter :
-- discours trop technique
-- promesses floues
-- style bancaire froid
-- complexité inutile
+```txt
+assets/js/oreille-metier-core.js
+assets/js/oreille-pay.js
+oreille.html
+hub.html
+session.html
+```
 
 ---
 
-## Calculs de lecture métier
+## Doctrine visuelle téléphone
 
-### Net pro
-```text
-entrées pro - dépenses pro
-Disponible pro
-net pro - épargne du mois
-Reste après perso visible
-disponible pro - dépenses perso visibles
-Poids de l’épargne
-épargne du mois / entrées du mois
-Session
+Oreille PAY doit être visible, grande et grasse.
 
-Le module PAY fonctionne avec une session locale légère via session.js.
+Sur téléphone :
 
-Éléments clés :
+- le titre Oreille doit être très lisible ;
+- les boutons doivent être grands ;
+- les suggestions doivent être en pavés, idéalement 2 par 2 ;
+- le pro doit pouvoir taper avec le pouce ;
+- éviter les longues colonnes qui fatiguent ;
+- moins d’écriture, plus de clics.
 
-slug
+---
 
-phone
+## Ce que fait l’Oreille PAY
 
-module = PAY
+Elle peut aider à préparer :
 
-Règles :
+- une vente reçue ;
+- une dépense ;
+- une dette client / somme à recevoir ;
+- un encaissement Wave ;
+- un paiement cash ;
+- une avance client ;
+- un règlement de dette ;
+- un achat fournisseur ;
+- un frais transport ;
+- un imprévu / urgence ;
+- un brouillon financier sans validation.
 
-si URL contient slug / phone, on les reprend
+Le pro parle ou clique. DIGIY met en forme. Le pro valide. PAY range.
 
-si session absente, retour vers pin.html
+---
 
-après validation PIN, sauvegarde session
+## Limites protégées
 
-après chargement cockpit ou admin, réappliquer URL propre
+Rien n’est confirmé automatiquement :
 
-Backend déjà posé
+- pas de paiement confirmé automatiquement ;
+- pas de reçu Wave validé sans preuve ;
+- pas de cash considéré comme encaissé sans confirmation ;
+- pas de dette client transformée en revenu avant paiement réel ;
+- pas de dépense validée sans vérification ;
+- pas d’épargne imposée automatiquement ;
+- pas de mouvement inscrit comme vérité finale sans validation du pro.
 
-Le front ne doit pas réinventer le backend si le rail existe déjà.
+PAY prépare. Le terrain garde la main.
 
-Rails connus
+---
 
-digiy_verify_pin
+## Dettes clients
 
-digiy_pay_get_cockpit_by_slug
+Une dette client est une somme à recevoir.
 
-table digiy_pay_movements
+Elle ne devient pas du cash tant qu’un vrai paiement n’est pas reçu et confirmé.
 
-Doctrine
+Quand une dette est payée plus tard, PAY doit créer une vraie entrée séparée :
 
-ne pas refaire le SQL sans bug réel prouvé
+```txt
+encaissement dette client
+```
 
-priorité au FRONT si le backend existe déjà
+Cette entrée précise :
 
-zéro mélange entre ancien rail et nouveau rail
+- montant payé ;
+- mode de paiement ;
+- client ;
+- partiel ou total ;
+- solde restant si paiement partiel.
 
-Navigation croisée minimale
+---
 
-Toutes les pages PAY doivent garder une navigation cohérente.
+## Accès et sécurité
 
-Minimum attendu :
+- Entrée courte : `index.html`.
+- Navigation principale : `hub.html`.
+- Porte sécurisée : `pin.html`.
+- Protection : `guard.js` et/ou `session.js` selon page.
+- Session locale : environ 8h.
+- Ne pas afficher de téléphone ou d’identifiant sensible dans l’URL.
+- Garder les routes existantes tant qu’il n’y a pas de bug réel.
 
-retour accueil
+---
 
-entrée PIN
+## Routes importantes
 
-cockpit
+```txt
+./index.html
+./hub.html
+./session.html
+./oreille.html
+./admin.html
+./cockpit.html
+./fiche.html
+./brain-admin.html
+./pin.html
+```
 
-saisie
+---
 
-quitter session
+## Test de fermeture terrain
 
-Aucune page ne doit être isolée.
+Après chaque correction, tester sur téléphone :
 
-Règles UX PAY HUD
-Règle 1
+1. ouvrir `index.html` ;
+2. vérifier que l’entrée mène proprement vers le parcours prévu ;
+3. entrer par PIN si nécessaire ;
+4. arriver sur `hub.html` ;
+5. ouvrir `oreille.html` depuis le hub ;
+6. vérifier que `oreille.html` affiche PAY, pas RESA ;
+7. vérifier que `hub.html` ne charge pas les scripts Oreille ;
+8. vérifier que `session.html` ne charge pas les scripts Oreille ;
+9. tester `admin.html`, `cockpit.html`, `fiche.html` ;
+10. vérifier que les suggestions Oreille sont en pavés téléphone.
 
-Toujours montrer d’abord l’essentiel.
+---
 
-Règle 2
+## Signature DIGIYLYFE
 
-Une action importante doit être visible sans chercher.
+PAY doit rester simple, mobile, lisible et terrain.
 
-Règle 3
+L’argent reste chez le pro. PAY garde la mémoire. DIGIY éclaire. L’humain décide.
 
-Le professionnel doit comprendre la page en quelques secondes.
-
-Règle 4
-
-Le formulaire doit rester simple, même si le backend est riche.
-
-Règle 5
-
-Le cockpit doit parler résultat, pas administration.
-
-Identité publique
-
-Nom public :
-MON ARGENT by DIGIY
-
-Signature possible :
-MON ARGENT ELECTRONIQUE BY DIGIY
-à utiliser seulement si pertinent côté façade, sans glisser vers une promesse de conservation des fonds.
-
-Résumé frère-bâtisseur
-
-PAY = cockpit financier terrain.
-PAY = lecture utile.
-PAY = décision rapide.
-PAY ≠ banque.
-PAY ≠ wallet custodial.
-PAY = une couche de visibilité, d’orchestration et de pilotage pour les pros DIGIYLYFE.
-
-Continuité de travail
-
-Quand on retouche PAY :
-
-garder le rail réel
-
-garder la logique HUD
-
-garder la lecture 2 secondes
-
-garder la cohérence visuelle entre :
-
-index.html
-
-pin.html
-
-cockpit.html
-
-admin.html
-
-ne jamais revenir à une page froide ou purement administrative
-
-Formule courte à retenir
-
-L’argent reste chez le pro.
-PAY apporte la vue.
-## Canal réel — voix, cash, dettes et imprévus
-
-PAY ne doit pas seulement lire les mouvements déjà visibles.
-PAY doit aussi permettre au professionnel de signaler rapidement les gestes du réel qui ne laissent pas toujours de trace numérique.
-
-Exemples :
-- course encaissée en espèces
-- dépense carburant cash
-- remboursement de dette
-- facture à régler plus tard
-- argent mis de côté
-- médicament, hospitalisation ou urgence famille
-
-Doctrine :
-Le téléphone capte le réel.
-PAY garde la mémoire.
-DIGIY éclaire.
-L’humain décide.
-
-Intentions vocales prioritaires :
-1. J’ai encaissé
-2. J’ai dépensé
-3. J’ai remboursé
-4. Je mets de côté
-5. Facture à régler
-6. Imprévu / urgence
-
-Règle de sécurité :
-La voix ne valide jamais seule.
-Elle prépare un brouillon.
-Le professionnel confirme avant inscription.
+**Le terrain garde la main.**
