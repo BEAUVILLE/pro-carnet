@@ -11,7 +11,7 @@
 (function () {
   "use strict";
 
-  const RECEIVER_VERSION = "action-digiy-receiver-v1-20260526";
+  const RECEIVER_VERSION = "action-digiy-receiver-v2-clean-20260526";
 
   const HOST = String(window.location.hostname || "").toLowerCase();
 
@@ -48,6 +48,15 @@
   function cleanCommand(text) {
     let t = String(text || "").trim();
 
+    /*
+      ACTION DIGIY RECEIVER — nettoyage terrain
+      Objectif :
+      - retirer le déclencheur vocal s’il a été dicté
+      - retirer les mots de routage comme "module POS"
+      - corriger les erreurs fréquentes du micro : poste/pos, web/wave
+      - garder seulement la note métier utile
+    */
+
     t = t
       .replace(/^\s*action\s+digi\s+i\s*/i, "")
       .replace(/^\s*action\s+diji\s+i\s*/i, "")
@@ -62,6 +71,29 @@
 
     t = t
       .replace(/^\s*(note|ajoute|ajouter|prépare|prepare|crée|cree|mets|met)\s+/i, "")
+      .trim();
+
+    // Nettoyage des bruits de routage et de transcription
+    t = t
+      // "module POS", "module poste", "module PAY" ne doivent jamais rester dans la note métier
+      .replace(/\bmodule\s+(pos|poste|post|pay|paie|paye)\b/gi, " ")
+
+      // Si la phrase commence par "poste vente..." ou "pos vente...", c'est un bruit de routage
+      .replace(/^\s*(pos|poste|post)\s+(vente|vendu|dépense|depense|encaissement|paiement)\b/gi, "$2")
+
+      // Si "poste/pos" est placé juste après vente, vendu, dépense, etc., on le retire
+      .replace(/\b(vente|vendu|dépense|depense|encaissement|paiement)\s+(pos|poste|post)\b/gi, "$1")
+
+      // Si "poste/pos" est placé juste avant un montant, on le retire
+      .replace(/\b(pos|poste|post)\s+(\d)/gi, "$2")
+
+      // Le micro écrit parfois "web" au lieu de "Wave"
+      .replace(/\b(web|wêve|weve|wève|wavee|ouève|ouve|waf|wef)\b/gi, "Wave")
+
+      // "francs" peut être retiré car le montant est déjà identifié en FCFA
+      .replace(/\bfrancs?\b/gi, "")
+
+      .replace(/\s+/g, " ")
       .trim();
 
     return t;
