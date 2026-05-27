@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#0b1d12"/>
+<title>AIDE ACTION PAY — Parler l’argent</title>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="description" content="Aide ACTION PAY : phrases à prononcer pour recette, dépense, dette client et encaissement dette."/>
+
+<style>
+:root{
+  --bg:#0b1d12;
+  --deep:#06140d;
+  --panel:#102015;
+  --green:#14532d;
+  --gold:#f4c86a;
+  --gold2:#ffe8a8;
+  --white:#fff;
+  --soft:rgba(255,255,255,.86);
+  --muted:rgba(255,255,255,.64);
+  --line:rgba(244,200,106,.24);
+  --shadow:0 18px 48px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top right,rgba(244,200,106,.20),transparent 32%),
+    radial-gradient(circle at 10% 0%,rgba(34,197,94,.14),transparent 34%),
+    linear-gradient(180deg,#06140d,#0b1d12 58%,#102015);
+  color:var(--white);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  padding-bottom:70px;
+}
+a{text-decoration:none;color:inherit}
+button{font:inherit;cursor:pointer;border:0}
+.wrap{width:min(960px,calc(100% - 22px));margin:auto}
+
+.top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(6,20,13,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.topin{
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 0;
+}
+.brand strong{display:block;font-size:18px;font-weight:1000}
+.brand small{display:block;color:var(--gold);font-size:11px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em}
+.link{
+  min-height:42px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  padding:9px 12px;
+  font-size:13px;
+  font-weight:1000;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.hero{
+  margin:14px 0;
+  min-height:52vh;
+  padding:22px 18px;
+  border-radius:30px;
+  background:
+    radial-gradient(circle at top right,rgba(244,200,106,.22),transparent 34%),
+    linear-gradient(145deg,#06140d,#0b1d12 45%,#14532d);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.kicker{
+  color:var(--gold);
+  font-size:13px;
+  font-weight:1000;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  margin-bottom:13px;
+}
+h1{
+  font-size:clamp(42px,12vw,82px);
+  line-height:.88;
+  letter-spacing:-.07em;
+  font-weight:1000;
+}
+.lead{
+  margin-top:16px;
+  color:var(--soft);
+  font-size:18px;
+  line-height:1.36;
+  font-weight:850;
+}
+.reader{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.btn{
+  min-height:60px;
+  border-radius:20px;
+  background:#102015;
+  color:#fff;
+  border:1px solid var(--line);
+  font-weight:1000;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.btn.gold{
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#102015;
+}
+.btn.green{
+  background:linear-gradient(135deg,#bbf7d0,#22c55e);
+  color:#052e16;
+}
+
+.card{
+  margin:12px 0;
+  padding:16px;
+  border-radius:24px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  box-shadow:0 12px 30px rgba(0,0,0,.24);
+}
+.card h2{
+  color:var(--gold);
+  font-size:26px;
+  line-height:1.05;
+  font-weight:1000;
+  margin-bottom:10px;
+}
+.steps{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.step{
+  background:#0b1d12;
+  border:1px solid rgba(244,200,106,.18);
+  border-radius:20px;
+  padding:13px;
+}
+.num{
+  width:32px;
+  height:32px;
+  border-radius:999px;
+  background:var(--gold);
+  color:#102015;
+  display:grid;
+  place-items:center;
+  font-weight:1000;
+  margin-bottom:9px;
+}
+.step b{
+  display:block;
+  color:#fff;
+  font-size:16px;
+  line-height:1.08;
+  margin-bottom:7px;
+}
+.step p{
+  color:var(--muted);
+  font-size:13.5px;
+  line-height:1.38;
+  font-weight:850;
+}
+.examples{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+.ex{
+  min-height:74px;
+  border-radius:18px;
+  background:#0b1d12;
+  color:#fff;
+  border:1px solid rgba(244,200,106,.20);
+  padding:12px;
+  text-align:left;
+  font-weight:1000;
+}
+.ex small{
+  display:block;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:1000;
+  margin-bottom:5px;
+}
+.rule{
+  padding:13px;
+  border-radius:18px;
+  background:rgba(244,200,106,.10);
+  border:1px solid rgba(244,200,106,.22);
+  color:var(--soft);
+  line-height:1.42;
+  font-weight:850;
+}
+.rule strong{color:var(--gold)}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%) translateY(35px);
+  opacity:0;
+  width:min(520px,calc(100% - 28px));
+  background:#102015;
+  color:#fff;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:12px 16px;
+  text-align:center;
+  font-weight:1000;
+  transition:.2s ease;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:760px){
+  .steps{grid-template-columns:1fr 1fr}
+  .examples{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .topin{align-items:flex-start;flex-direction:column}
+  .reader{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  h1{font-size:48px}
+}
+</style>
+</head>
+
+<body>
+<header class="top">
+  <div class="wrap topin">
+    <div class="brand">
+      <strong>🎓 Aide ACTION PAY</strong>
+      <small>Parler recette · dépense · dette · preuve</small>
+    </div>
+    <a class="link" href="./action.html">🎙️ Retour ACTION</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker">DIGIY PAY · Mode d’emploi vocal</div>
+    <h1>Parle l’argent simplement.</h1>
+    <p class="lead">
+      Dis ce qui entre, ce qui sort, ce qu’un client doit, ou ce qu’il vient de payer.
+      PAY prépare. Tu vérifies. Tu valides. La preuve reste.
+    </p>
+
+    <div class="reader">
+      <button class="btn gold" id="btnGuide" onclick="speakGuide()">🎧 Écouter l’aide</button>
+      <button class="btn" onclick="stopGuide()">⏹ Stop</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Le déroulé simple</h2>
+    <div class="steps">
+      <article class="step">
+        <div class="num">1</div>
+        <b>Je parle</b>
+        <p>Je dis recette, dépense, dette ou paiement reçu.</p>
+      </article>
+      <article class="step">
+        <div class="num">2</div>
+        <b>PAY prépare</b>
+        <p>DIGIY reconnaît le type, le montant, le canal et l’origine.</p>
+      </article>
+      <article class="step">
+        <div class="num">3</div>
+        <b>Je valide</b>
+        <p>Le pro contrôle avant de faire entrer l’argent dans PAY.</p>
+      </article>
+      <article class="step">
+        <div class="num">4</div>
+        <b>La preuve reste</b>
+        <p>Référence, date, montant, canal et note restent visibles.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Phrases à prononcer</h2>
+    <div class="examples">
+      <button class="ex" onclick="sayExample('recette boutique 10000 Wave')">
+        <small>Recette</small>
+        recette boutique 10000 Wave
+      </button>
+      <button class="ex" onclick="sayExample('dépense emballage 3000 cash')">
+        <small>Dépense</small>
+        dépense emballage 3000 cash
+      </button>
+      <button class="ex" onclick="sayExample('Awa doit 15000')">
+        <small>Dette client</small>
+        Awa doit 15000
+      </button>
+      <button class="ex" onclick="sayExample('Awa a payé 5000 Wave sur sa dette')">
+        <small>Encaissement dette</small>
+        Awa a payé 5000 Wave sur sa dette
+      </button>
+      <button class="ex" onclick="sayExample('recette chauffeur 25000 cash')">
+        <small>Recette métier</small>
+        recette chauffeur 25000 cash
+      </button>
+      <button class="ex" onclick="sayExample('dépense carburant 5000 Orange Money')">
+        <small>Dépense métier</small>
+        dépense carburant 5000 Orange Money
+      </button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Différence POS / PAY</h2>
+    <div class="rule">
+      <strong>POS détaille la vente.</strong><br>
+      Exemple : 2 serviettes à 5 000 = 10 000.<br><br>
+      <strong>PAY garde l’argent réel.</strong><br>
+      Exemple : recette Commerce POS 10 000 Cash.<br><br>
+      Pas de double saisie. Les articles restent dans POS. L’argent final va dans PAY.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Règle sacrée</h2>
+    <div class="rule">
+      ACTION PAY prépare. Le pro vérifie. Le pro valide. La preuve reste.
+      Rien n’est validé automatiquement.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Accès rapide</h2>
+    <div class="reader">
+      <a class="btn green" href="./action.html">🎙️ Ouvrir ACTION PAY</a>
+      <a class="btn" href="./cockpit.html">🌡️ Voir cockpit</a>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GUIDE_TEXT = [
+  "Tu es sur l'aide ACTION PAY.",
+  "Ici, tu apprends comment parler l'argent.",
+  "PAY ne détaille pas les articles.",
+  "Les articles restent dans P O S.",
+  "PAY reçoit seulement l'argent réel : recette, dépense, dette client, ou paiement d'une dette.",
+  "Exemple recette : recette boutique dix mille Ouève.",
+  "Exemple dépense : dépense emballage trois mille cash.",
+  "Exemple dette : Awa doit quinze mille.",
+  "Exemple encaissement dette : Awa a payé cinq mille Ouève sur sa dette.",
+  "Diji i prépare le brouillon.",
+  "Le pro vérifie le type, le montant, le canal et l'origine.",
+  "Puis le pro valide.",
+  "Après validation, PAY crée une preuve avec référence, date, montant et canal.",
+  "Rien n'est validé automatiquement.",
+  "ACTION PAY prépare. Le pro valide. La preuve reste."
+].join(" ");
+
+let speaking = false;
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert(text);
+    return;
+  }
+
+  speechSynthesis.cancel();
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "fr-FR";
+  u.rate = 0.84;
+  u.pitch = 1.02;
+
+  const btn = document.getElementById("btnGuide");
+
+  u.onstart = () => {
+    speaking = true;
+    if(btn) btn.textContent = "⏹ Stop";
+  };
+
+  u.onend = () => {
+    speaking = false;
+    if(btn) btn.textContent = "🎧 Écouter l’aide";
+  };
+
+  u.onerror = u.onend;
+
+  const run = () => {
+    const fr = (speechSynthesis.getVoices() || []).find(v => /^fr/i.test(v.lang));
+    if(fr) u.voice = fr;
+    speechSynthesis.speak(u);
+  };
+
+  if(speechSynthesis.getVoices().length) run();
+  else{
+    speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.onvoiceschanged = null;
+      run();
+    };
+    setTimeout(run, 120);
+  }
+}
+
+function speakGuide(){
+  if(speaking){
+    stopGuide();
+    return;
+  }
+  speak(GUIDE_TEXT);
+}
+
+function stopGuide(){
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+  speaking = false;
+  const btn = document.getElementById("btnGuide");
+  if(btn) btn.textContent = "🎧 Écouter l’aide";
+}
+
+function sayExample(text){
+  speak("Exemple à prononcer : " + text);
+  navigator.clipboard?.writeText(text)
+    .then(()=>toast("Phrase copiée."))
+    .catch(()=>toast("Phrase prête."));
+}
+</script>
+</body>
+</html>
