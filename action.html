@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1d12"/>
 <title>DIGIY GO PAY — Mon argent</title>
 <meta name="robots" content="noindex,nofollow"/>
-<meta name="description" content="DIGIY GO PAY : parler recette, dépense, dette client, encaissement dette, puis validation humaine avec preuve."/>
+<meta name="description" content="DIGIY GO PAY : parler recette, dépense, dette client, encaissement dette, contrôler une clôture POS, puis valider avec preuve."/>
 
 <style>
 :root{
@@ -179,6 +179,8 @@ textarea::placeholder{color:rgba(255,255,255,.50)}
 .result.show{display:block}
 .proof{display:none}
 .proof.show{display:block}
+.closure{display:none}
+.closure.show{display:block}
 .preview{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -408,6 +410,37 @@ summary::-webkit-details-marker{display:none}
     </div>
   </section>
 
+
+  <section class="panel closure" id="closureControlBox">
+    <h2>🌙 Contrôle clôture POS</h2>
+    <p>Recette consolidée reçue depuis MON COMMERCE. POS garde les tickets et les articles. PAY range les totaux par mode de paiement.</p>
+
+    <div class="preview">
+      <div class="mini"><small>Date caisse</small><b id="cDate">—</b></div>
+      <div class="mini"><small>Référence</small><b id="cRef">—</b></div>
+      <div class="mini"><small>Ventes</small><b id="cCount">0</b></div>
+      <div class="mini"><small>Règle</small><b>Option B</b></div>
+    </div>
+
+    <div class="preview" id="cLines"></div>
+
+    <div class="amount-big">
+      <span>Total recette boutique</span>
+      <span id="cTotal">0 F</span>
+    </div>
+
+    <div class="status">
+      Une seule clôture visible. Plusieurs mouvements PAY derrière : Cash, Wave, Orange Money, Carte.
+    </div>
+
+    <div class="actions">
+      <button class="btn green" type="button" id="validateClosureBtn">✅ Valider clôture PAY</button>
+      <button class="btn gold" type="button" id="copyClosureBtn">📋 Copier clôture</button>
+      <button class="btn" type="button" onclick="location.href='./hub.html'">🧭 HUB PAY</button>
+      <button class="btn red" type="button" id="cancelClosureBtn">✖ Annuler</button>
+    </div>
+  </section>
+
   <section class="panel result" id="resultBox">
     <h2>💳 Mouvement préparé</h2>
     <p>Vérifie avant validation. L’argent n’entre dans PAY qu’après ton clic.</p>
@@ -506,6 +539,15 @@ summary::-webkit-details-marker{display:none}
     clearBtn:$("clearBtn"),
     statusBox:$("statusBox"),
     resultBox:$("resultBox"),
+    closureControlBox:$("closureControlBox"),
+    cDate:$("cDate"),
+    cRef:$("cRef"),
+    cCount:$("cCount"),
+    cLines:$("cLines"),
+    cTotal:$("cTotal"),
+    validateClosureBtn:$("validateClosureBtn"),
+    copyClosureBtn:$("copyClosureBtn"),
+    cancelClosureBtn:$("cancelClosureBtn"),
     rType:$("rType"),
     rWho:$("rWho"),
     rCategory:$("rCategory"),
@@ -530,6 +572,7 @@ summary::-webkit-details-marker{display:none}
   let selectedPay = "Cash";
   let currentDraft = null;
   let currentProof = null;
+  let currentClosure = null;
   let listenBuffer = "";
 
   function toast(msg){
@@ -682,6 +725,7 @@ summary::-webkit-details-marker{display:none}
     currentDraft = d;
     currentProof = null;
     els.proofBox.classList.remove("show");
+    els.closureControlBox?.classList.remove("show");
     els.resultBox.classList.add("show");
     els.rType.textContent = d.typeLabel;
     els.rWho.textContent = d.who || "—";
@@ -761,6 +805,226 @@ summary::-webkit-details-marker{display:none}
       ".";
 
     window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  }
+
+
+  function numParam(q, key){
+    return Number(String(q.get(key) || "0").replace(/[^\d.-]/g,"")) || 0;
+  }
+
+  function draftFromPosClosureUrl(){
+    try{
+      const q = new URLSearchParams(window.location.search);
+      const from = String(q.get("from") || "").toUpperCase();
+      if(from !== "POS_CLOSURE") return null;
+
+      const day = q.get("date") || new Date().toISOString().slice(0,10);
+      const closureRef = q.get("closureRef") || ("POS-CLOTURE-" + Date.now());
+      const count = Number(q.get("count") || "0") || 0;
+
+      const modes = [
+        {key:"cash", label:"Cash", channel:"Cash", amount:numParam(q,"cash")},
+        {key:"wave", label:"Wave", channel:"Wave", amount:numParam(q,"wave")},
+        {key:"orange", label:"Orange Money", channel:"Orange Money", amount:numParam(q,"orange")},
+        {key:"card", label:"Carte / TPE", channel:"Carte", amount:numParam(q,"card")},
+        {key:"other", label:"Autres", channel:"Autres", amount:numParam(q,"other")}
+      ];
+
+      const sum = modes.reduce((s,m)=>s+Number(m.amount||0),0);
+      const total = numParam(q,"total") || sum;
+
+      return {
+        id:"PAY_FROM_POS_CLOSURE_" + Date.now(),
+        proofRef:closureRef,
+        closureRef,
+        source:"POS_CLOSURE",
+        sourceLabel:"MON COMMERCE POS",
+        module:"PAY",
+        type:"income_closure",
+        typeLabel:"Clôture POS",
+        amount:total,
+        currency:"XOF",
+        channel:"Multi-règlements",
+        who:q.get("who") || "MON COMMERCE POS",
+        client:q.get("who") || "MON COMMERCE POS",
+        category:q.get("category") || "Clôture caisse POS",
+        note:"Clôture caisse POS — " + day + " — " + money(total),
+        rawText:"Clôture caisse POS " + day + " total " + Math.round(total),
+        status:"draft",
+        requiresHumanValidation:true,
+        createdAt:new Date().toISOString(),
+        posClosureDate:day,
+        posSalesCount:count,
+        modes:modes.filter(m=>Number(m.amount||0)>0),
+        allModes:modes,
+        safety:{
+          noArticleDetailInPay:true,
+          posKeepsTickets:true,
+          payKeepsTreasuryByMode:true,
+          noAutoPayment:true,
+          noAutoConfirmation:true
+        }
+      };
+    }catch(_){
+      return null;
+    }
+  }
+
+  function renderClosureDraft(d){
+    currentClosure = d;
+    currentDraft = null;
+    currentProof = null;
+
+    els.resultBox.classList.remove("show");
+    els.proofBox.classList.remove("show");
+    els.closureControlBox.classList.add("show");
+
+    els.cDate.textContent = d.posClosureDate || d.date || "—";
+    els.cRef.textContent = d.closureRef || d.proofRef || "—";
+    els.cCount.textContent = String(d.posSalesCount || 0);
+    els.cTotal.textContent = money(d.amount);
+
+    const modes = d.allModes || d.modes || [];
+    els.cLines.innerHTML = modes.map(m=>{
+      const n = Number(m.amount || 0);
+      return `
+        <div class="mini" style="${n<=0?'opacity:.55':''}">
+          <small>${m.label}</small>
+          <b>${money(n)}</b>
+        </div>
+      `;
+    }).join("");
+
+    els.voiceText.value = d.rawText || "";
+    setStatus("Clôture POS reçue. Vérifie les modes de paiement, puis valide PAY.");
+    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  }
+
+  function closureProofText(summary, movements){
+    const lines = [
+      "PREUVE PAY — CLÔTURE POS",
+      "Référence : " + (summary.proofRef || summary.closureRef || summary.id || "—"),
+      "Date caisse : " + (summary.posClosureDate || "—"),
+      "Date validation : " + formatDate(summary.validatedAt || summary.createdAt),
+      "Origine : MON COMMERCE POS",
+      "Nombre de ventes : " + (summary.posSalesCount || 0),
+      "Total recette boutique : " + money(summary.amount),
+      "",
+      "Mouvements PAY créés :"
+    ];
+
+    (movements || []).forEach(m=>{
+      lines.push("- " + (m.channel || "Canal") + " : " + money(m.amount));
+    });
+
+    lines.push("");
+    lines.push("Validation humaine : oui");
+    lines.push("POS garde les tickets et les articles. PAY garde la trésorerie par mode.");
+    return lines.join("\n");
+  }
+
+  function validateClosure(){
+    if(!currentClosure){
+      toast("Aucune clôture POS à valider.");
+      return;
+    }
+
+    const modes = (currentClosure.modes || []).filter(m=>Number(m.amount||0)>0);
+    if(!modes.length){
+      toast("Clôture sans montant à envoyer.");
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const movements = modes.map((m, idx)=>({
+      id:"PAY_FROM_POS_CLOSURE_" + Date.now() + "_" + idx,
+      proofRef:(currentClosure.closureRef || currentClosure.proofRef || "POS-CLOTURE") + "-" + m.key.toUpperCase(),
+      source:"POS_CLOSURE",
+      sourceLabel:"MON COMMERCE POS",
+      module:"PAY",
+      type:"income",
+      typeLabel:"Recette",
+      amount:Number(m.amount || 0),
+      currency:"XOF",
+      channel:m.channel,
+      who:"MON COMMERCE POS",
+      client:"MON COMMERCE POS",
+      category:"Recette boutique POS — " + m.label,
+      note:"Clôture POS " + (currentClosure.posClosureDate || "") + " — " + m.label + " — " + money(m.amount),
+      rawText:"Recette boutique POS " + Math.round(Number(m.amount||0)) + " " + m.channel,
+      status:"validated",
+      requiresHumanValidation:false,
+      validatedBy:"pro",
+      createdAt:currentClosure.createdAt || now,
+      validatedAt:now,
+      posClosureRef:currentClosure.closureRef || currentClosure.proofRef || "",
+      posClosureDate:currentClosure.posClosureDate || "",
+      posSalesCount:currentClosure.posSalesCount || 0,
+      safety:{
+        noArticleDetailInPay:true,
+        posKeepsTickets:true,
+        payKeepsTreasuryByMode:true,
+        humanValidatedInPay:true
+      }
+    }));
+
+    const summary = {
+      ...currentClosure,
+      id:"PAY_CLOSURE_SUMMARY_" + Date.now(),
+      status:"validated",
+      validatedAt:now,
+      validatedBy:"pro",
+      movementsCount:movements.length,
+      movements,
+      safety:{
+        ...(currentClosure.safety || {}),
+        humanValidatedInPay:true,
+        optionB:true
+      }
+    };
+
+    summary.proofText = closureProofText(summary, movements);
+
+    const list = readJSON(STORAGE_KEY, []);
+    movements.forEach(m=>{ m.proofText = proofText(m); });
+    list.unshift(...movements);
+
+    writeJSON(STORAGE_KEY, list.slice(0,200));
+    writeJSON(LATEST_KEY, summary);
+
+    renderProof(summary);
+    toast("Clôture POS validée : mouvements PAY créés par mode.");
+  }
+
+  function copyClosure(){
+    if(!currentClosure){
+      toast("Aucune clôture à copier.");
+      return;
+    }
+    const text = closureProofText(currentClosure, (currentClosure.modes || []).map(m=>({
+      channel:m.label,
+      amount:m.amount
+    })));
+
+    navigator.clipboard?.writeText(text)
+      .then(()=>toast("Clôture copiée."))
+      .catch(()=>prompt("Copie la clôture :", text));
+  }
+
+  function initPosClosureFromUrl(){
+    const draft = draftFromPosClosureUrl();
+    if(!draft) return false;
+
+    renderClosureDraft(draft);
+    toast("Clôture POS reçue depuis MON COMMERCE.");
+
+    try{
+      const url = new URL(window.location.href);
+      ["from","date","closureRef","count","total","cash","wave","orange","card","other","category","who"].forEach(k=>url.searchParams.delete(k));
+      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+    }catch(_){}
+
+    return true;
   }
 
   function draftFromPosUrl(){
@@ -928,8 +1192,10 @@ summary::-webkit-details-marker{display:none}
     els.voiceText.value = "";
     els.resultBox.classList.remove("show");
     els.proofBox.classList.remove("show");
+    els.closureControlBox?.classList.remove("show");
     currentDraft = null;
     currentProof = null;
+    currentClosure = null;
     listenBuffer = "";
     setStatus("Prêt. PAY prépare un brouillon seulement. Rien n’est validé automatiquement.");
   }
@@ -1012,6 +1278,8 @@ summary::-webkit-details-marker{display:none}
       currentProof = null;
       els.resultBox.classList.remove("show");
       els.proofBox.classList.remove("show");
+      els.closureControlBox?.classList.remove("show");
+      currentClosure = null;
       recognition.start();
     }catch(_){
       toast("Micro déjà lancé.");
@@ -1031,12 +1299,16 @@ summary::-webkit-details-marker{display:none}
   els.editBtn.addEventListener("click",()=>els.voiceText.focus());
   els.cancelBtn.addEventListener("click",clearAll);
   els.proofCopyBtn.addEventListener("click",copyProof);
+  els.validateClosureBtn?.addEventListener("click",validateClosure);
+  els.copyClosureBtn?.addEventListener("click",copyClosure);
+  els.cancelClosureBtn?.addEventListener("click",clearAll);
 
   setupPay();
   setupSpeech();
-  initPosHandoffFromUrl();
+  if(!initPosClosureFromUrl()) initPosHandoffFromUrl();
 })();
 </script>
 </body>
 </html>
+
 
