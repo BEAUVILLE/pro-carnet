@@ -1519,6 +1519,36 @@
         </aside>
       </div>
 
+
+      <section class="scard actionProofCard" id="actionPayProofCard" aria-label="Dernière preuve ACTION PAY">
+        <div class="scard-head">
+          <div class="scard-title green">✅ Dernière preuve ACTION PAY</div>
+          <a class="btn-mini primary" href="./action.html">🎙️ Nouvelle action</a>
+        </div>
+
+        <div class="actionProofGrid">
+          <div class="actionProofBox"><small>Référence</small><b id="actionProofRef">—</b></div>
+          <div class="actionProofBox"><small>Date</small><b id="actionProofDate">—</b></div>
+          <div class="actionProofBox"><small>Type</small><b id="actionProofType">—</b></div>
+          <div class="actionProofBox"><small>Canal</small><b id="actionProofChannel">—</b></div>
+          <div class="actionProofBox"><small>Montant</small><b id="actionProofAmount">0 F</b></div>
+          <div class="actionProofBox"><small>Client / origine</small><b id="actionProofWho">—</b></div>
+          <div class="actionProofBox"><small>Catégorie</small><b id="actionProofCategory">—</b></div>
+          <div class="actionProofBox"><small>Statut</small><b id="actionProofStatus">En attente</b></div>
+        </div>
+
+        <div class="actionProofSummary" id="actionProofSummary">
+          Aucune preuve ACTION PAY trouvée sur ce téléphone. Lance ACTION PAY, prépare un mouvement, puis valide pour voir la preuve ici.
+        </div>
+
+        <div class="actionProofActions">
+          <button class="btn-mini gold" type="button" id="btnCopyActionProof">📋 Copier preuve</button>
+          <button class="btn-mini" type="button" id="btnRefreshActionProof">🔄 Relire</button>
+          <a class="btn-mini" href="./action.html">🎙️ Ouvrir ACTION PAY</a>
+          <a class="btn-mini" href="./admin.html">➕ Ajouter manuel</a>
+        </div>
+      </section>
+
       <section class="hud2s">
         <div class="hud2s-head">
           <div class="hud2s-kicker">Lecture flash</div>
@@ -3911,9 +3941,264 @@
     })();
   </script>
 
+
+
+  <script>
+    (() => {
+      "use strict";
+
+      const LATEST_KEY = "DIGIY_PAY_PENDING_ACTION";
+      const LIST_KEY = "DIGIY_PAY_ACTIONS";
+
+      function $(id){ return document.getElementById(id); }
+
+      function readJSON(key, fallback){
+        try{
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback;
+        }catch(_){
+          return fallback;
+        }
+      }
+
+      function money(n){
+        return Math.round(Number(n)||0).toLocaleString("fr-FR") + " F";
+      }
+
+      function formatDate(v){
+        const d = new Date(v);
+        if(isNaN(d.getTime())) return "—";
+        return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}) +
+          " " + d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+      }
+
+      function getLatestProof(){
+        const latest = readJSON(LATEST_KEY, null);
+        if(latest && typeof latest === "object") return latest;
+        const list = readJSON(LIST_KEY, []);
+        return Array.isArray(list) && list.length ? list[0] : null;
+      }
+
+      function buildProofText(m){
+        if(!m) return "";
+        return m.proofText || [
+          "PREUVE PAY — DIGIYLYFE",
+          "Référence : " + (m.proofRef || m.id || "—"),
+          "Date : " + formatDate(m.validatedAt || m.createdAt),
+          "Type : " + (m.typeLabel || "Mouvement PAY"),
+          "Montant : " + money(m.amount),
+          "Canal : " + (m.channel || "—"),
+          "Client / origine : " + (m.who || m.client || "—"),
+          "Catégorie : " + (m.category || "—"),
+          "Note : " + (m.note || m.rawText || "—"),
+          "Validation humaine : " + (m.validatedBy || m.safety?.humanValidated ? "oui" : "à vérifier"),
+          "Rien n’a été validé automatiquement."
+        ].join("\n");
+      }
+
+      function setText(id, value){
+        const el = $(id);
+        if(el) el.textContent = value;
+      }
+
+      function renderActionProof(){
+        const m = getLatestProof();
+
+        if(!m){
+          setText("actionProofRef", "—");
+          setText("actionProofDate", "—");
+          setText("actionProofType", "—");
+          setText("actionProofChannel", "—");
+          setText("actionProofAmount", "0 F");
+          setText("actionProofWho", "—");
+          setText("actionProofCategory", "—");
+          setText("actionProofStatus", "Aucune preuve");
+          setText("actionProofSummary", "Aucune preuve ACTION PAY trouvée sur ce téléphone. Lance ACTION PAY, prépare un mouvement, puis valide pour voir la preuve ici.");
+          return;
+        }
+
+        setText("actionProofRef", m.proofRef || m.id || "—");
+        setText("actionProofDate", formatDate(m.validatedAt || m.createdAt));
+        setText("actionProofType", m.typeLabel || "Mouvement PAY");
+        setText("actionProofChannel", m.channel || "—");
+        setText("actionProofAmount", money(m.amount));
+        setText("actionProofWho", m.who || m.client || "—");
+        setText("actionProofCategory", m.category || "—");
+        setText("actionProofStatus", m.status === "validated" ? "Validé" : "Brouillon");
+        setText(
+          "actionProofSummary",
+          "Dernière preuve : " + (m.typeLabel || "Mouvement PAY") +
+          " · " + money(m.amount) +
+          " · " + (m.channel || "canal non précisé") +
+          " · " + (m.who || m.client || "origine non précisée") + "."
+        );
+      }
+
+      function copyProof(){
+        const m = getLatestProof();
+        const text = buildProofText(m);
+        if(!text){
+          if(typeof toast === "function") toast("Aucune preuve à copier.");
+          else alert("Aucune preuve à copier.");
+          return;
+        }
+
+        navigator.clipboard?.writeText(text)
+          .then(()=>{
+            if(typeof toast === "function") toast("Preuve ACTION PAY copiée.");
+          })
+          .catch(()=>prompt("Copie la preuve :", text));
+      }
+
+      function bindActionProof(){
+        renderActionProof();
+        $("btnRefreshActionProof")?.addEventListener("click", renderActionProof);
+        $("btnCopyActionProof")?.addEventListener("click", copyProof);
+        window.addEventListener("storage", (e) => {
+          if(e.key === LATEST_KEY || e.key === LIST_KEY) renderActionProof();
+        });
+      }
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", bindActionProof);
+      }else{
+        bindActionProof();
+      }
+
+      window.DIGIY_PAY_RENDER_ACTION_PROOF = renderActionProof;
+    })();
+  </script>
+
   <script src="./oreille-metier-pay.js?v=pay-ear-v1-20260519"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
