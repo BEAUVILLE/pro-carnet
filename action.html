@@ -515,7 +515,7 @@ summary::-webkit-details-marker{display:none}
       <p><strong>Dette client :</strong> Awa doit 15000</p>
       <p><strong>Encaissement dette :</strong> Awa a payé 5000 Wave sur sa dette</p>
       <br>
-      <p>Règle : POS détaille la vente. PAY reçoit l’argent réel. Pas de double saisie.</p>
+      <p>Règle : POS détaille la vente. PAY reçoit l’argent réel par clôture consolidée. Pas de double saisie.</p>
     </div>
   </details>
 </main>
@@ -528,6 +528,7 @@ summary::-webkit-details-marker{display:none}
 
   const STORAGE_KEY = "DIGIY_PAY_ACTIONS";
   const LATEST_KEY = "DIGIY_PAY_PENDING_ACTION";
+  const CLOSURE_REGISTRY_KEY = "DIGIY_PAY_POS_CLOSURES";
 
   const $ = id => document.getElementById(id);
 
@@ -607,6 +608,72 @@ summary::-webkit-details-marker{display:none}
 
   function writeJSON(key, val){
     localStorage.setItem(key, JSON.stringify(val));
+  }
+
+  function closureKey(ref){
+    return String(ref || "").trim().toUpperCase();
+  }
+
+  function getClosureRegistry(){
+    const registry = readJSON(CLOSURE_REGISTRY_KEY, {});
+    return registry && typeof registry === "object" && !Array.isArray(registry) ? registry : {};
+  }
+
+  function closureAlreadyValidated(ref){
+    const key = closureKey(ref);
+    if(!key) return false;
+
+    const registry = getClosureRegistry();
+    if(registry[key]) return true;
+
+    const list = readJSON(STORAGE_KEY, []);
+    if(Array.isArray(list) && list.some(m => closureKey(m.posClosureRef || m.closureRef || m.proofRef) === key)){
+      return true;
+    }
+
+    const latest = readJSON(LATEST_KEY, null);
+    if(latest && closureKey(latest.closureRef || latest.posClosureRef || latest.proofRef) === key && latest.status === "validated"){
+      return true;
+    }
+
+    return false;
+  }
+
+  function rememberClosure(summary){
+    const key = closureKey(summary && (summary.closureRef || summary.proofRef || summary.posClosureRef));
+    if(!key) return;
+    const registry = getClosureRegistry();
+    registry[key] = {
+      closureRef: summary.closureRef || summary.proofRef || summary.posClosureRef || "",
+      status: summary.status || "validated",
+      amount: Number(summary.amount || 0),
+      posClosureDate: summary.posClosureDate || "",
+      posSalesCount: summary.posSalesCount || 0,
+      validatedAt: summary.validatedAt || new Date().toISOString()
+    };
+    writeJSON(CLOSURE_REGISTRY_KEY, registry);
+  }
+
+  function closeLegacyPosUrlIfNeeded(){
+    try{
+      const q = new URLSearchParams(window.location.search);
+      const from = String(q.get("from") || "").toUpperCase();
+      if(from !== "POS") return false;
+
+      const url = new URL(window.location.href);
+      ["from","type","amount","channel","category","who","proofRef"].forEach(k=>url.searchParams.delete(k));
+      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+
+      els.voiceText.value = "Clôture caisse POS obligatoire : retourne dans MON COMMERCE, puis utilise Clôture caisse → PAY.";
+      els.resultBox.classList.remove("show");
+      els.proofBox.classList.remove("show");
+      els.closureControlBox?.classList.remove("show");
+      setStatus("Ancienne route POS → PAY fermée. PAY reçoit MON COMMERCE uniquement par Clôture caisse → PAY.");
+      toast("Route POS directe fermée : passe par Clôture caisse → PAY.");
+      return true;
+    }catch(_){
+      return false;
+    }
   }
 
   function extractAmount(text){
@@ -929,6 +996,13 @@ summary::-webkit-details-marker{display:none}
       return;
     }
 
+    const ref = currentClosure.closureRef || currentClosure.proofRef || "";
+    if(closureAlreadyValidated(ref)){
+      setStatus("Clôture déjà validée dans PAY. Aucun doublon créé.");
+      toast("Clôture déjà validée : doublon bloqué.");
+      return;
+    }
+
     const modes = (currentClosure.modes || []).filter(m=>Number(m.amount||0)>0);
     if(!modes.length){
       toast("Clôture sans montant à envoyer.");
@@ -964,7 +1038,8 @@ summary::-webkit-details-marker{display:none}
         noArticleDetailInPay:true,
         posKeepsTickets:true,
         payKeepsTreasuryByMode:true,
-        humanValidatedInPay:true
+        humanValidatedInPay:true,
+        duplicateBlockedByClosureRef:true
       }
     }));
 
@@ -979,7 +1054,8 @@ summary::-webkit-details-marker{display:none}
       safety:{
         ...(currentClosure.safety || {}),
         humanValidatedInPay:true,
-        optionB:true
+        optionB:true,
+        duplicateBlockedByClosureRef:true
       }
     };
 
@@ -991,6 +1067,7 @@ summary::-webkit-details-marker{display:none}
 
     writeJSON(STORAGE_KEY, list.slice(0,200));
     writeJSON(LATEST_KEY, summary);
+    rememberClosure(summary);
 
     renderProof(summary);
     toast("Clôture POS validée : mouvements PAY créés par mode.");
@@ -1073,19 +1150,7 @@ summary::-webkit-details-marker{display:none}
   }
 
   function initPosHandoffFromUrl(){
-    const draft = draftFromPosUrl();
-    if(!draft) return;
-
-    els.voiceText.value = draft.rawText;
-    renderDraft(draft);
-    setStatus("Recette POS reçue. Vérifie puis valide PAY pour créer la preuve.");
-    toast("Recette POS reçue depuis MON COMMERCE.");
-
-    try{
-      const url = new URL(window.location.href);
-      ["from","type","amount","channel","category","who","proofRef"].forEach(k=>url.searchParams.delete(k));
-      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-    }catch(_){ }
+    closeLegacyPosUrlIfNeeded();
   }
 
   function escapeHTML(v){
@@ -1305,10 +1370,12 @@ summary::-webkit-details-marker{display:none}
 
   setupPay();
   setupSpeech();
-  if(!initPosClosureFromUrl()) initPosHandoffFromUrl();
+  if(!initPosClosureFromUrl()) closeLegacyPosUrlIfNeeded();
 })();
 </script>
 </body>
 </html>
+
+
 
 
