@@ -4,31 +4,56 @@
 */
 (function(){
   "use strict";
-  const VERSION="action-digiy-receiver-v3-validate-clean-20260526";
+  const VERSION="action-digiy-receiver-pay-v4-clean-amount-channel-20260527";
   const HOST=String(location.hostname||"").toLowerCase();
   const MODULE=HOST.includes("commerce-pro")?"POS":HOST.includes("pro-pay")?"PAY":HOST.includes("pro-driver")?"DRIVER":HOST.includes("pro-loc")?"LOC":HOST.includes("pro-resa")?"RESA":HOST.includes("pro-market")?"MARKET":HOST.includes("reseau-digiy")?"RESEAU_DIGIY":HOST.includes("pro-build")?"BUILD":HOST.includes("pro-job")?"JOBS":"MODULE";
   const STORAGE={latest:"DIGIY_INCOMING_ACTION",queue:"DIGIY_INCOMING_ACTION_QUEUE",moduleLatest:"DIGIY_"+MODULE+"_INCOMING_ACTION",moduleQueue:"DIGIY_"+MODULE+"_INCOMING_ACTION_QUEUE",validated:"DIGIY_VALIDATED_ACTION",moduleValidated:"DIGIY_"+MODULE+"_VALIDATED_ACTION"};
 
+  function fixMojibake(text){
+    return String(text||"")
+      .replace(/Ã©/g,"é").replace(/Ã¨/g,"è").replace(/Ãª/g,"ê").replace(/Ã«/g,"ë")
+      .replace(/Ã /g,"à").replace(/Ã¡/g,"á").replace(/Ã¢/g,"â").replace(/Ã¤/g,"ä")
+      .replace(/Ã´/g,"ô").replace(/Ã¶/g,"ö").replace(/Ã¹/g,"ù").replace(/Ã»/g,"û").replace(/Ã¼/g,"ü")
+      .replace(/Ã®/g,"î").replace(/Ã¯/g,"ï").replace(/Ã§/g,"ç").replace(/Â/g,"");
+  }
   function cleanCommand(text){
-    let t=String(text||"").trim();
+    let t=fixMojibake(text).trim();
     t=t.replace(/^\s*action\s+digi\s+i\s*/i,"").replace(/^\s*action\s+diji\s+i\s*/i,"").replace(/^\s*action\s+dgi\s+i\s*/i,"").replace(/^\s*action\s+dj\s*/i,"").replace(/^\s*action\s+d\s*j\s*/i,"").replace(/^\s*action\s+dji\s*/i,"").replace(/^\s*action\s+digiy\s*/i,"").replace(/^\s*digiy\s*/i,"").replace(/^\s*digi\s*i\s*/i,"").trim();
     t=t.replace(/^\s*(note|ajoute|ajouter|prépare|prepare|crée|cree|mets|met)\s+/i,"").trim();
     t=t.replace(/\bmodule\s+(pos|poste|post|pay|paie|paye)\b/gi," ").replace(/^\s*(pos|poste|post)\s+(vente|vendu|dépense|depense|encaissement|paiement)\b/gi,"$2").replace(/\b(vente|vendu|dépense|depense|encaissement|paiement)\s+(pos|poste|post)\b/gi,"$1").replace(/\b(pos|poste|post)\s+(\d)/gi,"$2").replace(/\b(web|wêve|weve|wève|wavee|ouève|ouve|waf|wef)\b/gi,"Wave").replace(/\bfrancs?\b/gi,"").replace(/\s+/g," ").trim();
     return t;
+  }
+  function inferAmount(action,note){
+    const direct=Number(action.amount||action.totalAmount||action.total||action.value||0);
+    if(Number.isFinite(direct)&&direct>0)return direct;
+    const s=fixMojibake(note||action.commandText||action.rawText||action.note||"");
+    const m=s.match(/\d[\d\s.,]*/g);
+    if(!m||!m.length)return 0;
+    const last=Number(String(m[m.length-1]).replace(/[^\d]/g,""));
+    return Number.isFinite(last)&&last>0?last:0;
+  }
+  function inferChannel(action,note){
+    if(action.channel)return action.channel;
+    const n=fixMojibake(note||action.commandText||action.rawText||action.note||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g," ");
+    if(/\b(wave|web|weve|ouve|oueve)\b/.test(n))return"Wave";
+    if(/orange\s*money|\bom\b/.test(n))return"Orange Money";
+    if(/\b(cash|espece|especes|liquide)\b/.test(n))return"Cash";
+    if(/virement/.test(n))return"Virement";
+    return action.channel||"";
   }
 
   function parseJson(v){ if(!v)return null; const tries=[v]; try{tries.push(decodeURIComponent(v));}catch(e){} try{tries.push(atob(v));}catch(e){} try{tries.push(atob(decodeURIComponent(v)));}catch(e){} for(const x of tries){try{const o=JSON.parse(x); if(o&&typeof o==="object")return o;}catch(e){}} return null; }
   function readActionFromUrl(){ const h=new URLSearchParams(String(location.hash||"").replace(/^#/,"")); const q=new URLSearchParams(String(location.search||"").replace(/^\?/,"")); return parseJson(h.get("digiyAction")||h.get("action")||q.get("digiyAction")||q.get("action")); }
   function cleanUrl(){ if(!history||!history.replaceState)return; const clean=location.origin+location.pathname+location.search.replace(/[?&](digiyAction|action)=[^&]+/g,""); history.replaceState({},document.title,clean); }
   function readQueue(key){ try{const x=JSON.parse(localStorage.getItem(key)||"[]");return Array.isArray(x)?x:[];}catch(e){return[];} }
-  function saveAction(action,status){ const note=cleanCommand(action.commandText||action.rawText||action.note||""); const safe={...action,receiverVersion:VERSION,receivedAt:new Date().toISOString(),receivedByModule:MODULE,commandText:note,rawText:note,note:note,requiresHumanValidation:status!=="validated_by_pro",status:status||"received_draft"}; localStorage.setItem(STORAGE.latest,JSON.stringify(safe)); localStorage.setItem(STORAGE.moduleLatest,JSON.stringify(safe)); const q1=readQueue(STORAGE.queue); q1.unshift(safe); localStorage.setItem(STORAGE.queue,JSON.stringify(q1.slice(0,50))); const q2=readQueue(STORAGE.moduleQueue); q2.unshift(safe); localStorage.setItem(STORAGE.moduleQueue,JSON.stringify(q2.slice(0,50))); return safe; }
+  function saveAction(action,status){ const note=cleanCommand(action.commandText||action.rawText||action.note||""); const amount=inferAmount(action,note); const channel=inferChannel(action,note); const safe={...action,receiverVersion:VERSION,receivedAt:new Date().toISOString(),receivedByModule:MODULE,commandText:note,rawText:note,note:note,amount:amount||action.amount||0,channel:channel||action.channel||"",requiresHumanValidation:status!=="validated_by_pro",status:status||"received_draft"}; localStorage.setItem(STORAGE.latest,JSON.stringify(safe)); localStorage.setItem(STORAGE.moduleLatest,JSON.stringify(safe)); const q1=readQueue(STORAGE.queue); q1.unshift(safe); localStorage.setItem(STORAGE.queue,JSON.stringify(q1.slice(0,50))); const q2=readQueue(STORAGE.moduleQueue); q2.unshift(safe); localStorage.setItem(STORAGE.moduleQueue,JSON.stringify(q2.slice(0,50))); return safe; }
   function validateDraft(action){ const validated=saveAction({...action,validatedAt:new Date().toISOString(),validatedByModule:MODULE},"validated_by_pro"); localStorage.setItem(STORAGE.validated,JSON.stringify(validated)); localStorage.setItem(STORAGE.moduleValidated,JSON.stringify(validated)); fillFields(validated); window.dispatchEvent(new CustomEvent("digiy:action-validated",{detail:validated})); return validated; }
   function relevant(action){ const p=action.primaryModule||action.module||action.targetModule||""; const links=Array.isArray(action.linkedModules)?action.linkedModules:[]; return p===MODULE||links.includes(MODULE)||(MODULE==="PAY"&&links.includes("PAY"))||(MODULE==="POS"&&(p==="POS"||links.includes("POS"))); }
   function moduleLabel(code){ return ({POS:"POS / Mon commerce",PAY:"PAY / Mon argent",DRIVER:"DRIVER",LOC:"LOC",RESA:"RESA",MARKET:"MARKET",RESEAU_DIGIY:"RÉSEAU DIGIY",BUILD:"Mes services",JOBS:"JOBS",MODULE:"Module DIGIY"})[code]||code||"Module DIGIY"; }
   function actionLabel(a){ return ({ADD_SALE:"Ajouter une vente",ADD_EXPENSE:"Ajouter une dépense",ADD_MOVEMENT:"Ajouter un mouvement",ADD_RECEIVABLE:"Noter une dette client",PREPARE_TRIP:"Préparer une course",CLOSE_AVAILABILITY:"Fermer une disponibilité",PREPARE_BOOKING:"Préparer une réservation",PREPARE_ANNOUNCEMENT:"Préparer une annonce",PREPARE_QUOTE:"Préparer un devis"})[a]||a||"Action métier"; }
-  function amountText(a){ const n=Number(a.amount); return Number.isFinite(n)&&n>0?n.toLocaleString("fr-FR")+" FCFA":"—"; }
+  function amountText(a){ const n=Number(a.amount||a.totalAmount||a.total||0); return Number.isFinite(n)&&n>0?n.toLocaleString("fr-FR")+" FCFA":"—"; }
   function copyText(t){ t=String(t||""); if(!t)return; if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(()=>prompt("Copie :",t)); else prompt("Copie :",t); }
-  function fillFields(action){ const note=cleanCommand(action.commandText||action.rawText||action.note||""); const amount=action.amount?String(action.amount):""; const channel=action.channel||""; const notes=["#note","#quickNote","#payNote","#posNote","#movementNote","#description","textarea[name='note']","textarea[name='description']","input[name='note']","input[name='description']"]; const amounts=["#amount","#montant","#payAmount","#posAmount","input[name='amount']","input[name='montant']"]; const channels=["#channel","#paymentChannel","#mode","select[name='channel']","select[name='mode']","input[name='channel']","input[name='mode']"]; function put(sel,val){document.querySelectorAll(sel).forEach(el=>{if(!el.value&&val)el.value=val;el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));});} notes.forEach(s=>put(s,note)); amounts.forEach(s=>put(s,amount)); channels.forEach(s=>put(s,channel)); }
+  function fillFields(action){ const note=cleanCommand(action.commandText||action.rawText||action.note||""); const amount=String(inferAmount(action,note)||""); const channel=inferChannel(action,note)||""; const notes=["#note","#quickNote","#payNote","#posNote","#movementNote","#description","textarea[name='note']","textarea[name='description']","input[name='note']","input[name='description']"]; const amounts=["#amount","#montant","#payAmount","#posAmount","input[name='amount']","input[name='montant']"]; const channels=["#channel","#paymentChannel","#mode","select[name='channel']","select[name='mode']","input[name='channel']","input[name='mode']"]; function put(sel,val){document.querySelectorAll(sel).forEach(el=>{if(!el.value&&val)el.value=val;el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));});} notes.forEach(s=>put(s,note)); amounts.forEach(s=>put(s,amount)); channels.forEach(s=>put(s,channel)); }
 
   function mountPanel(action){
     const old=document.getElementById("digiyActionReceiverPanel"); if(old)old.remove();
