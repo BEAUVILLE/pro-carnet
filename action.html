@@ -177,10 +177,8 @@ textarea::placeholder{color:rgba(255,255,255,.50)}
 }
 .result{display:none}
 .result.show{display:block}
-
 .proof{display:none}
 .proof.show{display:block}
-
 .preview{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -322,7 +320,6 @@ summary::-webkit-details-marker{display:none}
     color:#000!important;
     padding:0!important;
   }
-
   .top,
   .hero,
   .result,
@@ -332,7 +329,6 @@ summary::-webkit-details-marker{display:none}
   .proof .actions{
     display:none!important;
   }
-
   .proof.show{
     display:block!important;
     background:#fff!important;
@@ -340,30 +336,27 @@ summary::-webkit-details-marker{display:none}
     border:0!important;
     box-shadow:none!important;
   }
-
   .proof h2,
   .proof p,
   .proof .mini b,
   .proof .mini small{
     color:#000!important;
   }
-
   .proof .mini,
   .proof .status{
     background:#fff!important;
     color:#000!important;
     border:1px solid #ddd!important;
   }
-
   .proof .amount-big{
     background:#f5f5f5!important;
     color:#000!important;
   }
-
   .proof .amount-big span:last-child{
     color:#000!important;
   }
 }
+
 </style>
 </head>
 
@@ -770,6 +763,76 @@ summary::-webkit-details-marker{display:none}
     window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
   }
 
+  function draftFromPosUrl(){
+    try{
+      const q = new URLSearchParams(window.location.search);
+      const from = String(q.get("from") || "").toUpperCase();
+      if(from !== "POS") return null;
+
+      const amount = Number(String(q.get("amount") || "0").replace(/[^\d.-]/g,"")) || 0;
+      const channel = q.get("channel") || "Cash";
+      const category = q.get("category") || "Recette Commerce POS";
+      const who = q.get("who") || "Commerce POS";
+      const proofRefFromPos = q.get("proofRef") || ("POS-PAY-" + Date.now());
+      const rawText = "Recette Commerce POS " + Math.round(amount) + " " + channel;
+
+      return {
+        id:"PAY_FROM_POS_URL_" + Date.now(),
+        proofRef:proofRefFromPos,
+        source:"POS",
+        sourceLabel:"MON COMMERCE POS",
+        module:"PAY",
+        type:"income",
+        typeLabel:"Recette",
+        amount,
+        currency:"XOF",
+        channel,
+        who,
+        client:who,
+        category,
+        note:category + " — " + money(amount) + " — " + channel,
+        rawText,
+        status:"draft",
+        requiresHumanValidation:true,
+        createdAt:new Date().toISOString(),
+        safety:{
+          noArticleDetailInPay:true,
+          posKeepsItems:true,
+          payKeepsFinalMoney:true,
+          noAutoPayment:true,
+          noAutoConfirmation:true
+        }
+      };
+    }catch(_){
+      return null;
+    }
+  }
+
+  function initPosHandoffFromUrl(){
+    const draft = draftFromPosUrl();
+    if(!draft) return;
+
+    els.voiceText.value = draft.rawText;
+    renderDraft(draft);
+    setStatus("Recette POS reçue. Vérifie puis valide PAY pour créer la preuve.");
+    toast("Recette POS reçue depuis MON COMMERCE.");
+
+    try{
+      const url = new URL(window.location.href);
+      ["from","type","amount","channel","category","who","proofRef"].forEach(k=>url.searchParams.delete(k));
+      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+    }catch(_){ }
+  }
+
+  function escapeHTML(v){
+    return String(v??"")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
   function setStatus(text){
     els.statusBox.textContent = text;
   }
@@ -802,7 +865,7 @@ summary::-webkit-details-marker{display:none}
 
     const movement = {
       ...currentDraft,
-      proofRef:proofRef(),
+      proofRef: currentDraft.proofRef || proofRef(),
       channel:selectedPay,
       status:"validated",
       validatedAt:new Date().toISOString(),
@@ -971,6 +1034,7 @@ summary::-webkit-details-marker{display:none}
 
   setupPay();
   setupSpeech();
+  initPosHandoffFromUrl();
 })();
 </script>
 </body>
