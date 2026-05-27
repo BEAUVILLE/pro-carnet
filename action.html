@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1d12"/>
 <title>ACTION PAY — Mon argent</title>
 <meta name="robots" content="noindex,nofollow"/>
-<meta name="description" content="ACTION PAY DIGIY : parler recette, dépense, dette client, encaissement dette, puis validation humaine."/>
+<meta name="description" content="ACTION PAY DIGIY : parler recette, dépense, dette client, encaissement dette, puis validation humaine avec preuve."/>
 
 <style>
 :root{
@@ -177,6 +177,10 @@ textarea::placeholder{color:rgba(255,255,255,.50)}
 }
 .result{display:none}
 .result.show{display:block}
+
+.proof{display:none}
+.proof.show{display:block}
+
 .preview{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -311,6 +315,55 @@ summary::-webkit-details-marker{display:none}
   .dept{grid-template-columns:1fr 1fr}
   .preview{grid-template-columns:1fr}
 }
+
+@media(print){
+  body{
+    background:#fff!important;
+    color:#000!important;
+    padding:0!important;
+  }
+
+  .top,
+  .hero,
+  .result,
+  .dept,
+  details,
+  .toast,
+  .proof .actions{
+    display:none!important;
+  }
+
+  .proof.show{
+    display:block!important;
+    background:#fff!important;
+    color:#000!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  .proof h2,
+  .proof p,
+  .proof .mini b,
+  .proof .mini small{
+    color:#000!important;
+  }
+
+  .proof .mini,
+  .proof .status{
+    background:#fff!important;
+    color:#000!important;
+    border:1px solid #ddd!important;
+  }
+
+  .proof .amount-big{
+    background:#f5f5f5!important;
+    color:#000!important;
+  }
+
+  .proof .amount-big span:last-child{
+    color:#000!important;
+  }
+}
 </style>
 </head>
 
@@ -387,9 +440,37 @@ summary::-webkit-details-marker{display:none}
 
     <div class="actions">
       <button class="btn green" type="button" id="validateBtn">✅ Valider PAY</button>
-      <button class="btn gold" type="button" id="copyBtn">📋 Copier</button>
+      <button class="btn gold" type="button" id="copyBtn">📋 Copier brouillon</button>
       <button class="btn" type="button" id="editBtn">✏️ Modifier</button>
       <button class="btn red" type="button" id="cancelBtn">✖ Annuler</button>
+    </div>
+  </section>
+
+  <section class="panel proof" id="proofBox">
+    <h2>✅ Preuve PAY</h2>
+    <p>Mouvement validé par le pro. Cette preuve reste dans le téléphone.</p>
+
+    <div class="preview">
+      <div class="mini"><small>Référence</small><b id="pRef">—</b></div>
+      <div class="mini"><small>Date</small><b id="pDate">—</b></div>
+      <div class="mini"><small>Type</small><b id="pType">—</b></div>
+      <div class="mini"><small>Canal</small><b id="pChannel">—</b></div>
+    </div>
+
+    <div class="amount-big">
+      <span>Montant validé</span>
+      <span id="pAmount">0 F</span>
+    </div>
+
+    <div class="status" id="pSummary">
+      Preuve en attente.
+    </div>
+
+    <div class="actions">
+      <button class="btn gold" type="button" id="proofCopyBtn">📋 Copier preuve</button>
+      <button class="btn" type="button" onclick="window.print()">🖨️ Imprimer</button>
+      <a class="btn green" href="./cockpit.html">🌡️ Voir cockpit</a>
+      <a class="btn" href="./hub.html">🧭 Retour HUB</a>
     </div>
   </section>
 
@@ -441,12 +522,21 @@ summary::-webkit-details-marker{display:none}
     copyBtn:$("copyBtn"),
     editBtn:$("editBtn"),
     cancelBtn:$("cancelBtn"),
+    proofBox:$("proofBox"),
+    pRef:$("pRef"),
+    pDate:$("pDate"),
+    pType:$("pType"),
+    pChannel:$("pChannel"),
+    pAmount:$("pAmount"),
+    pSummary:$("pSummary"),
+    proofCopyBtn:$("proofCopyBtn"),
     toast:$("toast")
   };
 
   let recognition = null;
   let selectedPay = "Cash";
   let currentDraft = null;
+  let currentProof = null;
   let listenBuffer = "";
 
   function toast(msg){
@@ -597,6 +687,8 @@ summary::-webkit-details-marker{display:none}
 
   function renderDraft(d){
     currentDraft = d;
+    currentProof = null;
+    els.proofBox.classList.remove("show");
     els.resultBox.classList.add("show");
     els.rType.textContent = d.typeLabel;
     els.rWho.textContent = d.who || "—";
@@ -612,6 +704,69 @@ summary::-webkit-details-marker{display:none}
     }
 
     setStatus("Mouvement préparé. Vérifie avant validation.");
+    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  }
+
+  function proofRef(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const day = String(d.getDate()).padStart(2,"0");
+    const h = String(d.getHours()).padStart(2,"0");
+    const min = String(d.getMinutes()).padStart(2,"0");
+    const s = String(d.getSeconds()).padStart(2,"0");
+    return "PAY-" + y + m + day + "-" + h + min + s;
+  }
+
+  function formatDate(v){
+    const d = new Date(v);
+    if(isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}) +
+      " " +
+      d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  }
+
+  function proofText(movement){
+    if(!movement) return "";
+
+    return [
+      "PREUVE PAY — DIGIYLYFE",
+      "Référence : " + (movement.proofRef || movement.id || "—"),
+      "Date : " + formatDate(movement.validatedAt || movement.createdAt),
+      "Type : " + (movement.typeLabel || "Mouvement PAY"),
+      "Montant : " + money(movement.amount),
+      "Canal : " + (movement.channel || "—"),
+      "Client / origine : " + (movement.who || "—"),
+      "Catégorie : " + (movement.category || "—"),
+      "Note : " + (movement.note || "—"),
+      "Validation humaine : oui",
+      "Rien n’a été validé automatiquement."
+    ].join("\n");
+  }
+
+  function renderProof(movement){
+    if(!movement) return;
+
+    currentProof = movement;
+    els.proofBox.classList.add("show");
+
+    els.pRef.textContent = movement.proofRef || movement.id || "—";
+    els.pDate.textContent = formatDate(movement.validatedAt || movement.createdAt);
+    els.pType.textContent = movement.typeLabel || "Mouvement PAY";
+    els.pChannel.textContent = movement.channel || "—";
+    els.pAmount.textContent = money(movement.amount);
+
+    els.pSummary.textContent =
+      "Preuve validée : " +
+      (movement.typeLabel || "Mouvement PAY") +
+      " · " +
+      money(movement.amount) +
+      " · " +
+      (movement.channel || "canal non précisé") +
+      " · " +
+      (movement.who || "origine non précisée") +
+      ".";
+
     window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
   }
 
@@ -640,19 +795,36 @@ summary::-webkit-details-marker{display:none}
     if(!currentDraft) prepare();
     if(!currentDraft) return;
 
+    if(!currentDraft.amount || currentDraft.amount <= 0){
+      toast("Montant manquant : vérifie avant validation.");
+      return;
+    }
+
     const movement = {
       ...currentDraft,
+      proofRef:proofRef(),
       channel:selectedPay,
       status:"validated",
-      validatedAt:new Date().toISOString()
+      validatedAt:new Date().toISOString(),
+      validatedBy:"pro",
+      safety:{
+        ...(currentDraft.safety || {}),
+        humanValidated:true,
+        validationRequired:false,
+        noAutoPayment:false
+      }
     };
+
+    movement.proofText = proofText(movement);
 
     const list = readJSON(STORAGE_KEY, []);
     list.unshift(movement);
+
     writeJSON(STORAGE_KEY, list.slice(0,200));
     writeJSON(LATEST_KEY, movement);
 
-    toast("Mouvement PAY validé localement.");
+    renderProof(movement);
+    toast("Mouvement PAY validé + preuve créée.");
   }
 
   function copyDraft(){
@@ -671,14 +843,30 @@ summary::-webkit-details-marker{display:none}
     ].join("\n");
 
     navigator.clipboard?.writeText(text)
-      .then(()=>toast("Résumé copié."))
-      .catch(()=>prompt("Copie le résumé :", text));
+      .then(()=>toast("Brouillon copié."))
+      .catch(()=>prompt("Copie le brouillon :", text));
+  }
+
+  function copyProof(){
+    const latest = currentProof || readJSON(LATEST_KEY, null);
+    const text = latest && latest.proofText ? latest.proofText : proofText(latest);
+
+    if(!text){
+      toast("Aucune preuve à copier.");
+      return;
+    }
+
+    navigator.clipboard?.writeText(text)
+      .then(()=>toast("Preuve copiée."))
+      .catch(()=>prompt("Copie la preuve :", text));
   }
 
   function clearAll(){
     els.voiceText.value = "";
     els.resultBox.classList.remove("show");
+    els.proofBox.classList.remove("show");
     currentDraft = null;
+    currentProof = null;
     listenBuffer = "";
     setStatus("Prêt. PAY prépare un brouillon seulement. Rien n’est validé automatiquement.");
   }
@@ -694,7 +882,10 @@ summary::-webkit-details-marker{display:none}
         document.querySelectorAll(".pay").forEach(b=>b.classList.remove("active"));
         btn.classList.add("active");
         selectedPay = btn.dataset.pay || "Cash";
-        if(currentDraft) currentDraft.channel = selectedPay;
+        if(currentDraft){
+          currentDraft.channel = selectedPay;
+          els.rChannel.textContent = selectedPay;
+        }
       });
     });
   }
@@ -755,7 +946,9 @@ summary::-webkit-details-marker{display:none}
     try{
       els.voiceText.value = "";
       currentDraft = null;
+      currentProof = null;
       els.resultBox.classList.remove("show");
+      els.proofBox.classList.remove("show");
       recognition.start();
     }catch(_){
       toast("Micro déjà lancé.");
@@ -774,6 +967,7 @@ summary::-webkit-details-marker{display:none}
   els.copyBtn.addEventListener("click",copyDraft);
   els.editBtn.addEventListener("click",()=>els.voiceText.focus());
   els.cancelBtn.addEventListener("click",clearAll);
+  els.proofCopyBtn.addEventListener("click",copyProof);
 
   setupPay();
   setupSpeech();
