@@ -20,9 +20,13 @@ body{margin:0;background:#f4ead2;color:#102015;font-family:system-ui,-apple-syst
 </section></main>
 <script>
 function D(v){try{return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(v)))))}catch(e){try{return JSON.parse(atob(v))}catch(_){return {}}}}
+function fixText(x){return String(x||'').replace(/Ã©/g,'é').replace(/Ã¨/g,'è').replace(/Ãª/g,'ê').replace(/Ã /g,'à').replace(/Ã¢/g,'â').replace(/Ã´/g,'ô').replace(/Ã§/g,'ç').replace(/Â/g,'')}
+function cleanNote(x){return fixText(x).replace(/^\s*action\s+(digi\s+i|diji\s+i|digiy)\s*/i,'').replace(/^\s*(note|ajoute|ajouter|prépare|prepare|crée|cree|mets|met)\s+/i,'').replace(/\b(web|wêve|weve|wève|wavee|ouève|ouve|waf|wef)\b/gi,'Wave').replace(/\bfrancs?\b/gi,'').replace(/\s+/g,' ').trim()}
+function inferAmount(d){const direct=Number(d.amount||d.totalAmount||d.total||0);if(Number.isFinite(direct)&&direct>0)return direct;const note=cleanNote(d.commandText||d.rawText||d.note||'');const nums=note.match(/\d[\d\s.,]*/g)||[];const last=nums.length?Number(nums[nums.length-1].replace(/[^\d]/g,'')):0;return Number.isFinite(last)&&last>0?last:0}
+function inferChannel(d){if(d.channel)return d.channel;const n=cleanNote(d.commandText||d.rawText||d.note||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');if(/\b(wave|web|weve|ouve|oueve)\b/.test(n))return'Wave';if(/orange\s*money|\bom\b/.test(n))return'Orange Money';if(/\b(cash|espece|especes|liquide)\b/.test(n))return'Cash';if(/virement/.test(n))return'Virement';return'À contrôler'}
 function M(x){return x?Number(x).toLocaleString('fr-FR')+' FCFA':'—'}
-const p=new URLSearchParams(location.hash.replace('#',''));const d=D(p.get('digiyAction')||'');
-g.textContent=d.actionLabel||d.action||'Mouvement';m.textContent=M(d.amount||d.totalAmount);c.textContent=d.channel||'À contrôler';o.textContent=d.primaryModule==='POS'?'Commerce POS':(d.moduleLabel||d.primaryModule||'ACTION DIGIY');n.textContent=(d.commandText||d.rawText||'Brouillon reçu')+' — rien confirmé automatiquement.';if(p.get('digiyAction'))commerce.href='https://commerce-pro.digiylyfe.com/action.html#digiyAction='+p.get('digiyAction');
+const p=new URLSearchParams(location.hash.replace('#',''));const d=D(p.get('digiyAction')||'');const note=cleanNote(d.commandText||d.rawText||d.note||'Brouillon reçu'),amount=inferAmount(d),channel=inferChannel(d);
+g.textContent=d.actionLabel||d.action||'Mouvement';m.textContent=M(amount);c.textContent=channel;o.textContent=d.primaryModule==='POS'?'Commerce POS':(d.moduleLabel||d.primaryModule||'ACTION DIGIY');n.textContent=note+' — rien confirmé automatiquement.';if(p.get('digiyAction'))commerce.href='https://commerce-pro.digiylyfe.com/action.html#digiyAction='+p.get('digiyAction');
 </script>
 </body>
 </html>
