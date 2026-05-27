@@ -1,32 +1,783 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ACTION PAY</title>
-<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#0b1d12"/>
+<title>ACTION PAY — Mon argent</title>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="description" content="ACTION PAY DIGIY : parler recette, dépense, dette client, encaissement dette, puis validation humaine."/>
+
 <style>
-body{margin:0;background:#f4ead2;color:#102015;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.wrap{width:min(900px,calc(100% - 24px));margin:auto}.top{padding:14px 0;border-bottom:1px solid #0002}.card{margin:18px 0;background:#fff8e8;border:1px solid #0002;border-radius:24px;padding:18px;box-shadow:0 18px 36px #0001}h1{margin:0;font-size:42px;line-height:.95}.lead{font-weight:850;color:#5b4b16}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:white;border:1px solid #0001;border-radius:18px;padding:12px}.box small{display:block;color:#6b5b21;font-weight:1000}.box b{font-size:22px}.note{margin-top:12px;background:#102015;color:white;border-radius:18px;padding:13px;font-weight:900}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}a,button{border:0;border-radius:16px;min-height:50px;background:#f4c86a;color:#102015;font-weight:1000;text-decoration:none;display:grid;place-items:center}a.dark{background:#102015;color:white}@media(max-width:640px){.grid,.actions{grid-template-columns:1fr}h1{font-size:34px}}
+:root{
+  --bg:#0b1d12;
+  --deep:#06140d;
+  --panel:#102015;
+  --panel2:#14532d;
+  --gold:#f4c86a;
+  --gold2:#ffe8a8;
+  --green:#22c55e;
+  --white:#fff;
+  --soft:rgba(255,255,255,.86);
+  --muted:rgba(255,255,255,.64);
+  --line:rgba(244,200,106,.24);
+  --line2:rgba(255,255,255,.12);
+  --red:#7f1d1d;
+  --shadow:0 18px 48px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(34,197,94,.16),transparent 34%),
+    radial-gradient(circle at 90% 4%,rgba(244,200,106,.20),transparent 30%),
+    linear-gradient(180deg,#06140d,#0b1d12 58%,#102015);
+  color:var(--white);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  padding-bottom:80px;
+}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.wrap{width:min(980px,calc(100% - 22px));margin:auto}
+
+.top{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(6,20,13,.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 10px 28px rgba(0,0,0,.24);
+}
+.topin{
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 0;
+}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{
+  width:48px;height:48px;border-radius:17px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#bbf7d0,var(--gold));
+  color:#102015;font-size:24px;font-weight:1000;
+}
+.brand strong{display:block;font-size:18px;font-weight:1000;line-height:1.05}
+.brand small{
+  display:block;margin-top:3px;color:var(--gold);
+  font-size:11px;font-weight:1000;letter-spacing:.06em;text-transform:uppercase;
+}
+.toplinks{display:flex;gap:8px;align-items:center;flex:0 0 auto}
+.link{
+  min-height:40px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:999px;padding:9px 12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:#fff;font-size:13px;font-weight:1000;
+}
+
+.hero{
+  min-height:calc(100vh - 92px);
+  margin:12px 0;
+  padding:22px 18px;
+  border-radius:30px;
+  background:
+    radial-gradient(circle at top right,rgba(244,200,106,.22),transparent 34%),
+    linear-gradient(145deg,#06140d,#0b1d12 46%,#14532d);
+  border:1px solid rgba(244,200,106,.28);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.kicker{
+  color:var(--gold);font-size:14px;font-weight:1000;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;
+}
+h1{
+  color:#fff;
+  font-size:clamp(46px,15vw,86px);
+  line-height:.85;
+  letter-spacing:-.075em;
+  font-weight:1000;
+}
+.lead{
+  margin-top:18px;color:var(--soft);
+  font-size:18px;line-height:1.36;font-weight:850;
+}
+.example{
+  margin-top:18px;padding:14px;border-radius:20px;
+  background:rgba(255,255,255,.10);
+  border:1px solid var(--line2);
+  color:#fff;font-size:18px;font-weight:1000;line-height:1.28;
+}
+.voicebox{
+  margin-top:18px;padding:14px;border-radius:24px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(244,200,106,.24);
+}
+textarea{
+  width:100%;min-height:126px;
+  background:#06140d;color:#fff;
+  border:1px solid rgba(244,200,106,.30);
+  border-radius:22px;
+  padding:16px;outline:none;resize:vertical;
+  font-size:18px;line-height:1.42;font-weight:850;
+}
+textarea::placeholder{color:rgba(255,255,255,.50)}
+.actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;margin-top:12px;
+}
+.btn{
+  min-height:58px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:10px;color:#fff;background:#102015;
+  border:1px solid rgba(244,200,106,.22);
+  font-weight:1000;
+}
+.btn.gold{background:linear-gradient(135deg,#ffe8a8,#f4c86a);color:#102015}
+.btn.green{background:linear-gradient(135deg,#bbf7d0,#22c55e);color:#052e16}
+.btn.red{background:#7f1d1d;color:#fff}
+.btn:active{transform:scale(.985)}
+.status{
+  margin-top:12px;padding:11px 12px;border-radius:16px;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.82);
+  font-size:14px;line-height:1.35;font-weight:900;
+}
+
+.panel{
+  margin:12px 0;
+  padding:16px;
+  border-radius:24px;
+  background:#102015;
+  color:#fff;
+  border:1px solid rgba(244,200,106,.20);
+  box-shadow:0 12px 30px rgba(0,0,0,.24);
+}
+.panel h2{
+  color:var(--gold);
+  font-size:24px;
+  line-height:1.05;
+  font-weight:1000;
+  letter-spacing:-.03em;
+  margin-bottom:7px;
+}
+.panel p{
+  color:rgba(255,255,255,.75);
+  font-size:14px;
+  line-height:1.36;
+  font-weight:850;
+}
+.result{display:none}
+.result.show{display:block}
+.preview{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin-top:12px;
+}
+.mini{
+  padding:13px;
+  border-radius:18px;
+  background:#0b1d12;
+  border:1px solid rgba(244,200,106,.18);
+}
+.mini small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:5px;
+}
+.mini b{
+  display:block;
+  color:#fff;
+  font-size:18px;
+  font-weight:1000;
+}
+.amount-big{
+  margin-top:12px;
+  padding:16px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#14532d,#15803d);
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  font-weight:1000;
+}
+.amount-big span:last-child{
+  color:var(--gold);
+  font-size:32px;
+}
+.paymodes{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.pay{
+  min-height:48px;
+  border-radius:16px;
+  background:#0b1d12;
+  color:#fff;
+  border:1px solid rgba(244,200,106,.22);
+  font-weight:1000;
+}
+.pay.active{background:var(--gold);color:#102015}
+
+.dept{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin:12px 0;
+}
+.dept a,
+.dept button{
+  min-height:76px;
+  border:1px solid rgba(244,200,106,.18);
+  border-radius:20px;
+  background:#14532d;
+  color:#fff;
+  padding:12px;
+  text-align:left;
+  text-decoration:none;
+  font:inherit;
+}
+.dept strong{display:block;margin-top:4px;font-size:15px;font-weight:1000}
+.dept span{display:block;margin-top:3px;color:var(--gold);font-size:12px;font-weight:900}
+
+details{
+  margin:12px 0;
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid rgba(244,200,106,.18);
+  background:#102015;
+  color:#fff;
+}
+summary{
+  list-style:none;
+  cursor:pointer;
+  padding:15px;
+  color:var(--gold);
+  font-size:16px;
+  font-weight:1000;
+}
+summary::-webkit-details-marker{display:none}
+.help{
+  padding:0 15px 15px;
+  color:var(--soft);
+  font-size:14px;
+  line-height:1.4;
+  font-weight:850;
+}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%) translateY(40px);
+  opacity:0;
+  pointer-events:none;
+  width:min(520px,calc(100% - 28px));
+  background:#102015;
+  color:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+  font-weight:900;
+  z-index:100;
+  text-align:center;
+  transition:.22s ease;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:680px){
+  .topin{min-height:64px}
+  .brand strong{font-size:16px}
+  .brand small{font-size:10px}
+  .link{font-size:12px;padding:8px 10px}
+  .hero{min-height:calc(100vh - 84px);padding:20px 16px}
+  h1{font-size:clamp(48px,18vw,78px)}
+  .actions{grid-template-columns:1fr 1fr}
+  .paymodes{grid-template-columns:1fr 1fr}
+  .dept{grid-template-columns:1fr 1fr}
+  .preview{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
-<header class="top"><div class="wrap"><b>💳 ACTION PAY</b><br><small>Arrivée directe depuis ACTION DIGIY</small></div></header>
-<main class="wrap"><section class="card">
-<h1>Argent à contrôler.</h1>
-<p class="lead">Le montant arrive ici en brouillon. Le pro vérifie avant confirmation.</p>
-<div class="grid"><div class="box"><small>Geste</small><b id="g">—</b></div><div class="box"><small>Montant</small><b id="m">—</b></div><div class="box"><small>Canal</small><b id="c">—</b></div><div class="box"><small>Origine</small><b id="o">—</b></div></div>
-<div class="note" id="n">Brouillon validé ≠ argent confirmé.</div>
-<div class="actions"><a class="dark" href="./hub.html">HUB PAY</a><a id="commerce" href="https://commerce-pro.digiylyfe.com/hub.html">🧾 Commerce</a></div>
-</section></main>
+<header class="top">
+  <div class="wrap topin">
+    <a class="brand" href="./hub.html">
+      <div class="logo">💳</div>
+      <div>
+        <strong>ACTION PAY</strong>
+        <small>Voix argent · validation humaine</small>
+      </div>
+    </a>
+
+    <div class="toplinks">
+      <a class="link" href="./hub.html">🧭 PAY</a>
+      <a class="link" href="./session.html">🔐 Session</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker">ACTION DIGIY · PAY</div>
+    <h1>Dis l’argent.</h1>
+
+    <p class="lead">
+      PAY ne détaille pas les articles. PAY écoute l’argent réel :
+      recette, dépense, dette client, encaissement dette.
+    </p>
+
+    <div class="example">
+      “recette boutique 10000 Wave”
+    </div>
+
+    <div class="voicebox">
+      <textarea id="voiceText" placeholder="Dis ou écris le mouvement PAY ici…">recette boutique 10000 Wave</textarea>
+
+      <div class="actions">
+        <button class="btn green" type="button" id="listenBtn">🎙️ Écouter</button>
+        <button class="btn red" type="button" id="stopBtn">⏹ Stop</button>
+        <button class="btn gold" type="button" id="prepareBtn">⚡ Préparer</button>
+        <button class="btn" type="button" id="clearBtn">🧹 Effacer</button>
+      </div>
+
+      <div class="status" id="statusBox">
+        Prêt. PAY prépare un brouillon seulement. Rien n’est validé automatiquement.
+      </div>
+    </div>
+  </section>
+
+  <section class="panel result" id="resultBox">
+    <h2>💳 Mouvement préparé</h2>
+    <p>Vérifie avant validation. L’argent n’entre dans PAY qu’après ton clic.</p>
+
+    <div class="preview">
+      <div class="mini"><small>Type</small><b id="rType">—</b></div>
+      <div class="mini"><small>Client / origine</small><b id="rWho">—</b></div>
+      <div class="mini"><small>Catégorie</small><b id="rCategory">—</b></div>
+      <div class="mini"><small>Canal</small><b id="rChannel">—</b></div>
+    </div>
+
+    <div class="amount-big">
+      <span>Montant</span>
+      <span id="rAmount">0 F</span>
+    </div>
+
+    <div class="paymodes">
+      <button class="pay active" type="button" data-pay="Cash">Cash</button>
+      <button class="pay" type="button" data-pay="Wave">Wave</button>
+      <button class="pay" type="button" data-pay="Orange Money">Orange</button>
+      <button class="pay" type="button" data-pay="Carte">Carte</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn green" type="button" id="validateBtn">✅ Valider PAY</button>
+      <button class="btn gold" type="button" id="copyBtn">📋 Copier</button>
+      <button class="btn" type="button" id="editBtn">✏️ Modifier</button>
+      <button class="btn red" type="button" id="cancelBtn">✖ Annuler</button>
+    </div>
+  </section>
+
+  <section class="dept" aria-label="Départements PAY">
+    <button type="button" onclick="fillExample('recette boutique 10000 Wave')">💰 <strong>Recette</strong><span>argent reçu</span></button>
+    <button type="button" onclick="fillExample('dépense emballage 3000 cash')">💸 <strong>Dépense</strong><span>sortie argent</span></button>
+    <button type="button" onclick="fillExample('Awa doit 15000')">🤝 <strong>Dette client</strong><span>à recevoir</span></button>
+    <button type="button" onclick="fillExample('Awa a payé 5000 Wave sur sa dette')">✅ <strong>Encaissement dette</strong><span>paiement partiel</span></button>
+  </section>
+
+  <details>
+    <summary>🎓 Comment parler à ACTION PAY</summary>
+    <div class="help">
+      <p><strong>Recette :</strong> recette boutique 10000 Wave</p>
+      <p><strong>Dépense :</strong> dépense carburant 5000 cash</p>
+      <p><strong>Dette client :</strong> Awa doit 15000</p>
+      <p><strong>Encaissement dette :</strong> Awa a payé 5000 Wave sur sa dette</p>
+      <br>
+      <p>Règle : POS détaille la vente. PAY reçoit l’argent réel. Pas de double saisie.</p>
+    </div>
+  </details>
+</main>
+
+<div class="toast" id="toast"></div>
+
 <script>
-function D(v){try{return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(v)))))}catch(e){try{return JSON.parse(atob(v))}catch(_){return {}}}}
-function fixText(x){return String(x||'').replace(/Ã©/g,'é').replace(/Ã¨/g,'è').replace(/Ãª/g,'ê').replace(/Ã /g,'à').replace(/Ã¢/g,'â').replace(/Ã´/g,'ô').replace(/Ã§/g,'ç').replace(/Â/g,'')}
-function cleanNote(x){return fixText(x).replace(/^\s*action\s+(digi\s+i|diji\s+i|digiy)\s*/i,'').replace(/^\s*(note|ajoute|ajouter|prépare|prepare|crée|cree|mets|met)\s+/i,'').replace(/\b(web|wêve|weve|wève|wavee|ouève|ouve|waf|wef)\b/gi,'Wave').replace(/\bfrancs?\b/gi,'').replace(/\s+/g,' ').trim()}
-function inferAmount(d){const direct=Number(d.amount||d.totalAmount||d.total||0);if(Number.isFinite(direct)&&direct>0)return direct;const note=cleanNote(d.commandText||d.rawText||d.note||'');const nums=note.match(/\d[\d\s.,]*/g)||[];const last=nums.length?Number(nums[nums.length-1].replace(/[^\d]/g,'')):0;return Number.isFinite(last)&&last>0?last:0}
-function inferChannel(d){if(d.channel)return d.channel;const n=cleanNote(d.commandText||d.rawText||d.note||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');if(/\b(wave|web|weve|ouve|oueve)\b/.test(n))return'Wave';if(/orange\s*money|\bom\b/.test(n))return'Orange Money';if(/\b(cash|espece|especes|liquide)\b/.test(n))return'Cash';if(/virement/.test(n))return'Virement';return'À contrôler'}
-function M(x){return x?Number(x).toLocaleString('fr-FR')+' FCFA':'—'}
-const p=new URLSearchParams(location.hash.replace('#',''));const d=D(p.get('digiyAction')||'');const note=cleanNote(d.commandText||d.rawText||d.note||'Brouillon reçu'),amount=inferAmount(d),channel=inferChannel(d);
-g.textContent=d.actionLabel||d.action||'Mouvement';m.textContent=M(amount);c.textContent=channel;o.textContent=d.primaryModule==='POS'?'Commerce POS':(d.moduleLabel||d.primaryModule||'ACTION DIGIY');n.textContent=note+' — rien confirmé automatiquement.';if(p.get('digiyAction'))commerce.href='https://commerce-pro.digiylyfe.com/action.html#digiyAction='+p.get('digiyAction');
+(function(){
+  "use strict";
+
+  const STORAGE_KEY = "DIGIY_PAY_ACTIONS";
+  const LATEST_KEY = "DIGIY_PAY_PENDING_ACTION";
+
+  const $ = id => document.getElementById(id);
+
+  const els = {
+    voiceText:$("voiceText"),
+    listenBtn:$("listenBtn"),
+    stopBtn:$("stopBtn"),
+    prepareBtn:$("prepareBtn"),
+    clearBtn:$("clearBtn"),
+    statusBox:$("statusBox"),
+    resultBox:$("resultBox"),
+    rType:$("rType"),
+    rWho:$("rWho"),
+    rCategory:$("rCategory"),
+    rChannel:$("rChannel"),
+    rAmount:$("rAmount"),
+    validateBtn:$("validateBtn"),
+    copyBtn:$("copyBtn"),
+    editBtn:$("editBtn"),
+    cancelBtn:$("cancelBtn"),
+    toast:$("toast")
+  };
+
+  let recognition = null;
+  let selectedPay = "Cash";
+  let currentDraft = null;
+  let listenBuffer = "";
+
+  function toast(msg){
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(()=>els.toast.classList.remove("show"),2400);
+  }
+
+  function money(n){
+    return Math.round(Number(n)||0).toLocaleString("fr-FR") + " F";
+  }
+
+  function normalize(v){
+    return String(v||"")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[’']/g," ")
+      .replace(/[^a-z0-9]+/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function readJSON(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(_){
+      return fallback;
+    }
+  }
+
+  function writeJSON(key, val){
+    localStorage.setItem(key, JSON.stringify(val));
+  }
+
+  function extractAmount(text){
+    const nums = [];
+    String(text||"").replace(/\d[\d\s.]*/g, m=>{
+      const n = Number(String(m).replace(/[^\d]/g,""));
+      if(n > 0) nums.push(n);
+    });
+    return nums.length ? nums[nums.length - 1] : 0;
+  }
+
+  function detectChannel(text){
+    const n = normalize(text);
+    if(n.includes("wave") || n.includes("ouve") || n.includes("oueve")) return "Wave";
+    if(n.includes("orange")) return "Orange Money";
+    if(n.includes("carte") || n.includes("tpe")) return "Carte";
+    if(n.includes("cash") || n.includes("espece") || n.includes("liquide")) return "Cash";
+    return selectedPay || "Cash";
+  }
+
+  function detectType(text){
+    const n = normalize(text);
+
+    if(n.includes("a paye") || n.includes("a payé") || n.includes("paye sur sa dette") || n.includes("paiement dette")){
+      return {type:"debt_payment", label:"Encaissement dette"};
+    }
+
+    if(n.includes("doit") || n.includes("dette") || n.includes("credit") || n.includes("a recevoir")){
+      return {type:"receivable", label:"Dette client"};
+    }
+
+    if(n.includes("depense") || n.includes("sortie") || n.includes("achat") || n.includes("carburant") || n.includes("emballage")){
+      return {type:"expense", label:"Dépense"};
+    }
+
+    return {type:"income", label:"Recette"};
+  }
+
+  function extractWho(text, type){
+    const raw = String(text||"").trim();
+    const n = normalize(raw);
+
+    if(type === "receivable"){
+      const m = raw.match(/^([A-Za-zÀ-ÿ\s'-]{2,30})\s+doit/i);
+      if(m) return m[1].trim();
+    }
+
+    if(type === "debt_payment"){
+      const m = raw.match(/^([A-Za-zÀ-ÿ\s'-]{2,30})\s+a\s+pay[ée]/i);
+      if(m) return m[1].trim();
+    }
+
+    if(n.includes("boutique")) return "Boutique";
+    if(n.includes("commerce")) return "Commerce";
+    if(n.includes("client")) return "Client";
+
+    return "Non précisé";
+  }
+
+  function extractCategory(text, type){
+    const n = normalize(text);
+
+    if(type === "income"){
+      if(n.includes("boutique")) return "Recette boutique";
+      if(n.includes("commerce")) return "Recette commerce";
+      return "Recette";
+    }
+
+    if(type === "expense"){
+      if(n.includes("emballage")) return "Emballage";
+      if(n.includes("carburant")) return "Carburant";
+      if(n.includes("transport")) return "Transport";
+      if(n.includes("fournisseur")) return "Fournisseur";
+      return "Dépense";
+    }
+
+    if(type === "receivable") return "À recevoir";
+    if(type === "debt_payment") return "Encaissement dette";
+
+    return "PAY";
+  }
+
+  function buildDraft(text){
+    const kind = detectType(text);
+    const amount = extractAmount(text);
+    const channel = detectChannel(text);
+    const who = extractWho(text, kind.type);
+    const category = extractCategory(text, kind.type);
+
+    return {
+      id:"PAY_ACTION_" + Date.now(),
+      source:"ACTION_DIGIY_PAY",
+      module:"PAY",
+      type:kind.type,
+      typeLabel:kind.label,
+      amount,
+      currency:"XOF",
+      channel,
+      who,
+      client:who,
+      category,
+      note:String(text||"").trim(),
+      rawText:String(text||"").trim(),
+      status:"draft",
+      requiresHumanValidation:true,
+      createdAt:new Date().toISOString(),
+      safety:{
+        noAutoPayment:true,
+        noAutoDebtSettlement:true,
+        noAutoConfirmation:true
+      }
+    };
+  }
+
+  function renderDraft(d){
+    currentDraft = d;
+    els.resultBox.classList.add("show");
+    els.rType.textContent = d.typeLabel;
+    els.rWho.textContent = d.who || "—";
+    els.rCategory.textContent = d.category || "—";
+    els.rChannel.textContent = d.channel || "—";
+    els.rAmount.textContent = money(d.amount);
+
+    if(d.channel){
+      document.querySelectorAll(".pay").forEach(b=>{
+        b.classList.toggle("active", b.dataset.pay === d.channel);
+      });
+      selectedPay = d.channel;
+    }
+
+    setStatus("Mouvement préparé. Vérifie avant validation.");
+    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  }
+
+  function setStatus(text){
+    els.statusBox.textContent = text;
+  }
+
+  function prepare(){
+    const text = els.voiceText.value.trim();
+    if(!text){
+      toast("Parle ou écris un mouvement PAY.");
+      return;
+    }
+
+    const d = buildDraft(text);
+    renderDraft(d);
+
+    if(!d.amount){
+      toast("Brouillon préparé, montant à vérifier.");
+    }else{
+      toast("Mouvement PAY préparé.");
+    }
+  }
+
+  function saveValidated(){
+    if(!currentDraft) prepare();
+    if(!currentDraft) return;
+
+    const movement = {
+      ...currentDraft,
+      channel:selectedPay,
+      status:"validated",
+      validatedAt:new Date().toISOString()
+    };
+
+    const list = readJSON(STORAGE_KEY, []);
+    list.unshift(movement);
+    writeJSON(STORAGE_KEY, list.slice(0,200));
+    writeJSON(LATEST_KEY, movement);
+
+    toast("Mouvement PAY validé localement.");
+  }
+
+  function copyDraft(){
+    if(!currentDraft) prepare();
+    if(!currentDraft) return;
+
+    const text = [
+      "ACTION PAY — Mouvement préparé",
+      "Type : " + currentDraft.typeLabel,
+      "Montant : " + money(currentDraft.amount),
+      "Canal : " + selectedPay,
+      "Client / origine : " + currentDraft.who,
+      "Catégorie : " + currentDraft.category,
+      "Note : " + currentDraft.note,
+      "Validation humaine obligatoire."
+    ].join("\n");
+
+    navigator.clipboard?.writeText(text)
+      .then(()=>toast("Résumé copié."))
+      .catch(()=>prompt("Copie le résumé :", text));
+  }
+
+  function clearAll(){
+    els.voiceText.value = "";
+    els.resultBox.classList.remove("show");
+    currentDraft = null;
+    listenBuffer = "";
+    setStatus("Prêt. PAY prépare un brouillon seulement. Rien n’est validé automatiquement.");
+  }
+
+  window.fillExample = function(text){
+    els.voiceText.value = text;
+    prepare();
+  };
+
+  function setupPay(){
+    document.querySelectorAll(".pay").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        document.querySelectorAll(".pay").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedPay = btn.dataset.pay || "Cash";
+        if(currentDraft) currentDraft.channel = selectedPay;
+      });
+    });
+  }
+
+  function setupSpeech(){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR){
+      els.listenBtn.disabled = true;
+      els.listenBtn.textContent = "🎙️ Micro non dispo";
+      setStatus("Micro non disponible sur ce navigateur. Tu peux écrire.");
+      return;
+    }
+
+    recognition = new SR();
+    recognition.lang = "fr-FR";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = ()=>{
+      listenBuffer = "";
+      setStatus("J’écoute… parle l’argent.");
+      toast("Micro ouvert.");
+    };
+
+    recognition.onresult = e=>{
+      let finalText = "";
+      let interim = "";
+
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const tr = e.results[i][0].transcript;
+        if(e.results[i].isFinal) finalText += tr;
+        else interim += tr;
+      }
+
+      if(finalText.trim()) listenBuffer = (listenBuffer + " " + finalText).trim();
+
+      const visible = (listenBuffer + " " + interim).trim();
+      if(visible) els.voiceText.value = visible;
+    };
+
+    recognition.onerror = e=>{
+      setStatus(e.error === "not-allowed" ? "Permission micro refusée." : "Micro arrêté. Tu peux écrire.");
+    };
+
+    recognition.onend = ()=>{
+      setStatus("Écoute terminée. Tu peux préparer.");
+      if(els.voiceText.value.trim()) prepare();
+    };
+  }
+
+  els.listenBtn.addEventListener("click",()=>{
+    if(!recognition){
+      toast("Micro non disponible ici.");
+      return;
+    }
+
+    try{
+      els.voiceText.value = "";
+      currentDraft = null;
+      els.resultBox.classList.remove("show");
+      recognition.start();
+    }catch(_){
+      toast("Micro déjà lancé.");
+    }
+  });
+
+  els.stopBtn.addEventListener("click",()=>{
+    try{ recognition && recognition.stop(); }catch(_){}
+    try{ speechSynthesis && speechSynthesis.cancel(); }catch(_){}
+    setStatus("Stop.");
+  });
+
+  els.prepareBtn.addEventListener("click",prepare);
+  els.clearBtn.addEventListener("click",clearAll);
+  els.validateBtn.addEventListener("click",saveValidated);
+  els.copyBtn.addEventListener("click",copyDraft);
+  els.editBtn.addEventListener("click",()=>els.voiceText.focus());
+  els.cancelBtn.addEventListener("click",clearAll);
+
+  setupPay();
+  setupSpeech();
+})();
 </script>
 </body>
 </html>
