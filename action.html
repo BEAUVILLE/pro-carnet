@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACTION PAY</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+body{margin:0;background:#f4ead2;color:#102015;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.wrap{width:min(900px,calc(100% - 24px));margin:auto}.top{padding:14px 0;border-bottom:1px solid #0002}.card{margin:18px 0;background:#fff8e8;border:1px solid #0002;border-radius:24px;padding:18px;box-shadow:0 18px 36px #0001}h1{margin:0;font-size:42px;line-height:.95}.lead{font-weight:850;color:#5b4b16}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:white;border:1px solid #0001;border-radius:18px;padding:12px}.box small{display:block;color:#6b5b21;font-weight:1000}.box b{font-size:22px}.note{margin-top:12px;background:#102015;color:white;border-radius:18px;padding:13px;font-weight:900}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}a,button{border:0;border-radius:16px;min-height:50px;background:#f4c86a;color:#102015;font-weight:1000;text-decoration:none;display:grid;place-items:center}a.dark{background:#102015;color:white}@media(max-width:640px){.grid,.actions{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><b>💳 ACTION PAY</b><br><small>Arrivée directe depuis ACTION DIGIY</small></div></header>
+<main class="wrap"><section class="card">
+<h1>Argent à contrôler.</h1>
+<p class="lead">Le montant arrive ici en brouillon. Le pro vérifie avant confirmation.</p>
+<div class="grid"><div class="box"><small>Geste</small><b id="g">—</b></div><div class="box"><small>Montant</small><b id="m">—</b></div><div class="box"><small>Canal</small><b id="c">—</b></div><div class="box"><small>Origine</small><b id="o">—</b></div></div>
+<div class="note" id="n">Brouillon validé ≠ argent confirmé.</div>
+<div class="actions"><a class="dark" href="./hub.html">HUB PAY</a><a id="commerce" href="https://commerce-pro.digiylyfe.com/hub.html">🧾 Commerce</a></div>
+</section></main>
+<script>
+function D(v){try{return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(v)))))}catch(e){try{return JSON.parse(atob(v))}catch(_){return {}}}}
+function M(x){return x?Number(x).toLocaleString('fr-FR')+' FCFA':'—'}
+const p=new URLSearchParams(location.hash.replace('#',''));const d=D(p.get('digiyAction')||'');
+g.textContent=d.actionLabel||d.action||'Mouvement';m.textContent=M(d.amount||d.totalAmount);c.textContent=d.channel||'À contrôler';o.textContent=d.primaryModule==='POS'?'Commerce POS':(d.moduleLabel||d.primaryModule||'ACTION DIGIY');n.textContent=(d.commandText||d.rawText||'Brouillon reçu')+' — rien confirmé automatiquement.';if(p.get('digiyAction'))commerce.href='https://commerce-pro.digiylyfe.com/action.html#digiyAction='+p.get('digiyAction');
+</script>
+</body>
+</html>
