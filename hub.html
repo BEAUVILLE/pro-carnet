@@ -6,8 +6,8 @@
   <title>Mon argent — HUB PAY</title>
   <meta name="theme-color" content="#f4ead2"/>
   <meta name="robots" content="noindex,nofollow"/>
-  <meta name="description" content="PAY PRO — HUB mobile terrain en pavés : DIGIY GO PAY, ajouter, température, fiche, session et accès."/>
-  <meta name="digiy-build" content="pay-hub-digiy-go-pay-20260527"/>
+  <meta name="description" content="PAY PRO — HUB mobile terrain en pavés : DIGIY GO PAY, ajouter, mouvements caisse, fiche, session et accès."/>
+  <meta name="digiy-build" content="pay-hub-mouvements-caisse-20260528"/>
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -25,7 +25,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
-  <script src="./session.js?v=pay-hub-20260519"></script>
+  <script src="./session.js?v=pay-hub-mouvements-caisse-20260528"></script>
   <script src="./assets/js/action-digiy-receiver.js?v=20260526-v2"></script>
 
   <link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png"/>
@@ -202,7 +202,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     <section class="hubHead">
       <div class="eyebrow">💰 MON ARGENT</div><h1>Toutes tes portes.</h1>
       <div class="hubSub">PAY est la caisse centrale : tu parles, tu cliques, DIGIY prépare, puis tu valides.</div>
-      <div class="rule"><b>Index</b> = porte courte. <b>HUB</b> = navigation. <b>DIGIY GO PAY</b> = parler l’argent. <b>Ajouter</b> = saisie manuelle. <b>Température</b> = lecture. <b>Fiche</b> = identité PAY.</div>
+      <div class="rule"><b>Index</b> = porte courte. <b>HUB</b> = navigation. <b>DIGIY GO PAY</b> = parler l’argent. <b>Ajouter</b> = saisie manuelle. <b>Mouvements</b> = vraie caisse visible. <b>Fiche</b> = identité PAY.</div>
     </section>
 
     <section class="digiyReader" aria-label="Lecteur DIGIY PAY">
@@ -229,7 +229,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
       <a class="tile gold blasonTile" href="https://digiylyfe.com/"><div class="tileTop"><img class="tileLogoImg" src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/><div class="tileTag">DIGIY</div></div><div><b>Métiers pro</b><span>Le blason commun des portes métier.</span></div></a>
       <a class="tile pay" href="./action.html"><div class="tileTop"><div class="tileIcon">🎙️</div><div class="tileTag">DIGIY GO</div></div><div><b>DIGIY GO PAY</b><span>Dire recette, dépense ou dette à la voix.</span></div></a>
       <a class="tile primary" href="./admin.html"><div class="tileTop"><div class="tileIcon">➕</div><div class="tileTag">Ajouter</div></div><div><b>Ajouter</b><span>Entrée, dépense, dette, réserve.</span></div></a>
-      <a class="tile gold" href="./cockpit.html"><div class="tileTop"><div class="tileIcon">🌡️</div><div class="tileTag">Lecture</div></div><div><b>Ma température</b><span>Ce qui entre, sort, reste et pèse.</span></div></a>
+      <a class="tile gold" href="./mouvements.html"><div class="tileTop"><div class="tileIcon">📜</div><div class="tileTag">Caisse</div></div><div><b>Mouvements caisse</b><span>Voir les vraies lignes inscrites dans PAY.</span></div></a>
     </div></section>
 
     <section class="group"><div class="groupLabel">Gestion · repères</div><div class="tileGrid">
@@ -246,7 +246,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
       <a class="tile gold" href="https://digiy-hub.digiylyfe.com/"><div class="tileTop"><div class="tileIcon">🧭</div><div class="tileTag">HUB</div></div><div><b>HUB général</b><span>Retour aux portes DIGIY.</span></div></a>
     </div></section>
   </main>
-  <nav class="bottomBar"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./action.html"><span class="bi">🎙️</span><span>GO</span></a><a href="./admin.html"><span class="bi">➕</span><span>Ajouter</span></a><a href="./cockpit.html"><span class="bi">🌡️</span><span>Lecture</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
+  <nav class="bottomBar"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./action.html"><span class="bi">🎙️</span><span>GO</span></a><a href="./admin.html"><span class="bi">➕</span><span>Ajouter</span></a><a href="./mouvements.html"><span class="bi">📜</span><span>Caisse</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
   <script>
     (()=>{try{if(window.DIGIY_SESSION?.cleanVisibleUrl)window.DIGIY_SESSION.cleanVisibleUrl();}catch(_ ){}
     const p=document.getElementById("sessionPill");let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}
@@ -263,7 +263,7 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     "Ici, le pro garde la trace de ce qui entre, de ce qui sort, de ce qui reste, et de ce qui pèse sur la caisse. " +
     "Ajouter sert à poser un mouvement : recette, dépense, dette client, réserve, acompte ou solde. " +
     "DIGIY GO PAY permet de parler simplement : par exemple, j’ai encaissé quinze mille francs avec Wave pour une vente POS, ou j’ai payé du carburant en cash pour DRIVER. " +
-    "La température lit l’activité : argent reçu, argent sorti, dettes ouvertes, restes à recevoir, réserve et pression du mois. " +
+    "Mouvements caisse montre les vraies lignes : argent reçu, argent sorti, dettes ouvertes, restes à recevoir, réserve et pression du mois. " +
     "Oreille PAY prépare une trace claire, mais le pro vérifie et valide. Rien ne devient cash sans paiement réel confirmé. Une promesse, une réservation ou un devis reste une trace à suivre, pas une recette encaissée. " +
     "Les modules travaillent : POS vend, MARKET annonce, DRIVER roule, LOC loue, RESA réserve, JOBS relie, Mes services intervient. PAY comprend. " +
     "Règle importante : si l’activité ne remonte pas à PAY, il n’y a pas de lecture. Pas de lecture, pas de contrôle. Le terrain agit, PAY enregistre, DIGIY lit, le pro décide.";
@@ -276,7 +276,8 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
     return String(text || "")
       .replace(/\bWave\b/g, "Ouève")
       .replace(/\bWhatsApp\b/g, "Ouatsap")
-      .replace(/\bDIGIY GO\b/g, "diji go")\n      .replace(/\bDIGIYLYFE\b/g, "diji laïfe");
+      .replace(/\bDIGIY GO\b/g, "diji go")
+      .replace(/\bDIGIYLYFE\b/g, "diji laïfe");
   }
 
   function setStatus(message){
@@ -362,6 +363,65 @@ h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
