@@ -3,782 +3,670 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>DIGIY GO PAY — ACTION concentrée</title>
 <meta name="theme-color" content="#0b1d12"/>
-<title>DIGIY GO PAY — Mon argent</title>
-<meta name="robots" content="noindex,nofollow"/>
-<meta name="description" content="DIGIY GO PAY : parler recette, dépense, dette client, encaissement dette, contrôler une clôture POS, puis valider avec preuve."/>
-
-<script src="./assets/js/digiy-go-pay-vocab.js?v=20260528"></script>
-  
 <style>
 :root{
-  --bg:#0b1d12;
-  --deep:#06140d;
-  --panel:#102015;
-  --panel2:#14532d;
-  --gold:#f4c86a;
-  --gold2:#ffe8a8;
+  --ink:#f8fafc;
+  --soft:rgba(248,250,252,.78);
+  --gold:#f6c453;
   --green:#22c55e;
-  --white:#fff;
-  --soft:rgba(255,255,255,.86);
-  --muted:rgba(255,255,255,.64);
-  --line:rgba(244,200,106,.24);
-  --line2:rgba(255,255,255,.12);
-  --red:#7f1d1d;
-  --shadow:0 18px 48px rgba(0,0,0,.34);
+  --line:rgba(255,255,255,.13);
+  --shadow:0 18px 54px rgba(0,0,0,.34);
+  --fontA:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
+*{box-sizing:border-box}
 body{
+  margin:0;
   min-height:100vh;
+  color:var(--ink);
+  font-family:var(--fontA);
   background:
-    radial-gradient(circle at 10% 0%,rgba(34,197,94,.16),transparent 34%),
-    radial-gradient(circle at 90% 4%,rgba(244,200,106,.20),transparent 30%),
-    linear-gradient(180deg,#06140d,#0b1d12 58%,#102015);
-  color:var(--white);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  padding-bottom:80px;
+    radial-gradient(900px 520px at 8% -10%,rgba(34,197,94,.32),transparent 62%),
+    radial-gradient(760px 420px at 92% 0%,rgba(246,196,83,.18),transparent 58%),
+    linear-gradient(180deg,#0b5f34 0%,#062a1d 30%,#04130d 100%);
+  padding:18px;
 }
-a{text-decoration:none;color:inherit}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer;border:0}
-.wrap{width:min(980px,calc(100% - 22px));margin:auto}
-
+a{color:inherit;text-decoration:none}
+button,textarea,input,select{font:inherit}
+.wrap{width:min(1180px,100%);margin:0 auto}
 .top{
-  position:sticky;
-  top:0;
-  z-index:30;
-  background:rgba(6,20,13,.94);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);
-  box-shadow:0 10px 28px rgba(0,0,0,.24);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
 }
-.topin{
-  min-height:70px;
+.top strong{font-size:18px;font-weight:1000;color:#fff3cf}
+.top span{color:var(--soft);font-weight:850;font-size:13px}
+
+.payAction{
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1.02fr) minmax(340px,.98fr);
+  gap:14px;
+  padding:16px;
+  border-radius:28px;
+  border:1px solid rgba(246,196,83,.42);
+  background:
+    radial-gradient(720px 320px at 0% 0%,rgba(246,196,83,.22),transparent 62%),
+    radial-gradient(680px 320px at 100% 0%,rgba(34,197,94,.22),transparent 60%),
+    linear-gradient(135deg,rgba(10,30,18,.96),rgba(4,15,10,.98));
+  box-shadow:var(--shadow);
+}
+.payLeft,.payRight{
+  position:relative;
+  z-index:1;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  padding:16px;
+}
+.payLeft{display:grid;gap:14px;align-content:start}
+.payTop{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  padding:10px 0;
+  flex-wrap:wrap;
 }
-.brand{display:flex;align-items:center;gap:11px;min-width:0}
-.logo{
-  width:48px;height:48px;border-radius:17px;
-  display:grid;place-items:center;
-  background:linear-gradient(135deg,#bbf7d0,var(--gold));
-  color:#102015;font-size:24px;font-weight:1000;
-}
-.brand strong{display:block;font-size:18px;font-weight:1000;line-height:1.05}
-.brand small{
-  display:block;margin-top:3px;color:var(--gold);
-  font-size:11px;font-weight:1000;letter-spacing:.06em;text-transform:uppercase;
-}
-.toplinks{display:flex;gap:8px;align-items:center;flex:0 0 auto}
-.link{
-  min-height:40px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:999px;padding:9px 12px;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--line);
-  color:#fff;font-size:13px;font-weight:1000;
-}
-
-.hero{
-  min-height:calc(100vh - 92px);
-  margin:12px 0;
-  padding:22px 18px;
-  border-radius:30px;
-  background:
-    radial-gradient(circle at top right,rgba(244,200,106,.22),transparent 34%),
-    linear-gradient(145deg,#06140d,#0b1d12 46%,#14532d);
-  border:1px solid rgba(244,200,106,.28);
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
+.kicker,.safe{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:30px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:1000;
 }
 .kicker{
-  color:var(--gold);font-size:14px;font-weight:1000;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;
+  border:1px solid rgba(246,196,83,.36);
+  background:rgba(246,196,83,.12);
+  color:#fff3cf;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+.safe{
+  border:1px solid rgba(34,197,94,.34);
+  background:rgba(34,197,94,.13);
+  color:#dfffe9;
 }
 h1{
+  margin:0;
+  font-size:clamp(34px,5vw,58px);
+  line-height:.92;
+  letter-spacing:-.055em;
+  font-weight:1000;
   color:#fff;
-  font-size:clamp(46px,15vw,86px);
-  line-height:.85;
-  letter-spacing:-.075em;
+}
+h1 span{color:var(--gold)}
+.lead{
+  margin:0;
+  color:rgba(248,250,252,.80);
+  font-size:15px;
+  line-height:1.48;
+  font-weight:850;
+}
+.lead strong{color:#fff3cf}
+.langBar{display:flex;flex-wrap:wrap;gap:8px}
+.langBtn{
+  min-height:40px;
+  border-radius:999px;
+  padding:0 13px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+  color:rgba(248,250,252,.86);
+  font-size:12px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.langBtn.isActive{
+  color:#06140f;
+  background:linear-gradient(135deg,#fff1bd,var(--gold),#22c55e);
+  border-color:rgba(246,196,83,.46);
+}
+.voiceBox{
+  display:grid;
+  grid-template-columns:92px minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  padding:14px;
+  border-radius:24px;
+  border:1px solid rgba(246,196,83,.28);
+  background:
+    radial-gradient(220px 120px at 20% 20%,rgba(246,196,83,.20),transparent 65%),
+    rgba(0,0,0,.18);
+}
+.mic{
+  width:92px;
+  height:92px;
+  border-radius:32px;
+  display:grid;
+  place-items:center;
+  font-size:44px;
+  color:#06140f;
+  background:linear-gradient(135deg,#fff1bd,var(--gold),#22c55e);
+  border:1px solid rgba(255,255,255,.36);
+  box-shadow:0 14px 34px rgba(0,0,0,.28);
+}
+.selectedLabel{
+  margin:0 0 6px;
+  color:#fff3cf;
+  font-size:12px;
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.selected{
+  margin:0;
+  color:#fff;
+  font-size:clamp(18px,2.4vw,26px);
+  line-height:1.12;
   font-weight:1000;
 }
-.lead{
-  margin-top:18px;color:var(--soft);
-  font-size:18px;line-height:1.36;font-weight:850;
+.textWrap{display:grid;gap:8px}
+.textLabel{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:#fff3cf;
+  font-weight:1000;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
 }
-.example{
-  margin-top:18px;padding:14px;border-radius:20px;
-  background:rgba(255,255,255,.10);
-  border:1px solid var(--line2);
-  color:#fff;font-size:18px;font-weight:1000;line-height:1.28;
-}
-.voicebox{
-  margin-top:18px;padding:14px;border-radius:24px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(244,200,106,.24);
-}
+.status{color:#dfffe9;text-transform:none;letter-spacing:0;font-size:11px}
 textarea{
-  width:100%;min-height:126px;
-  background:#06140d;color:#fff;
-  border:1px solid rgba(244,200,106,.30);
+  width:100%;
+  min-height:116px;
+  resize:vertical;
   border-radius:22px;
-  padding:16px;outline:none;resize:vertical;
-  font-size:18px;line-height:1.42;font-weight:850;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.20);
+  color:#fff;
+  padding:14px;
+  outline:none;
+  font-size:16px;
+  line-height:1.42;
+  font-weight:850;
 }
-textarea::placeholder{color:rgba(255,255,255,.50)}
+textarea::placeholder{color:rgba(248,250,252,.45)}
 .actions{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:9px;margin-top:12px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
 }
 .btn{
-  min-height:58px;border-radius:18px;
-  display:flex;align-items:center;justify-content:center;text-align:center;
-  padding:10px;color:#fff;background:#102015;
-  border:1px solid rgba(244,200,106,.22);
-  font-weight:1000;
-}
-.btn.gold{background:linear-gradient(135deg,#ffe8a8,#f4c86a);color:#102015}
-.btn.green{background:linear-gradient(135deg,#bbf7d0,#22c55e);color:#052e16}
-.btn.red{background:#7f1d1d;color:#fff}
-.btn:active{transform:scale(.985)}
-.status{
-  margin-top:12px;padding:11px 12px;border-radius:16px;
-  background:rgba(255,255,255,.08);
-  color:rgba(255,255,255,.82);
-  font-size:14px;line-height:1.35;font-weight:900;
-}
-
-.panel{
-  margin:12px 0;
-  padding:16px;
-  border-radius:24px;
-  background:#102015;
-  color:#fff;
-  border:1px solid rgba(244,200,106,.20);
-  box-shadow:0 12px 30px rgba(0,0,0,.24);
-}
-.panel h2{
-  color:var(--gold);
-  font-size:24px;
-  line-height:1.05;
-  font-weight:1000;
-  letter-spacing:-.03em;
-  margin-bottom:7px;
-}
-.panel p{
-  color:rgba(255,255,255,.75);
-  font-size:14px;
-  line-height:1.36;
-  font-weight:850;
-}
-.result{display:none}
-.result.show{display:block}
-.proof{display:none}
-.proof.show{display:block}
-.closure{display:none}
-.closure.show{display:block}
-.preview{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:9px;
-  margin-top:12px;
-}
-.mini{
-  padding:13px;
-  border-radius:18px;
-  background:#0b1d12;
-  border:1px solid rgba(244,200,106,.18);
-}
-.mini small{
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:900;
-  margin-bottom:5px;
-}
-.mini b{
-  display:block;
-  color:#fff;
-  font-size:18px;
-  font-weight:1000;
-}
-.amount-big{
-  margin-top:12px;
-  padding:16px;
-  border-radius:22px;
-  background:linear-gradient(135deg,#14532d,#15803d);
+  min-height:54px;
+  border-radius:17px;
   display:flex;
-  justify-content:space-between;
-  gap:12px;
   align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:0 12px;
+  font-size:13px;
   font-weight:1000;
+  cursor:pointer;
+  text-decoration:none;
+  color:#fff3cf;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(246,196,83,.26);
 }
-.amount-big span:last-child{
-  color:var(--gold);
-  font-size:32px;
+.btn.main{
+  color:#06140f;
+  background:linear-gradient(135deg,#fff1bd,var(--gold),#22c55e);
+  border:1px solid rgba(246,196,83,.54);
+  box-shadow:0 12px 26px rgba(0,0,0,.26);
 }
-.paymodes{
+.btn.green{
+  color:#eafff3;
+  background:rgba(34,197,94,.14);
+  border:1px solid rgba(34,197,94,.28);
+}
+.prepared{
+  display:none;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(34,197,94,.24);
+  background:rgba(34,197,94,.08);
+  color:#dfffe9;
+  font-size:13px;
+  line-height:1.42;
+  font-weight:850;
+}
+.prepared.show{display:block}
+.validation{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-top:12px;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
 }
-.pay{
-  min-height:48px;
-  border-radius:16px;
-  background:#0b1d12;
-  color:#fff;
-  border:1px solid rgba(244,200,106,.22);
+.validate,.proofBtn{
+  min-height:58px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:0 12px;
+  font-size:13px;
+  font-weight:1000;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.16);
+}
+.validate{
+  background:rgba(34,197,94,.18);
+  border-color:rgba(34,197,94,.38);
+  color:#dfffe9;
+}
+.proofBtn{
+  background:rgba(246,196,83,.12);
+  border-color:rgba(246,196,83,.34);
+  color:#fff3cf;
+}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips span{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:0 9px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.07);
+  color:rgba(248,250,252,.86);
+  font-size:10.5px;
   font-weight:1000;
 }
-.pay.active{background:var(--gold);color:#102015}
-
-.dept{
+.rightHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.payRight h2{
+  margin:0;
+  font-size:clamp(22px,3vw,34px);
+  line-height:1;
+  letter-spacing:-.04em;
+  font-weight:1000;
+  color:#fff;
+}
+.payRight p{
+  margin:6px 0 0;
+  color:rgba(248,250,252,.70);
+  font-size:13px;
+  line-height:1.38;
+  font-weight:850;
+}
+.badge{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:0 10px;
+  border-radius:999px;
+  border:1px solid rgba(246,196,83,.30);
+  background:rgba(246,196,83,.10);
+  color:#fff3cf;
+  font-size:11px;
+  font-weight:1000;
+}
+.models{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:9px;
-  margin:12px 0;
 }
-.dept a,
-.dept button{
-  min-height:76px;
-  border:1px solid rgba(244,200,106,.18);
-  border-radius:20px;
-  background:#14532d;
-  color:#fff;
-  padding:12px;
+.model{
+  min-height:102px;
   text-align:left;
-  text-decoration:none;
-  font:inherit;
-}
-.dept strong{display:block;margin-top:4px;font-size:15px;font-weight:1000}
-.dept span{display:block;margin-top:3px;color:var(--gold);font-size:12px;font-weight:900}
-
-details{
-  margin:12px 0;
-  border-radius:22px;
-  overflow:hidden;
-  border:1px solid rgba(244,200,106,.18);
-  background:#102015;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.065);
   color:#fff;
-}
-summary{
-  list-style:none;
+  padding:11px;
   cursor:pointer;
-  padding:15px;
-  color:var(--gold);
-  font-size:16px;
-  font-weight:1000;
+  display:grid;
+  gap:6px;
+  transition:transform .14s,border-color .14s,background .14s;
 }
-summary::-webkit-details-marker{display:none}
-.help{
-  padding:0 15px 15px;
-  color:var(--soft);
-  font-size:14px;
-  line-height:1.4;
+.model:hover,.model.isActive{
+  transform:translateY(-2px);
+  border-color:rgba(246,196,83,.46);
+  background:linear-gradient(135deg,rgba(246,196,83,.15),rgba(34,197,94,.12));
+}
+.modelTop{display:flex;align-items:center;gap:8px}
+.modelIcon{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(246,196,83,.13);
+  border:1px solid rgba(246,196,83,.20);
+  font-size:18px;
+}
+.model b{font-size:13px;font-weight:1000;color:#fff3cf}
+.model em{
+  display:block;
+  color:rgba(248,250,252,.82);
+  font-style:normal;
+  font-size:12.5px;
+  line-height:1.32;
   font-weight:850;
 }
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%) translateY(40px);
-  opacity:0;
-  pointer-events:none;
-  width:min(520px,calc(100% - 28px));
-  background:#102015;
-  color:#fff;
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:14px 16px;
-  box-shadow:var(--shadow);
-  font-weight:900;
-  z-index:100;
-  text-align:center;
-  transition:.22s ease;
+.note{
+  margin:12px 0 0;
+  padding:11px;
+  border-radius:17px;
+  border:1px solid rgba(34,197,94,.24);
+  background:rgba(34,197,94,.08);
+  color:#dfffe9;
+  font-size:12.5px;
+  line-height:1.42;
+  font-weight:850;
 }
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-@media(max-width:680px){
-  .topin{min-height:64px}
-  .brand strong{font-size:16px}
-  .brand small{font-size:10px}
-  .link{font-size:12px;padding:8px 10px}
-  .hero{min-height:calc(100vh - 84px);padding:20px 16px}
-  h1{font-size:clamp(48px,18vw,78px)}
+.proof{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(246,196,83,.30);
+  background:rgba(246,196,83,.08);
+  color:#fff3cf;
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+  white-space:pre-wrap;
+}
+.proof.show{display:block}
+@media(max-width:860px){
+  body{padding:10px}
+  .payAction{grid-template-columns:1fr;padding:12px;border-radius:24px}
   .actions{grid-template-columns:1fr 1fr}
-  .paymodes{grid-template-columns:1fr 1fr}
-  .dept{grid-template-columns:1fr 1fr}
-  .preview{grid-template-columns:1fr}
 }
-
-@media(print){
-  body{
-    background:#fff!important;
-    color:#000!important;
-    padding:0!important;
-  }
-  .top,
-  .hero,
-  .result,
-  .dept,
-  details,
-  .toast,
-  .proof .actions{
-    display:none!important;
-  }
-  .proof.show{
-    display:block!important;
-    background:#fff!important;
-    color:#000!important;
-    border:0!important;
-    box-shadow:none!important;
-  }
-  .proof h2,
-  .proof p,
-  .proof .mini b,
-  .proof .mini small{
-    color:#000!important;
-  }
-  .proof .mini,
-  .proof .status{
-    background:#fff!important;
-    color:#000!important;
-    border:1px solid #ddd!important;
-  }
-  .proof .amount-big{
-    background:#f5f5f5!important;
-    color:#000!important;
-  }
-  .proof .amount-big span:last-child{
-    color:#000!important;
-  }
+@media(max-width:520px){
+  .payLeft,.payRight{padding:13px;border-radius:21px}
+  .voiceBox{grid-template-columns:1fr}
+  .mic{width:78px;height:78px;border-radius:26px;font-size:38px}
+  .models{grid-template-columns:1fr}
+  .actions,.validation{grid-template-columns:1fr}
 }
-
 </style>
 </head>
-
 <body>
-<header class="top">
-  <div class="wrap topin">
-    <a class="brand" href="./hub.html">
-      <div class="logo">💳</div>
-      <div>
-        <strong>DIGIY GO PAY</strong>
-        <small>Voix argent · validation humaine</small>
-      </div>
-    </a>
-
-    <div class="toplinks">
-      <a class="link" href="./hub.html">🧭 PAY</a>
-      <a class="link" href="./session.html">🔐 Session</a>
-    </div>
-  </div>
-</header>
-
 <main class="wrap">
-  <section class="hero">
-    <div class="kicker">DIGIY GO · PAY</div>
-    <h1>Dis l’argent.</h1>
+  <div class="top">
+    <strong>DIGIY GO PAY · ACTION concentrée</strong>
+    <span>Gauche : voix + écrit · Droite : modèles argent cliquables</span>
+  </div>
 
-    <p class="lead">
-      PAY ne détaille pas les articles. PAY écoute l’argent réel :
-      recette, dépense, dette client, encaissement dette.
-    </p>
+  <section class="payAction" id="pay-action" aria-label="PAY — ACTION argent">
+    <article class="payLeft">
+      <div class="payTop">
+        <span class="kicker">💳 PAY · ACTION argent</span>
+        <span class="safe">✓ Validation humaine</span>
+      </div>
 
-    <div class="example">
-      “recette boutique 10000 Wave”
-    </div>
+      <h1>Dis l’argent.<br><span>PAY prépare.</span></h1>
 
-    <div class="voicebox">
-      <textarea id="voiceText" placeholder="Dis ou écris le mouvement PAY ici…">recette boutique 10000 Wave</textarea>
+      <p class="lead" data-i18n="lead">
+        PAY écoute l’argent réel : <strong>recette, dépense, dette client, encaissement dette, clôture ou pont métier.</strong>
+        PAY ne détaille pas les articles, courses ou réservations.
+      </p>
+
+      <div class="langBar" aria-label="Langue de travail PAY">
+        <button class="langBtn isActive" type="button" data-lang="fr">🇫🇷 Français</button>
+        <button class="langBtn" type="button" data-lang="wo">🇸🇳 Wolof</button>
+        <button class="langBtn" type="button" data-lang="ar">🇸🇦 عربي</button>
+      </div>
+
+      <div class="voiceBox">
+        <div class="mic" aria-hidden="true">💳</div>
+        <div>
+          <p class="selectedLabel">Formulation choisie</p>
+          <p class="selected" data-selected>“recette boutique 10000 Wave”</p>
+        </div>
+      </div>
+
+      <div class="textWrap">
+        <label class="textLabel" for="payText">
+          Ce qu’ACTION prépare
+          <span class="status" data-status>Prêt</span>
+        </label>
+        <textarea id="payText" placeholder="Clique un exemple à droite, écris, ou parle si le micro est disponible.">recette boutique 10000 Wave</textarea>
+      </div>
 
       <div class="actions">
-        <button class="btn green" type="button" id="listenBtn">🎙️ Écouter</button>
-        <button class="btn red" type="button" id="stopBtn">⏹ Stop</button>
-        <button class="btn gold" type="button" id="prepareBtn">⚡ Préparer</button>
-        <button class="btn" type="button" id="clearBtn">🧹 Effacer</button>
+        <button class="btn main" type="button" data-listen>🎙️ Écouter</button>
+        <button class="btn" type="button" data-prepare>⚡ Préparer</button>
+        <button class="btn" type="button" data-copy>📋 Copier</button>
+        <button class="btn green" type="button" data-clear>🧹 Effacer</button>
       </div>
 
-      <div class="status" id="statusBox">
-        Prêt. PAY prépare un brouillon seulement. Rien n’est validé automatiquement.
+      <div class="prepared" data-prepared>
+        Brouillon PAY prêt. Le pro vérifie puis valide seulement si l’argent est réel.
       </div>
-    </div>
+
+      <div class="validation">
+        <button class="validate" type="button" data-validate>✅ Valider PAY</button>
+        <button class="proofBtn" type="button" data-copy-proof>📋 Copier preuve</button>
+      </div>
+
+      <div class="proof" data-proof></div>
+
+      <div class="chips">
+        <span>Argent final</span>
+        <span>Pas de détail articles</span>
+        <span>Pas de course confirmée</span>
+        <span>Dette non soldée seule</span>
+        <span>Preuve locale</span>
+      </div>
+    </article>
+
+    <aside class="payRight" aria-label="Exemples métier PAY">
+      <div class="rightHead">
+        <div>
+          <h2 data-i18n="modelsTitle">Modèles argent</h2>
+          <p data-i18n="modelsSub">Exemples cliquables pour préparer un mouvement PAY sans écrire depuis zéro.</p>
+        </div>
+        <span class="badge">8 modèles</span>
+      </div>
+
+      <div class="models">
+        <button class="model isActive" type="button" data-key="income" data-template="recette boutique 10000 Wave">
+          <span class="modelTop"><span class="modelIcon">💰</span><b>Recette</b></span>
+          <em>“recette boutique 10000 Wave”</em>
+        </button>
+
+        <button class="model" type="button" data-key="expense" data-template="dépense emballage 3000 cash">
+          <span class="modelTop"><span class="modelIcon">💸</span><b>Dépense</b></span>
+          <em>“dépense emballage 3000 cash”</em>
+        </button>
+
+        <button class="model" type="button" data-key="debt" data-template="Awa doit 15000">
+          <span class="modelTop"><span class="modelIcon">🤝</span><b>Dette client</b></span>
+          <em>“Awa doit 15000”</em>
+        </button>
+
+        <button class="model" type="button" data-key="debtPay" data-template="Awa a payé 5000 sur sa dette">
+          <span class="modelTop"><span class="modelIcon">✅</span><b>Encaissement dette</b></span>
+          <em>“Awa a payé 5000 sur sa dette”</em>
+        </button>
+
+        <button class="model" type="button" data-key="driverIncome" data-template="recette course DRIVER 20000 Wave">
+          <span class="modelTop"><span class="modelIcon">🚗</span><b>Pont DRIVER</b></span>
+          <em>“recette course DRIVER 20000 Wave”</em>
+        </button>
+
+        <button class="model" type="button" data-key="fuel" data-template="dépense essence 6700 cash">
+          <span class="modelTop"><span class="modelIcon">⛽</span><b>Essence</b></span>
+          <em>“dépense essence 6700 cash”</em>
+        </button>
+
+        <button class="model" type="button" data-key="closure" data-template="clôture caisse du jour 85000 Wave 25000 cash">
+          <span class="modelTop"><span class="modelIcon">🌙</span><b>Clôture caisse</b></span>
+          <em>“clôture caisse du jour 85000 Wave 25000 cash”</em>
+        </button>
+
+        <button class="model" type="button" data-key="supplier" data-template="paiement fournisseur 12000 Orange Money">
+          <span class="modelTop"><span class="modelIcon">📦</span><b>Fournisseur</b></span>
+          <em>“paiement fournisseur 12000 Orange Money”</em>
+        </button>
+      </div>
+
+      <div class="note" data-i18n="note">
+        PAY ne remplace pas les modules métier. Il garde l’argent final : recette, dépense, dette, encaissement et preuve.
+      </div>
+    </aside>
   </section>
-
-
-  <section class="panel closure" id="closureControlBox">
-    <h2>🌙 Contrôle clôture POS</h2>
-    <p>Recette consolidée reçue depuis MON COMMERCE. POS garde les tickets et les articles. PAY range les totaux par mode de paiement.</p>
-
-    <div class="preview">
-      <div class="mini"><small>Date caisse</small><b id="cDate">—</b></div>
-      <div class="mini"><small>Référence</small><b id="cRef">—</b></div>
-      <div class="mini"><small>Ventes</small><b id="cCount">0</b></div>
-      <div class="mini"><small>Règle</small><b>Option B</b></div>
-    </div>
-
-    <div class="preview" id="cLines"></div>
-
-    <div class="amount-big">
-      <span>Total recette boutique</span>
-      <span id="cTotal">0 F</span>
-    </div>
-
-    <div class="status">
-      Une seule clôture visible. Plusieurs mouvements PAY derrière : Cash, Wave, Orange Money, Carte.
-    </div>
-
-    <div class="actions">
-      <button class="btn green" type="button" id="validateClosureBtn">✅ Valider clôture PAY</button>
-      <button class="btn gold" type="button" id="copyClosureBtn">📋 Copier clôture</button>
-      <button class="btn" type="button" onclick="location.href='./hub.html'">🧭 HUB PAY</button>
-      <button class="btn red" type="button" id="cancelClosureBtn">✖ Annuler</button>
-    </div>
-  </section>
-
-  <section class="panel result" id="resultBox">
-    <h2>💳 Mouvement préparé</h2>
-    <p>Vérifie avant validation. L’argent n’entre dans PAY qu’après ton clic.</p>
-
-    <div class="preview">
-      <div class="mini"><small>Type</small><b id="rType">—</b></div>
-      <div class="mini"><small>Client / origine</small><b id="rWho">—</b></div>
-      <div class="mini"><small>Catégorie</small><b id="rCategory">—</b></div>
-      <div class="mini"><small>Canal</small><b id="rChannel">—</b></div>
-    </div>
-
-    <div class="amount-big">
-      <span>Montant</span>
-      <span id="rAmount">0 F</span>
-    </div>
-
-    <div class="paymodes">
-      <button class="pay active" type="button" data-pay="Cash">Cash</button>
-      <button class="pay" type="button" data-pay="Wave">Wave</button>
-      <button class="pay" type="button" data-pay="Orange Money">Orange</button>
-      <button class="pay" type="button" data-pay="Carte">Carte</button>
-    </div>
-
-    <div class="actions">
-      <button class="btn green" type="button" id="validateBtn">✅ Valider PAY</button>
-      <button class="btn gold" type="button" id="copyBtn">📋 Copier brouillon</button>
-      <button class="btn" type="button" id="editBtn">✏️ Modifier</button>
-      <button class="btn red" type="button" id="cancelBtn">✖ Annuler</button>
-    </div>
-  </section>
-
-  <section class="panel proof" id="proofBox">
-    <h2>✅ Preuve PAY</h2>
-    <p>Mouvement validé par le pro. Cette preuve reste dans le téléphone.</p>
-
-    <div class="preview">
-      <div class="mini"><small>Référence</small><b id="pRef">—</b></div>
-      <div class="mini"><small>Date</small><b id="pDate">—</b></div>
-      <div class="mini"><small>Type</small><b id="pType">—</b></div>
-      <div class="mini"><small>Canal</small><b id="pChannel">—</b></div>
-    </div>
-
-    <div class="amount-big">
-      <span>Montant validé</span>
-      <span id="pAmount">0 F</span>
-    </div>
-
-    <div class="status" id="pSummary">
-      Preuve en attente.
-    </div>
-
-    <div class="actions">
-      <button class="btn gold" type="button" id="proofCopyBtn">📋 Copier preuve</button>
-      <button class="btn" type="button" onclick="window.print()">🖨️ Imprimer</button>
-      <a class="btn green" href="./cockpit.html">🌡️ Voir cockpit</a>
-      <a class="btn" href="./hub.html">🧭 Retour HUB</a>
-    </div>
-  </section>
-
-  <section class="dept" aria-label="Départements PAY">
-    <button type="button" onclick="fillExample('recette boutique 10000 Wave')">💰 <strong>Recette</strong><span>argent reçu</span></button>
-    <button type="button" onclick="fillExample('dépense emballage 3000 cash')">💸 <strong>Dépense</strong><span>sortie argent</span></button>
-    <button type="button" onclick="fillExample('Awa doit 15000')">🤝 <strong>Dette client</strong><span>à recevoir</span></button>
-    <button type="button" onclick="fillExample('Awa a payé 5000 Wave sur sa dette')">✅ <strong>Encaissement dette</strong><span>paiement partiel</span></button>
-  </section>
-
-  <details>
-    <summary>🎓 Comment parler à DIGIY GO PAY</summary>
-    <div class="help">
-      <p><strong>Recette :</strong> recette boutique 10000 Wave</p>
-      <p><strong>Dépense :</strong> dépense carburant 5000 cash</p>
-      <p><strong>Dette client :</strong> Awa doit 15000</p>
-      <p><strong>Encaissement dette :</strong> Awa a payé 5000 Wave sur sa dette</p>
-      <br>
-      <p>Règle : POS détaille la vente. PAY reçoit l’argent réel par clôture consolidée. Pas de double saisie.</p>
-    </div>
-  </details>
 </main>
-
-<div class="toast" id="toast"></div>
 
 <script>
 (function(){
-  "use strict";
+  const root = document.getElementById("pay-action");
+  if(!root) return;
 
-  const STORAGE_KEY = "DIGIY_PAY_ACTIONS";
-  const LATEST_KEY = "DIGIY_PAY_PENDING_ACTION";
-  const CLOSURE_REGISTRY_KEY = "DIGIY_PAY_POS_CLOSURES";
+  const selected = root.querySelector("[data-selected]");
+  const textArea = root.querySelector("#payText");
+  const listenBtn = root.querySelector("[data-listen]");
+  const prepareBtn = root.querySelector("[data-prepare]");
+  const copyBtn = root.querySelector("[data-copy]");
+  const clearBtn = root.querySelector("[data-clear]");
+  const validateBtn = root.querySelector("[data-validate]");
+  const copyProofBtn = root.querySelector("[data-copy-proof]");
+  const status = root.querySelector("[data-status]");
+  const prepared = root.querySelector("[data-prepared]");
+  const proofBox = root.querySelector("[data-proof]");
+  const cards = Array.from(root.querySelectorAll("[data-template]"));
+  const langButtons = Array.from(root.querySelectorAll("[data-lang]"));
+  const leadEl = root.querySelector("[data-i18n='lead']");
+  const modelsTitleEl = root.querySelector("[data-i18n='modelsTitle']");
+  const modelsSubEl = root.querySelector("[data-i18n='modelsSub']");
+  const noteEl = root.querySelector("[data-i18n='note']");
 
-  const $ = id => document.getElementById(id);
-
-  const els = {
-    voiceText:$("voiceText"),
-    listenBtn:$("listenBtn"),
-    stopBtn:$("stopBtn"),
-    prepareBtn:$("prepareBtn"),
-    clearBtn:$("clearBtn"),
-    statusBox:$("statusBox"),
-    resultBox:$("resultBox"),
-    closureControlBox:$("closureControlBox"),
-    cDate:$("cDate"),
-    cRef:$("cRef"),
-    cCount:$("cCount"),
-    cLines:$("cLines"),
-    cTotal:$("cTotal"),
-    validateClosureBtn:$("validateClosureBtn"),
-    copyClosureBtn:$("copyClosureBtn"),
-    cancelClosureBtn:$("cancelClosureBtn"),
-    rType:$("rType"),
-    rWho:$("rWho"),
-    rCategory:$("rCategory"),
-    rChannel:$("rChannel"),
-    rAmount:$("rAmount"),
-    validateBtn:$("validateBtn"),
-    copyBtn:$("copyBtn"),
-    editBtn:$("editBtn"),
-    cancelBtn:$("cancelBtn"),
-    proofBox:$("proofBox"),
-    pRef:$("pRef"),
-    pDate:$("pDate"),
-    pType:$("pType"),
-    pChannel:$("pChannel"),
-    pAmount:$("pAmount"),
-    pSummary:$("pSummary"),
-    proofCopyBtn:$("proofCopyBtn"),
-    toast:$("toast")
+  const LANG = {
+    fr:{
+      speech:"fr-FR",
+      lead:"PAY écoute l’argent réel : <strong>recette, dépense, dette client, encaissement dette, clôture ou pont métier.</strong> PAY ne détaille pas les articles, courses ou réservations.",
+      modelsTitle:"Modèles argent",
+      modelsSub:"Exemples cliquables pour préparer un mouvement PAY sans écrire depuis zéro.",
+      note:"PAY ne remplace pas les modules métier. Il garde l’argent final : recette, dépense, dette, encaissement et preuve.",
+      keys:{
+        income:{label:"Recette", icon:"💰", text:"recette boutique 10000 Wave"},
+        expense:{label:"Dépense", icon:"💸", text:"dépense emballage 3000 cash"},
+        debt:{label:"Dette client", icon:"🤝", text:"Awa doit 15000"},
+        debtPay:{label:"Encaissement dette", icon:"✅", text:"Awa a payé 5000 sur sa dette"},
+        driverIncome:{label:"Pont DRIVER", icon:"🚗", text:"recette course DRIVER 20000 Wave"},
+        fuel:{label:"Essence", icon:"⛽", text:"dépense essence 6700 cash"},
+        closure:{label:"Clôture caisse", icon:"🌙", text:"clôture caisse du jour 85000 Wave 25000 cash"},
+        supplier:{label:"Fournisseur", icon:"📦", text:"paiement fournisseur 12000 Orange Money"}
+      }
+    },
+    wo:{
+      speech:"fr-SN",
+      lead:"PAY dafay dégg xaalis bu dëgg : <strong>recette, dépense, boru client, fay bor, tëj caisse wala pont métier.</strong> PAY du bind détail article, course wala réservation.",
+      modelsTitle:"Royukaay xaalis",
+      modelsSub:"Pro bi jël misaal, soppi ko, ba noppi valide.",
+      note:"PAY du wuutu module métier. PAY dafay denc xaalis bu dëgg ak preuve.",
+      keys:{
+        income:{label:"Xaalis bi dugg", icon:"💰", text:"xaalis bi dugg boutique 10000 Wave"},
+        expense:{label:"Dépense", icon:"💸", text:"dépense emballage 3000 cash"},
+        debt:{label:"Boru client", icon:"🤝", text:"Awa am na bor 15000"},
+        debtPay:{label:"Fay bor", icon:"✅", text:"Awa fay na 5000 ci boram"},
+        driverIncome:{label:"Pont DRIVER", icon:"🚗", text:"recette course DRIVER 20000 Wave"},
+        fuel:{label:"Essence", icon:"⛽", text:"dépense essence 6700 cash"},
+        closure:{label:"Tëj caisse", icon:"🌙", text:"tëj caisse bés bi 85000 Wave 25000 cash"},
+        supplier:{label:"Fournisseur", icon:"📦", text:"paiement fournisseur 12000 Orange Money"}
+      }
+    },
+    ar:{
+      speech:"ar-SA",
+      lead:"PAY يسمع المال الحقيقي: <strong>الدخل، المصروف، دين الزبون، سداد الدين، إغلاق الصندوق أو جسر من مهنة أخرى.</strong> PAY لا يفصل المقالات أو الرحلات أو الحجوزات.",
+      modelsTitle:"نماذج المال",
+      modelsSub:"أمثلة قابلة للنقر. المهني يأخذ المثال، يعدله، ثم يؤكد.",
+      note:"PAY لا يعوض وحدات المهنة. PAY يحفظ المال النهائي والدليل.",
+      keys:{
+        income:{label:"دخل", icon:"💰", text:"دخل المحل 10000 وايف"},
+        expense:{label:"مصروف", icon:"💸", text:"مصروف تغليف 3000 كاش"},
+        debt:{label:"دين زبون", icon:"🤝", text:"آوا عليها 15000"},
+        debtPay:{label:"سداد دين", icon:"✅", text:"آوا دفعت 5000 من الدين"},
+        driverIncome:{label:"جسر DRIVER", icon:"🚗", text:"دخل رحلة DRIVER 20000 وايف"},
+        fuel:{label:"بنزين", icon:"⛽", text:"مصروف بنزين 6700 كاش"},
+        closure:{label:"إغلاق الصندوق", icon:"🌙", text:"إغلاق صندوق اليوم 85000 وايف 25000 كاش"},
+        supplier:{label:"مورد", icon:"📦", text:"دفع للمورد 12000 Orange Money"}
+      }
+    }
   };
 
-  let recognition = null;
-  let selectedPay = "Cash";
+  let currentLang = "fr";
+  let currentText = textArea.value.trim();
   let currentDraft = null;
   let currentProof = null;
-  let currentClosure = null;
-  let listenBuffer = "";
+  let recognition = null;
 
-  function toast(msg){
-    els.toast.textContent = msg;
-    els.toast.classList.add("show");
-    clearTimeout(toast._t);
-    toast._t = setTimeout(()=>els.toast.classList.remove("show"),2400);
-  }
+  function setStatus(text){ if(status) status.textContent = text; }
 
-  function money(n){
-    return Math.round(Number(n)||0).toLocaleString("fr-FR") + " F";
-  }
-
-  function normalize(v){
-    return String(v||"")
-      .toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-      .replace(/[’']/g," ")
-      .replace(/[^a-z0-9]+/g," ")
-      .replace(/\s+/g," ")
-      .trim();
-  }
-
-  function readJSON(key, fallback){
-    try{
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
-    }catch(_){
-      return fallback;
-    }
-  }
-
-  function writeJSON(key, val){
-    localStorage.setItem(key, JSON.stringify(val));
-  }
-
-  function closureKey(ref){
-    return String(ref || "").trim().toUpperCase();
-  }
-
-  function getClosureRegistry(){
-    const registry = readJSON(CLOSURE_REGISTRY_KEY, {});
-    return registry && typeof registry === "object" && !Array.isArray(registry) ? registry : {};
-  }
-
-  function closureAlreadyValidated(ref){
-    const key = closureKey(ref);
-    if(!key) return false;
-
-    const registry = getClosureRegistry();
-    if(registry[key]) return true;
-
-    const list = readJSON(STORAGE_KEY, []);
-    if(Array.isArray(list) && list.some(m => closureKey(m.posClosureRef || m.closureRef || m.proofRef) === key)){
-      return true;
-    }
-
-    const latest = readJSON(LATEST_KEY, null);
-    if(latest && closureKey(latest.closureRef || latest.posClosureRef || latest.proofRef) === key && latest.status === "validated"){
-      return true;
-    }
-
-    return false;
-  }
-
-  function rememberClosure(summary){
-    const key = closureKey(summary && (summary.closureRef || summary.proofRef || summary.posClosureRef));
-    if(!key) return;
-    const registry = getClosureRegistry();
-    registry[key] = {
-      closureRef: summary.closureRef || summary.proofRef || summary.posClosureRef || "",
-      status: summary.status || "validated",
-      amount: Number(summary.amount || 0),
-      posClosureDate: summary.posClosureDate || "",
-      posSalesCount: summary.posSalesCount || 0,
-      validatedAt: summary.validatedAt || new Date().toISOString()
-    };
-    writeJSON(CLOSURE_REGISTRY_KEY, registry);
-  }
-
-  function closeLegacyPosUrlIfNeeded(){
-    try{
-      const q = new URLSearchParams(window.location.search);
-      const from = String(q.get("from") || "").toUpperCase();
-      if(from !== "POS") return false;
-
-      const url = new URL(window.location.href);
-      ["from","type","amount","channel","category","who","proofRef"].forEach(k=>url.searchParams.delete(k));
-      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-
-      els.voiceText.value = "Clôture caisse POS obligatoire : retourne dans MON COMMERCE, puis utilise Clôture caisse → PAY.";
-      els.resultBox.classList.remove("show");
-      els.proofBox.classList.remove("show");
-      els.closureControlBox?.classList.remove("show");
-      setStatus("Ancienne route POS → PAY fermée. PAY reçoit MON COMMERCE uniquement par Clôture caisse → PAY.");
-      toast("Route POS directe fermée : passe par Clôture caisse → PAY.");
-      return true;
-    }catch(_){
-      return false;
-    }
+  function norm(v){
+    return String(v || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   }
 
   function extractAmount(text){
-    const nums = [];
-    String(text||"").replace(/\d[\d\s.]*/g, m=>{
-      const n = Number(String(m).replace(/[^\d]/g,""));
-      if(n > 0) nums.push(n);
-    });
-    return nums.length ? nums[nums.length - 1] : 0;
-  }
-
-  function detectChannel(text){
-    const n = normalize(text);
-    if(n.includes("wave") || n.includes("ouve") || n.includes("oueve")) return "Wave";
-    if(n.includes("orange")) return "Orange Money";
-    if(n.includes("carte") || n.includes("tpe")) return "Carte";
-    if(n.includes("cash") || n.includes("espece") || n.includes("liquide")) return "Cash";
-    return selectedPay || "Cash";
+    const raw = String(text || "")
+      .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+      .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+    const m = raw.replace(/\s+/g," ").match(/(\d[\d\s.,]*)\s*(?:f|fcfa|xof)?/i);
+    if(!m) return null;
+    const n = Number(m[1].replace(/[^\d]/g,""));
+    return Number.isFinite(n) && n > 0 ? n : null;
   }
 
   function detectType(text){
-    const n = normalize(text);
-
-    if(n.includes("a paye") || n.includes("a payé") || n.includes("paye sur sa dette") || n.includes("paiement dette")){
-      return {type:"debt_payment", label:"Encaissement dette"};
-    }
-
-    if(n.includes("doit") || n.includes("dette") || n.includes("credit") || n.includes("a recevoir")){
-      return {type:"receivable", label:"Dette client"};
-    }
-
-    if(n.includes("depense") || n.includes("sortie") || n.includes("achat") || n.includes("carburant") || n.includes("emballage")){
-      return {type:"expense", label:"Dépense"};
-    }
-
-    return {type:"income", label:"Recette"};
+    const t = norm(text);
+    const raw = String(text || "");
+    if(/\bdepense\b|\bsortie\b|\bachat\b|\bcarburant\b|\bessence\b|\bfournisseur\b|\bloyer\b/.test(t) || /مصروف|خرج|شراء|بنزين/.test(raw)) return "expense";
+    if(/\bdoit\b|\bdette\b|\ba recevoir\b|\bcredit\b|\bbor\b|war na fay/.test(t) || /دين|عليها|مستحق/.test(raw)) return "receivable";
+    if(/\ba paye\b|\bpaiement dette\b|\bsur sa dette\b|\bfay na\b/.test(t) || /دفعت|سدد|سداد/.test(raw)) return "debtPayment";
+    if(/\bcloture\b|\bfin de journee\b|\btotal caisse\b|\btëj\b/.test(t) || /إغلاق|نهاية|صندوق/.test(raw)) return "closure";
+    return "income";
   }
 
-  function extractWho(text, type){
-    const raw = String(text||"").trim();
-    const n = normalize(raw);
-
-    if(type === "receivable"){
-      const m = raw.match(/^([A-Za-zÀ-ÿ\s'-]{2,30})\s+doit/i);
-      if(m) return m[1].trim();
-    }
-
-    if(type === "debt_payment"){
-      const m = raw.match(/^([A-Za-zÀ-ÿ\s'-]{2,30})\s+a\s+pay[ée]/i);
-      if(m) return m[1].trim();
-    }
-
-    if(n.includes("boutique")) return "Boutique";
-    if(n.includes("commerce")) return "Commerce";
-    if(n.includes("client")) return "Client";
-
-    return "Non précisé";
+  function detectChannel(text){
+    const t = norm(text);
+    const raw = String(text || "");
+    if(t.includes("wave") || raw.includes("وايف")) return "Wave";
+    if(t.includes("orange")) return "Orange Money";
+    if(t.includes("carte")) return "Carte";
+    if(t.includes("cash") || t.includes("espece") || raw.includes("كاش")) return "Cash";
+    return "Cash";
   }
 
-  function extractCategory(text, type){
-    const n = normalize(text);
-
-    if(type === "income"){
-      if(n.includes("boutique")) return "Recette boutique";
-      if(n.includes("commerce")) return "Recette commerce";
-      return "Recette";
-    }
-
-    if(type === "expense"){
-      if(n.includes("emballage")) return "Emballage";
-      if(n.includes("carburant")) return "Carburant";
-      if(n.includes("transport")) return "Transport";
-      if(n.includes("fournisseur")) return "Fournisseur";
-      return "Dépense";
-    }
-
-    if(type === "receivable") return "À recevoir";
-    if(type === "debt_payment") return "Encaissement dette";
-
-    return "PAY";
+  function labelType(type){
+    return {
+      income:"Recette",
+      expense:"Dépense",
+      receivable:"Dette client",
+      debtPayment:"Encaissement dette",
+      closure:"Clôture caisse"
+    }[type] || "Mouvement PAY";
   }
 
   function buildDraft(text){
-    const kind = detectType(text);
+    const type = detectType(text);
     const amount = extractAmount(text);
     const channel = detectChannel(text);
-    const who = extractWho(text, kind.type);
-    const category = extractCategory(text, kind.type);
-
     return {
-      id:"PAY_ACTION_" + Date.now(),
-      source:"ACTION_DIGIY_PAY",
+      source:"PAY_ACTION",
       module:"PAY",
-      type:kind.type,
-      typeLabel:kind.label,
+      type,
+      typeLabel:labelType(type),
       amount,
-      currency:"XOF",
+      currency:amount ? "XOF" : "",
       channel,
-      who,
-      client:who,
-      category,
-      note:String(text||"").trim(),
-      rawText:String(text||"").trim(),
+      note:String(text || "").trim(),
       status:"draft",
       requiresHumanValidation:true,
       createdAt:new Date().toISOString(),
@@ -790,589 +678,195 @@ summary::-webkit-details-marker{display:none}
     };
   }
 
-  function renderDraft(d){
-    currentDraft = d;
-    currentProof = null;
-    els.proofBox.classList.remove("show");
-    els.closureControlBox?.classList.remove("show");
-    els.resultBox.classList.add("show");
-    els.rType.textContent = d.typeLabel;
-    els.rWho.textContent = d.who || "—";
-    els.rCategory.textContent = d.category || "—";
-    els.rChannel.textContent = d.channel || "—";
-    els.rAmount.textContent = money(d.amount);
-
-    if(d.channel){
-      document.querySelectorAll(".pay").forEach(b=>{
-        b.classList.toggle("active", b.dataset.pay === d.channel);
-      });
-      selectedPay = d.channel;
-    }
-
-    setStatus("Mouvement préparé. Vérifie avant validation.");
-    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  function renderDraft(draft){
+    currentDraft = draft;
+    const amount = draft.amount ? draft.amount.toLocaleString("fr-FR") + " FCFA" : "montant à vérifier";
+    prepared.textContent = "Brouillon PAY prêt : " + draft.typeLabel + " · " + amount + " · " + draft.channel + ". Le pro vérifie avant validation.";
+    prepared.classList.add("show");
+    setStatus("Brouillon préparé. Validation humaine obligatoire.");
   }
 
-  function proofRef(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const day = String(d.getDate()).padStart(2,"0");
-    const h = String(d.getHours()).padStart(2,"0");
-    const min = String(d.getMinutes()).padStart(2,"0");
-    const s = String(d.getSeconds()).padStart(2,"0");
-    return "PAY-" + y + m + day + "-" + h + min + s;
-  }
-
-  function formatDate(v){
-    const d = new Date(v);
-    if(isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}) +
-      " " +
-      d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  function choose(card){
+    currentText = card.getAttribute("data-template") || "";
+    if(selected) selected.textContent = "“" + currentText + "”";
+    if(textArea) textArea.value = currentText;
+    cards.forEach(btn => btn.classList.remove("isActive"));
+    card.classList.add("isActive");
+    renderDraft(buildDraft(currentText));
   }
 
   function proofText(movement){
-    if(!movement) return "";
-
+    const amount = movement.amount ? movement.amount.toLocaleString("fr-FR") + " FCFA" : "montant non précisé";
     return [
       "PREUVE PAY — DIGIYLYFE",
-      "Référence : " + (movement.proofRef || movement.id || "—"),
-      "Date : " + formatDate(movement.validatedAt || movement.createdAt),
-      "Type : " + (movement.typeLabel || "Mouvement PAY"),
-      "Montant : " + money(movement.amount),
-      "Canal : " + (movement.channel || "—"),
-      "Client / origine : " + (movement.who || "—"),
-      "Catégorie : " + (movement.category || "—"),
-      "Note : " + (movement.note || "—"),
-      "Validation humaine : oui",
-      "Rien n’a été validé automatiquement."
+      "Type : " + movement.typeLabel,
+      "Montant : " + amount,
+      "Canal : " + movement.channel,
+      "Note : " + movement.note,
+      "Date : " + new Date(movement.validatedAt).toLocaleString("fr-FR"),
+      "Validation humaine : oui"
     ].join("\n");
   }
 
-  function renderProof(movement){
-    if(!movement) return;
-
-    currentProof = movement;
-    els.proofBox.classList.add("show");
-
-    els.pRef.textContent = movement.proofRef || movement.id || "—";
-    els.pDate.textContent = formatDate(movement.validatedAt || movement.createdAt);
-    els.pType.textContent = movement.typeLabel || "Mouvement PAY";
-    els.pChannel.textContent = movement.channel || "—";
-    els.pAmount.textContent = money(movement.amount);
-
-    els.pSummary.textContent =
-      "Preuve validée : " +
-      (movement.typeLabel || "Mouvement PAY") +
-      " · " +
-      money(movement.amount) +
-      " · " +
-      (movement.channel || "canal non précisé") +
-      " · " +
-      (movement.who || "origine non précisée") +
-      ".";
-
-    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
-  }
-
-
-  function numParam(q, key){
-    return Number(String(q.get(key) || "0").replace(/[^\d.-]/g,"")) || 0;
-  }
-
-  function draftFromPosClosureUrl(){
-    try{
-      const q = new URLSearchParams(window.location.search);
-      const from = String(q.get("from") || "").toUpperCase();
-      if(from !== "POS_CLOSURE") return null;
-
-      const day = q.get("date") || new Date().toISOString().slice(0,10);
-      const closureRef = q.get("closureRef") || ("POS-CLOTURE-" + Date.now());
-      const count = Number(q.get("count") || "0") || 0;
-
-      const modes = [
-        {key:"cash", label:"Cash", channel:"Cash", amount:numParam(q,"cash")},
-        {key:"wave", label:"Wave", channel:"Wave", amount:numParam(q,"wave")},
-        {key:"orange", label:"Orange Money", channel:"Orange Money", amount:numParam(q,"orange")},
-        {key:"card", label:"Carte / TPE", channel:"Carte", amount:numParam(q,"card")},
-        {key:"other", label:"Autres", channel:"Autres", amount:numParam(q,"other")}
-      ];
-
-      const sum = modes.reduce((s,m)=>s+Number(m.amount||0),0);
-      const total = numParam(q,"total") || sum;
-
-      return {
-        id:"PAY_FROM_POS_CLOSURE_" + Date.now(),
-        proofRef:closureRef,
-        closureRef,
-        source:"POS_CLOSURE",
-        sourceLabel:"MON COMMERCE POS",
-        module:"PAY",
-        type:"income_closure",
-        typeLabel:"Clôture POS",
-        amount:total,
-        currency:"XOF",
-        channel:"Multi-règlements",
-        who:q.get("who") || "MON COMMERCE POS",
-        client:q.get("who") || "MON COMMERCE POS",
-        category:q.get("category") || "Clôture caisse POS",
-        note:"Clôture caisse POS — " + day + " — " + money(total),
-        rawText:"Clôture caisse POS " + day + " total " + Math.round(total),
-        status:"draft",
-        requiresHumanValidation:true,
-        createdAt:new Date().toISOString(),
-        posClosureDate:day,
-        posSalesCount:count,
-        modes:modes.filter(m=>Number(m.amount||0)>0),
-        allModes:modes,
-        safety:{
-          noArticleDetailInPay:true,
-          posKeepsTickets:true,
-          payKeepsTreasuryByMode:true,
-          noAutoPayment:true,
-          noAutoConfirmation:true
-        }
-      };
-    }catch(_){
-      return null;
-    }
-  }
-
-  function renderClosureDraft(d){
-    currentClosure = d;
-    currentDraft = null;
-    currentProof = null;
-
-    els.resultBox.classList.remove("show");
-    els.proofBox.classList.remove("show");
-    els.closureControlBox.classList.add("show");
-
-    els.cDate.textContent = d.posClosureDate || d.date || "—";
-    els.cRef.textContent = d.closureRef || d.proofRef || "—";
-    els.cCount.textContent = String(d.posSalesCount || 0);
-    els.cTotal.textContent = money(d.amount);
-
-    const modes = d.allModes || d.modes || [];
-    els.cLines.innerHTML = modes.map(m=>{
-      const n = Number(m.amount || 0);
-      return `
-        <div class="mini" style="${n<=0?'opacity:.55':''}">
-          <small>${m.label}</small>
-          <b>${money(n)}</b>
-        </div>
-      `;
-    }).join("");
-
-    els.voiceText.value = d.rawText || "";
-    setStatus("Clôture POS reçue. Vérifie les modes de paiement, puis valide PAY.");
-    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
-  }
-
-  function closureProofText(summary, movements){
-    const lines = [
-      "PREUVE PAY — CLÔTURE POS",
-      "Référence : " + (summary.proofRef || summary.closureRef || summary.id || "—"),
-      "Date caisse : " + (summary.posClosureDate || "—"),
-      "Date validation : " + formatDate(summary.validatedAt || summary.createdAt),
-      "Origine : MON COMMERCE POS",
-      "Nombre de ventes : " + (summary.posSalesCount || 0),
-      "Total recette boutique : " + money(summary.amount),
-      "",
-      "Mouvements PAY créés :"
-    ];
-
-    (movements || []).forEach(m=>{
-      lines.push("- " + (m.channel || "Canal") + " : " + money(m.amount));
-    });
-
-    lines.push("");
-    lines.push("Validation humaine : oui");
-    lines.push("POS garde les tickets et les articles. PAY garde la trésorerie par mode.");
-    return lines.join("\n");
-  }
-
-  function validateClosure(){
-    if(!currentClosure){
-      toast("Aucune clôture POS à valider.");
-      return;
-    }
-
-    const ref = currentClosure.closureRef || currentClosure.proofRef || "";
-    if(closureAlreadyValidated(ref)){
-      setStatus("Clôture déjà validée dans PAY. Aucun doublon créé.");
-      toast("Clôture déjà validée : doublon bloqué.");
-      return;
-    }
-
-    const modes = (currentClosure.modes || []).filter(m=>Number(m.amount||0)>0);
-    if(!modes.length){
-      toast("Clôture sans montant à envoyer.");
-      return;
-    }
-
-    const now = new Date().toISOString();
-    const movements = modes.map((m, idx)=>({
-      id:"PAY_FROM_POS_CLOSURE_" + Date.now() + "_" + idx,
-      proofRef:(currentClosure.closureRef || currentClosure.proofRef || "POS-CLOTURE") + "-" + m.key.toUpperCase(),
-      source:"POS_CLOSURE",
-      sourceLabel:"MON COMMERCE POS",
-      module:"PAY",
-      type:"income",
-      typeLabel:"Recette",
-      amount:Number(m.amount || 0),
-      currency:"XOF",
-      channel:m.channel,
-      who:"MON COMMERCE POS",
-      client:"MON COMMERCE POS",
-      category:"Recette boutique POS — " + m.label,
-      note:"Clôture POS " + (currentClosure.posClosureDate || "") + " — " + m.label + " — " + money(m.amount),
-      rawText:"Recette boutique POS " + Math.round(Number(m.amount||0)) + " " + m.channel,
-      status:"validated",
-      requiresHumanValidation:false,
-      validatedBy:"pro",
-      createdAt:currentClosure.createdAt || now,
-      validatedAt:now,
-      posClosureRef:currentClosure.closureRef || currentClosure.proofRef || "",
-      posClosureDate:currentClosure.posClosureDate || "",
-      posSalesCount:currentClosure.posSalesCount || 0,
-      safety:{
-        noArticleDetailInPay:true,
-        posKeepsTickets:true,
-        payKeepsTreasuryByMode:true,
-        humanValidatedInPay:true,
-        duplicateBlockedByClosureRef:true
-      }
-    }));
-
-    const summary = {
-      ...currentClosure,
-      id:"PAY_CLOSURE_SUMMARY_" + Date.now(),
-      status:"validated",
-      validatedAt:now,
-      validatedBy:"pro",
-      movementsCount:movements.length,
-      movements,
-      safety:{
-        ...(currentClosure.safety || {}),
-        humanValidatedInPay:true,
-        optionB:true,
-        duplicateBlockedByClosureRef:true
-      }
-    };
-
-    summary.proofText = closureProofText(summary, movements);
-
-    const list = readJSON(STORAGE_KEY, []);
-    movements.forEach(m=>{ m.proofText = proofText(m); });
-    list.unshift(...movements);
-
-    writeJSON(STORAGE_KEY, list.slice(0,200));
-    writeJSON(LATEST_KEY, summary);
-    rememberClosure(summary);
-
-    renderProof(summary);
-    toast("Clôture POS validée : mouvements PAY créés par mode.");
-  }
-
-  function copyClosure(){
-    if(!currentClosure){
-      toast("Aucune clôture à copier.");
-      return;
-    }
-    const text = closureProofText(currentClosure, (currentClosure.modes || []).map(m=>({
-      channel:m.label,
-      amount:m.amount
-    })));
-
-    navigator.clipboard?.writeText(text)
-      .then(()=>toast("Clôture copiée."))
-      .catch(()=>prompt("Copie la clôture :", text));
-  }
-
-  function initPosClosureFromUrl(){
-    const draft = draftFromPosClosureUrl();
-    if(!draft) return false;
-
-    renderClosureDraft(draft);
-    toast("Clôture POS reçue depuis MON COMMERCE.");
-
-    try{
-      const url = new URL(window.location.href);
-      ["from","date","closureRef","count","total","cash","wave","orange","card","other","category","who"].forEach(k=>url.searchParams.delete(k));
-      window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-    }catch(_){}
-
-    return true;
-  }
-
-  function draftFromPosUrl(){
-    try{
-      const q = new URLSearchParams(window.location.search);
-      const from = String(q.get("from") || "").toUpperCase();
-      if(from !== "POS") return null;
-
-      const amount = Number(String(q.get("amount") || "0").replace(/[^\d.-]/g,"")) || 0;
-      const channel = q.get("channel") || "Cash";
-      const category = q.get("category") || "Recette Commerce POS";
-      const who = q.get("who") || "Commerce POS";
-      const proofRefFromPos = q.get("proofRef") || ("POS-PAY-" + Date.now());
-      const rawText = "Recette Commerce POS " + Math.round(amount) + " " + channel;
-
-      return {
-        id:"PAY_FROM_POS_URL_" + Date.now(),
-        proofRef:proofRefFromPos,
-        source:"POS",
-        sourceLabel:"MON COMMERCE POS",
-        module:"PAY",
-        type:"income",
-        typeLabel:"Recette",
-        amount,
-        currency:"XOF",
-        channel,
-        who,
-        client:who,
-        category,
-        note:category + " — " + money(amount) + " — " + channel,
-        rawText,
-        status:"draft",
-        requiresHumanValidation:true,
-        createdAt:new Date().toISOString(),
-        safety:{
-          noArticleDetailInPay:true,
-          posKeepsItems:true,
-          payKeepsFinalMoney:true,
-          noAutoPayment:true,
-          noAutoConfirmation:true
-        }
-      };
-    }catch(_){
-      return null;
-    }
-  }
-
-  function initPosHandoffFromUrl(){
-    closeLegacyPosUrlIfNeeded();
-  }
-
-  function escapeHTML(v){
-    return String(v??"")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function setStatus(text){
-    els.statusBox.textContent = text;
-  }
-
-  function prepare(){
-    const text = els.voiceText.value.trim();
+  function validate(){
+    const text = textArea.value.trim();
     if(!text){
-      toast("Parle ou écris un mouvement PAY.");
+      setStatus("Rien à valider.");
       return;
     }
-
-    const d = buildDraft(text);
-    renderDraft(d);
-
-    if(!d.amount){
-      toast("Brouillon préparé, montant à vérifier.");
-    }else{
-      toast("Mouvement PAY préparé.");
-    }
-  }
-
-  function saveValidated(){
-    if(!currentDraft) prepare();
-    if(!currentDraft) return;
-
-    if(!currentDraft.amount || currentDraft.amount <= 0){
-      toast("Montant manquant : vérifie avant validation.");
+    const draft = currentDraft || buildDraft(text);
+    if(!draft.amount && draft.type !== "closure"){
+      setStatus("Montant à vérifier avant validation.");
+      renderDraft(draft);
       return;
     }
-
     const movement = {
-      ...currentDraft,
-      proofRef: currentDraft.proofRef || proofRef(),
-      channel:selectedPay,
+      ...draft,
       status:"validated",
       validatedAt:new Date().toISOString(),
-      validatedBy:"pro",
-      safety:{
-        ...(currentDraft.safety || {}),
-        humanValidated:true,
-        validationRequired:false,
-        noAutoPayment:false
-      }
+      requiresHumanValidation:false
     };
-
     movement.proofText = proofText(movement);
 
-    const list = readJSON(STORAGE_KEY, []);
-    list.unshift(movement);
+    try{
+      const key = "DIGIY_PAY_ACTIONS";
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      list.unshift(movement);
+      localStorage.setItem(key, JSON.stringify(list.slice(0,200)));
+      localStorage.setItem("DIGIY_PAY_PENDING_ACTION", JSON.stringify(movement));
+    }catch(e){}
 
-    writeJSON(STORAGE_KEY, list.slice(0,200));
-    writeJSON(LATEST_KEY, movement);
-
-    renderProof(movement);
-    toast("Mouvement PAY validé + preuve créée.");
+    currentProof = movement;
+    proofBox.textContent = movement.proofText;
+    proofBox.classList.add("show");
+    setStatus("Mouvement PAY validé + preuve créée.");
   }
 
-  function copyDraft(){
-    if(!currentDraft) prepare();
-    if(!currentDraft) return;
+  function applyLang(lang){
+    currentLang = LANG[lang] ? lang : "fr";
+    const pack = LANG[currentLang];
 
-    const text = [
-      "DIGIY GO PAY — Mouvement préparé",
-      "Type : " + currentDraft.typeLabel,
-      "Montant : " + money(currentDraft.amount),
-      "Canal : " + selectedPay,
-      "Client / origine : " + currentDraft.who,
-      "Catégorie : " + currentDraft.category,
-      "Note : " + currentDraft.note,
-      "Validation humaine obligatoire."
-    ].join("\n");
+    if(leadEl) leadEl.innerHTML = pack.lead;
+    if(modelsTitleEl) modelsTitleEl.textContent = pack.modelsTitle;
+    if(modelsSubEl) modelsSubEl.textContent = pack.modelsSub;
+    if(noteEl) noteEl.textContent = pack.note;
 
-    navigator.clipboard?.writeText(text)
-      .then(()=>toast("Brouillon copié."))
-      .catch(()=>prompt("Copie le brouillon :", text));
-  }
+    langButtons.forEach(btn => btn.classList.toggle("isActive", btn.getAttribute("data-lang") === currentLang));
 
-  function copyProof(){
-    const latest = currentProof || readJSON(LATEST_KEY, null);
-    const text = latest && latest.proofText ? latest.proofText : proofText(latest);
+    cards.forEach(card => {
+      const item = pack.keys[card.getAttribute("data-key")];
+      if(!item) return;
+      card.setAttribute("data-template", item.text);
+      const icon = card.querySelector(".modelIcon");
+      const label = card.querySelector("b");
+      const em = card.querySelector("em");
+      if(icon) icon.textContent = item.icon;
+      if(label) label.textContent = item.label;
+      if(em) em.textContent = "“" + item.text + "”";
+    });
 
-    if(!text){
-      toast("Aucune preuve à copier.");
-      return;
+    const active = cards.find(c => c.classList.contains("isActive")) || cards[0];
+    if(active) choose(active);
+
+    if(recognition){
+      try{ recognition.lang = pack.speech || "fr-FR"; }catch(e){}
     }
-
-    navigator.clipboard?.writeText(text)
-      .then(()=>toast("Preuve copiée."))
-      .catch(()=>prompt("Copie la preuve :", text));
   }
 
-  function clearAll(){
-    els.voiceText.value = "";
-    els.resultBox.classList.remove("show");
-    els.proofBox.classList.remove("show");
-    els.closureControlBox?.classList.remove("show");
+  cards.forEach(card => card.addEventListener("click", () => choose(card)));
+
+  prepareBtn.addEventListener("click", () => {
+    const text = textArea.value.trim();
+    if(!text){ setStatus("Écris ou clique un exemple."); return; }
+    currentText = text;
+    if(selected) selected.textContent = "“" + text + "”";
+    renderDraft(buildDraft(text));
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    const text = textArea.value.trim();
+    const old = copyBtn.textContent;
+    try{
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = "✅ Copié";
+    }catch(e){
+      window.prompt("Copie le brouillon :", text);
+      copyBtn.textContent = "✅ Prêt";
+    }
+    setTimeout(() => copyBtn.textContent = old, 1500);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    currentText = "";
     currentDraft = null;
     currentProof = null;
-    currentClosure = null;
-    listenBuffer = "";
-    setStatus("Prêt. PAY prépare un brouillon seulement. Rien n’est validé automatiquement.");
-  }
+    textArea.value = "";
+    if(selected) selected.textContent = "—";
+    prepared.classList.remove("show");
+    proofBox.classList.remove("show");
+    cards.forEach(btn => btn.classList.remove("isActive"));
+    setStatus("Effacé. Prêt pour un nouveau mouvement PAY.");
+  });
 
-  window.fillExample = function(text){
-    els.voiceText.value = text;
-    prepare();
-  };
+  validateBtn.addEventListener("click", validate);
 
-  function setupPay(){
-    document.querySelectorAll(".pay").forEach(btn=>{
-      btn.addEventListener("click",()=>{
-        document.querySelectorAll(".pay").forEach(b=>b.classList.remove("active"));
-        btn.classList.add("active");
-        selectedPay = btn.dataset.pay || "Cash";
-        if(currentDraft){
-          currentDraft.channel = selectedPay;
-          els.rChannel.textContent = selectedPay;
-        }
-      });
-    });
-  }
+  copyProofBtn.addEventListener("click", async () => {
+    const text = currentProof && currentProof.proofText ? currentProof.proofText : proofBox.textContent;
+    if(!text){ setStatus("Aucune preuve à copier."); return; }
+    const old = copyProofBtn.textContent;
+    try{
+      await navigator.clipboard.writeText(text);
+      copyProofBtn.textContent = "✅ Preuve copiée";
+    }catch(e){
+      window.prompt("Copie la preuve :", text);
+      copyProofBtn.textContent = "✅ Prêt";
+    }
+    setTimeout(() => copyProofBtn.textContent = old, 1500);
+  });
+
+  langButtons.forEach(btn => btn.addEventListener("click", () => {
+    applyLang(btn.getAttribute("data-lang") || "fr");
+    setStatus("Langue changée.");
+  }));
 
   function setupSpeech(){
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!SR){
-      els.listenBtn.disabled = true;
-      els.listenBtn.textContent = "🎙️ Micro non dispo";
-      setStatus("Micro non disponible sur ce navigateur. Tu peux écrire.");
+      listenBtn.textContent = "🎙️ Micro non dispo";
       return;
     }
-
     recognition = new SR();
-    recognition.lang = "fr-FR";
-    recognition.continuous = true;
+    recognition.lang = (LANG[currentLang] && LANG[currentLang].speech) || "fr-FR";
+    recognition.continuous = false;
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
-
-    recognition.onstart = ()=>{
-      listenBuffer = "";
-      setStatus("J’écoute… parle l’argent.");
-      toast("Micro ouvert.");
-    };
-
-    recognition.onresult = e=>{
-      let finalText = "";
-      let interim = "";
-
-      for(let i=e.resultIndex;i<e.results.length;i++){
-        const tr = e.results[i][0].transcript;
-        if(e.results[i].isFinal) finalText += tr;
-        else interim += tr;
+    recognition.onstart = () => setStatus("J’écoute...");
+    recognition.onerror = () => setStatus("Micro fragile.");
+    recognition.onend = () => setStatus("Prêt.");
+    recognition.onresult = (event) => {
+      let text = "";
+      for(let i = event.resultIndex; i < event.results.length; i++) text += event.results[i][0].transcript;
+      text = text.trim();
+      if(text){
+        textArea.value = text;
+        currentText = text;
+        if(selected) selected.textContent = "“" + text + "”";
       }
-
-      if(finalText.trim()) listenBuffer = (listenBuffer + " " + finalText).trim();
-
-      const visible = (listenBuffer + " " + interim).trim();
-      if(visible) els.voiceText.value = visible;
-    };
-
-    recognition.onerror = e=>{
-      setStatus(e.error === "not-allowed" ? "Permission micro refusée." : "Micro arrêté. Tu peux écrire.");
-    };
-
-    recognition.onend = ()=>{
-      setStatus("Écoute terminée. Tu peux préparer.");
-      if(els.voiceText.value.trim()) prepare();
     };
   }
 
-  els.listenBtn.addEventListener("click",()=>{
-    if(!recognition){
-      toast("Micro non disponible ici.");
-      return;
-    }
-
-    try{
-      els.voiceText.value = "";
-      currentDraft = null;
-      currentProof = null;
-      els.resultBox.classList.remove("show");
-      els.proofBox.classList.remove("show");
-      els.closureControlBox?.classList.remove("show");
-      currentClosure = null;
-      recognition.start();
-    }catch(_){
-      toast("Micro déjà lancé.");
-    }
-  });
-
-  els.stopBtn.addEventListener("click",()=>{
-    try{ recognition && recognition.stop(); }catch(_){}
-    try{ speechSynthesis && speechSynthesis.cancel(); }catch(_){}
-    setStatus("Stop.");
-  });
-
-  els.prepareBtn.addEventListener("click",prepare);
-  els.clearBtn.addEventListener("click",clearAll);
-  els.validateBtn.addEventListener("click",saveValidated);
-  els.copyBtn.addEventListener("click",copyDraft);
-  els.editBtn.addEventListener("click",()=>els.voiceText.focus());
-  els.cancelBtn.addEventListener("click",clearAll);
-  els.proofCopyBtn.addEventListener("click",copyProof);
-  els.validateClosureBtn?.addEventListener("click",validateClosure);
-  els.copyClosureBtn?.addEventListener("click",copyClosure);
-  els.cancelClosureBtn?.addEventListener("click",clearAll);
-
-  setupPay();
   setupSpeech();
-  if(!initPosClosureFromUrl()) closeLegacyPosUrlIfNeeded();
+
+  listenBtn.addEventListener("click", () => {
+    if(!recognition){ setStatus("Micro non disponible."); return; }
+    try{ recognition.start(); }catch(e){ setStatus("Micro déjà lancé."); }
+  });
+
+  textArea.addEventListener("input", () => {
+    currentText = textArea.value.trim();
+  });
+
+  applyLang("fr");
 })();
 </script>
 </body>
