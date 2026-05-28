@@ -1,32 +1,4 @@
-/* DIGIY GO PAY — vocabulaire argent FR WO AR
-   PAY garde recette, dépense, dette client, encaissement dette, clôture. Les métiers gardent leur détail métier.
-*/
-(function(){
-  "use strict";
-  var vocab={
-    module:"PAY",
-    label:"Mon argent",
-    version:"pay-vocab-fr-wo-ar-20260528",
-    languages:["fr","wo","ar"],
-    doctrine:"PAY écoute l'argent réel en français, wolof ou arabe. Il ne détaille pas les articles, courses, réservations ou chantiers.",
-    intents:{
-      income:["recette","entrée","entree","argent reçu","argent recu","encaissement","paiement reçu","paiement recu","fay","xaalis bi dugg","dugg","recette","دخل","مدخول","قبض","دفع وصل","مال دخل"],
-      expense:["dépense","depense","sortie","achat","carburant","emballage","fournisseur","loyer","charge","génn","jënd","essence","emballage","fournisseur","خرج","مصروف","شراء","بنزين","مورد","إيجار"],
-      receivable:["client doit","doit","dette client","à recevoir","a recevoir","crédit","credit","kiliyaan am na bor","bor","war na fay","دين","زبون عليه","مستحق","آجل"],
-      debtPayment:["a payé","a paye","paiement dette","sur sa dette","avance dette","fay na","fay bor","جزء من الدين","دفع الدين","سدد"],
-      closure:["clôture","cloture","fin de journée","fin de journee","total caisse","tëj caisse","mujj bés","إغلاق","نهاية اليوم","مجموع الصندوق"]
-    },
-    fields:{
-      amount:["montant","somme","total","prix","xaalis","njëg","مبلغ","مجموع","سعر"],
-      channel:["cash","espèces","especes","wave","orange money","carte","tpe","xaalis","kesh","كاش","نقدا","وايف","أورنج موني","بطاقة"],
-      who:["client","origine","boutique","chauffeur","loc","market","réseau","reseau","kiliyaan","fu joge","زبون","مصدر","محل","سائق"],
-      category:["catégorie","categorie","motif","type","wàll","سبب","نوع","فئة"]
-    },
-    examples:["recette boutique 10000 Wave","dépense emballage 3000 cash","Awa doit 15000","Awa a payé 5000 Wave sur sa dette","دخل المحل 10000 وايف","Awa war na fay 15000"],
-    safety:["aucun paiement automatique","aucune dette soldée automatiquement","aucune recette sans validation humaine","PAY ne remplace pas le module métier"],
-    bridgePolicy:{acceptsFinalMoneyOnly:true,rejectsArticleDetails:true,rejectsTripDetails:true,rejectsBookingConfirmation:true}
-  };
-  window.DIGIY_GO_VOCABS=window.DIGIY_GO_VOCABS||{};
-  window.DIGIY_GO_VOCABS.PAY=vocab;
-  window.DIGIY_GO_PAY_VOCAB=vocab;
-})();
+/* DIGIY GO PAY — vocabulaire argent FR WO AR + choix langue */
+(function(){"use strict";
+var vocab={module:"PAY",label:"Mon argent",version:"pay-lang-ui-20260528",languages:["fr","wo","ar"],doctrine:"PAY écoute l'argent réel en français, wolof ou arabe. Il ne détaille pas les articles, courses, réservations ou chantiers.",intents:{income:["recette","entrée","argent reçu","encaissement","paiement reçu","fay","xaalis bi dugg","dugg","دخل","مدخول","قبض"],expense:["dépense","sortie","achat","carburant","emballage","fournisseur","loyer","génn","jënd","خرج","مصروف","شراء"],receivable:["client doit","dette client","à recevoir","crédit","kiliyaan am na bor","bor","war na fay","دين","زبون عليه","مستحق"],debtPayment:["a payé","paiement dette","sur sa dette","fay na","fay bor","دفع الدين","سدد"],closure:["clôture","fin de journée","total caisse","tëj caisse","mujj bés","إغلاق","نهاية اليوم","مجموع الصندوق"]},fields:{amount:["montant","somme","total","prix","xaalis","njëg","مبلغ","مجموع"],channel:["cash","espèces","wave","orange money","carte","xaalis","kesh","كاش","وايف","بطاقة"],who:["client","origine","boutique","chauffeur","loc","market","réseau","kiliyaan","زبون","مصدر","محل"],category:["catégorie","motif","type","wàll","سبب","نوع"]},examples:["recette boutique 10000 Wave","dépense emballage 3000 cash","Awa doit 15000","Awa war na fay 15000","دخل المحل 10000 وايف"],safety:["aucun paiement automatique","aucune dette soldée automatiquement","aucune recette sans validation humaine","PAY ne remplace pas le module métier"],bridgePolicy:{acceptsFinalMoneyOnly:true,rejectsArticleDetails:true,rejectsTripDetails:true,rejectsBookingConfirmation:true}};
+function ui(v){var L={fr:{r:"fr-FR",d:"ltr",h:"Parle ou écris en français."},wo:{r:"fr-FR",d:"ltr",h:"Wolof : parle si le téléphone comprend, sinon écris ou dicte au clavier."},ar:{r:"ar-SA",d:"auto",h:"Parle ou écris en arabe."}};var K="DIGIY_GO_LANG_"+v.module;function cur(){return localStorage.getItem(K)||"fr"}function apply(x){localStorage.setItem(K,x);window.DIGIY_GO_LANG=x;window.DIGIY_GO_SPEECH_LANG=L[x].r;document.querySelectorAll("textarea,input").forEach(function(el){el.dir=L[x].d});var h=document.getElementById("digiyGoLangHint");if(h)h.textContent=L[x].h;document.querySelectorAll("[data-digiy-lang]").forEach(function(b){b.style.opacity=b.dataset.digiyLang===x?"1":".55"})}function patch(){["SpeechRecognition","webkitSpeechRecognition"].forEach(function(n){var O=window[n];if(!O||O.__digiyPatched)return;function W(){var rec=new O(),start=rec.start;rec.start=function(){try{rec.lang=L[cur()].r}catch(e){}return start.apply(rec,arguments)};return rec}W.__digiyPatched=true;W.prototype=O.prototype;window[n]=W})}function mount(){if(document.getElementById("digiyGoLangBox"))return;var host=document.querySelector("textarea")||document.querySelector("main")||document.body;var box=document.createElement("div");box.id="digiyGoLangBox";box.style.cssText="margin:12px 0;padding:12px;border-radius:18px;border:1px solid rgba(250,204,21,.35);background:rgba(0,0,0,.18);font-weight:1000";box.innerHTML='<div style="color:#fde68a;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">Langue de travail</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><button type="button" data-digiy-lang="fr">🇫🇷 Français</button><button type="button" data-digiy-lang="wo">🇸🇳 Wolof</button><button type="button" data-digiy-lang="ar">🇸🇦 العربية</button></div><div id="digiyGoLangHint" style="margin-top:8px;color:rgba(255,255,255,.78);font-size:13px"></div>';box.querySelectorAll("button").forEach(function(b){b.style.cssText="min-height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);color:inherit;font:inherit;cursor:pointer";b.onclick=function(){apply(b.dataset.digiyLang)}});host.parentNode.insertBefore(box,host);apply(cur())}patch();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount);else mount()}window.DIGIY_GO_VOCABS=window.DIGIY_GO_VOCABS||{};window.DIGIY_GO_VOCABS.PAY=vocab;window.DIGIY_GO_PAY_VOCAB=vocab;ui(vocab);})();
