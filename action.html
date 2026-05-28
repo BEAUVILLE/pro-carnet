@@ -14,15 +14,15 @@ window.DIGIY_MODULE="PAY";
 window.DIGIY_LOGIN_URL="./pin.html";
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./session.js?v=pay-action-origin-manual-20260528"></script>
-<script src="./pay-tools.js?v=pay-action-origin-manual-20260528"></script>
+<script src="./session.js?v=pay-action-caisse-directe-20260528-v2"></script>
+<script src="./pay-tools.js?v=pay-action-caisse-directe-20260528-v2"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(720px 380px at 8% -10%,rgba(34,197,94,.30),transparent 62%),linear-gradient(180deg,#0b5f34,#04130d);color:white;padding:10px;font-weight:900}a{color:inherit;text-decoration:none}button,textarea{font:inherit}.wrap{width:min(880px,100%);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.top b{color:#fff3cf}.top a{font-size:12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.08)}.box{border:1px solid rgba(246,196,83,.36);border-radius:22px;background:rgba(255,255,255,.07);padding:12px;box-shadow:0 18px 44px rgba(0,0,0,.24)}h1{font-size:clamp(34px,9vw,58px);line-height:.9;letter-spacing:-.06em;margin:4px 0 8px}.gold{color:#f6c453}.lead{font-size:14px;line-height:1.36;color:rgba(255,255,255,.82);margin:0 0 10px}.models{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.model{min-height:62px;border-radius:14px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:white;padding:8px;text-align:left;font-weight:1000}.model small{display:block;color:#fff3cf;font-size:11px;margin-bottom:3px}.model span{font-size:12px;color:rgba(255,255,255,.82)}label{display:block;color:#fff3cf;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px}textarea{width:100%;min-height:88px;border-radius:16px;border:1px solid rgba(246,196,83,.28);background:#06140f;color:white;padding:12px;font-size:16px;font-weight:850;outline:none;resize:vertical}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.valid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}button{cursor:pointer}.btn,.vbtn{min-height:42px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(255,255,255,.08);color:white;padding:7px 6px;font-size:11.5px;font-weight:1000;line-height:1.08}.main{background:linear-gradient(135deg,#fff1bd,#f6c453,#22c55e);color:#06140f}.pay{background:linear-gradient(135deg,#bbf7d0,#22c55e,#f6c453);color:#06140f;border-color:rgba(34,197,94,.55);box-shadow:0 8px 18px rgba(0,0,0,.18)}.state,.proof{margin-top:8px;border:1px dashed rgba(246,196,83,.28);border-radius:14px;background:rgba(0,0,0,.16);padding:9px;font-size:12.5px;color:#dfffe9;line-height:1.32;white-space:pre-wrap}.proof{display:none;color:#fff3cf}.proof.show{display:block}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.chips span{font-size:10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 8px;color:rgba(255,255,255,.8)}@media(max-width:520px){body{padding:8px}.models{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr 1fr}.valid{grid-template-columns:1fr}.vbtn{min-height:40px}.chips{display:none}}@media(max-width:360px){.models{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <div class="top"><b>💳 DIGIY GO PAY</b><a href="./cockpit.html">🌡️ Mouvements</a></div>
+  <div class="top"><b>💳 DIGIY GO PAY</b><a href="./mouvements.html">📜 Caisse</a></div>
   <section class="box">
     <h1>Dis l’argent.<br><span class="gold">PAY encaisse.</span></h1>
     <p class="lead">PAY reçoit l’argent final. Le pro vérifie puis valide. Le mouvement entre dans la vraie caisse si la session PAY est bonne.</p>
@@ -46,7 +46,7 @@ window.DIGIY_LOGIN_URL="./pin.html";
       <button class="vbtn pay" id="validate">✅ Valider dans la caisse PAY</button>
       <a class="vbtn" href="./admin.html">➕ Ajouter manuel</a>
     </div>
-    <div class="state" id="state">Version corrigée : origin manual. Clique “Valider dans la caisse PAY”.</div>
+    <div class="state" id="state">Prêt. Clique “Valider dans la caisse PAY”.</div>
     <div class="proof" id="proof"></div>
     <div class="chips"><span>vraie caisse</span><span>preuve locale secours</span><span>session PAY requise</span></div>
   </section>
@@ -64,7 +64,7 @@ function category(k,v){const t=norm(v);if(k==='expense'){if(t.includes('essence'
 function label(k,v){const s=source(v);if(k==='expense')return tIncludes(v,'essence')?'Dépense essence':'Dépense activité';if(k==='receivable')return'À recevoir';return s==='PAY'?'Recette PAY':'Recette '+s}
 function tIncludes(v,x){return norm(v).includes(x)}
 function proofText(m,ok,msg){return ['PREUVE PAY — DIGIYLYFE','Statut caisse : '+(ok?'INSCRIT':'NON INSCRIT'),msg?'Message : '+msg:null,'Référence : '+(m.source_id||'—'),'Date : '+new Date().toLocaleString('fr-FR'),'Type : '+(m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette'),'Montant : '+(m.amount_xof||0).toLocaleString('fr-FR')+' F','Canal : '+rawChannel(txt.value),'Origine : '+m.source_module,'Libellé : '+m.label,'Note : '+(m.note_text||'—'),'Validation humaine : oui'].filter(Boolean).join('\n')}
-function build(){const text=txt.value.trim(), k=kind(text), a=amount(text), s=source(text);return{direction:k==='expense'?'out':'in',scope:'pro',kind:k==='expense'?'expense':k==='receivable'?'other':'sale',category:category(k,text),amount_xof:a||0,channel:channel(text),label:label(k,text),note_text:text,source_module:s,source_id:'PAY-ACTION-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),origin:'manual',status:k==='receivable'?'pending':'posted',meta:{action_pay:true,action_origin:'action_pay',type_from_text:k,raw_channel:rawChannel(text)}}}
+function build(){const text=txt.value.trim(), k=kind(text), a=amount(text), s=source(text);return{direction:k==='expense'?'out':'in',scope:'pro',kind:k==='expense'?'expense':k==='receivable'?'other':'sale',category:category(k,text),amount_xof:a||0,channel:channel(text),label:label(k,text),note_text:text,source_module:s,source_id:'PAY-ACTION-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),origin:'manual',status:k==='receivable'?'pending':'posted',meta:{action_pay:true,type_from_text:k,raw_channel:rawChannel(text)}}}
 function set(m){state.textContent=m}
 function saveLocal(m,ok,msg){const movement={source:m.source_module,module:'PAY',type:m.direction==='out'?'expense':m.status==='pending'?'receivable':'income',typeLabel:m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette',amount:m.amount_xof,channel:rawChannel(txt.value),who:m.source_module,category:m.label,note:m.note_text,status:'validated',validatedAt:new Date().toISOString(),insertedInMovements:ok,proofText:proofText(m,ok,msg)};try{const list=JSON.parse(localStorage.getItem('DIGIY_PAY_ACTIONS')||'[]');list.unshift(movement);localStorage.setItem('DIGIY_PAY_ACTIONS',JSON.stringify(list.slice(0,200)));localStorage.setItem('DIGIY_PAY_PENDING_ACTION',JSON.stringify(movement))}catch(e){}proof.textContent=movement.proofText;proof.classList.add('show')}
 async function validate(){const m=build();if(!m.amount_xof){set('Montant manquant : ajoute un montant.');return}set('Insertion dans la caisse PAY…');let res={ok:false,error:'Outil PAY non chargé'};try{if(window.DIGIY_PAY_TOOLS&&typeof window.DIGIY_PAY_TOOLS.insertMovement==='function')res=await window.DIGIY_PAY_TOOLS.insertMovement(m)}catch(e){res={ok:false,error:e&&e.message?e.message:'Erreur insertion'}}if(res&&res.ok){saveLocal(m,true,'Mouvement inscrit dans les vrais mouvements PAY.');set('✅ Mouvement inscrit dans la caisse PAY. Ouvre Mouvements pour vérifier.')}else{const msg=(res&&res.error)||res.code||'Session PAY / téléphone / slug à vérifier.';saveLocal(m,false,msg);set('⚠️ Preuve gardée, mais non inscrit dans Mouvements : '+msg)}}
@@ -79,4 +79,5 @@ speech();document.getElementById('listen').onclick=()=>{if(!rec){set('Micro non 
 </script>
 </body>
 </html>
+
 
