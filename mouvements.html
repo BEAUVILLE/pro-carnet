@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PAY — Mouvements caisse</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f4ead2">
+<script>
+window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
+window.DIGIY_SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+window.DIGIY_SUPABASE_ANON=window.DIGIY_SUPABASE_ANON_KEY;
+window.DIGIY_MODULE="PAY";
+window.DIGIY_LOGIN_URL="./pin.html";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./session.js?v=pay-mouvements-20260528"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f6edd8,#ead9b7 58%,#dfc99c);color:#1f2a1f;padding:10px 10px 96px;font-weight:900}a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(940px,100%);margin:0 auto}.top{position:sticky;top:0;z-index:20;background:rgba(246,237,216,.96);border:1px solid rgba(83,58,26,.22);border-radius:0 0 22px 22px;padding:10px;margin:-10px -2px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#22c55e,#facc15);display:grid;place-items:center;font-size:22px}.brand b{font-size:20px;color:#241a0d}.brand small{display:block;color:#5f4308;font-size:12px}.pill{min-height:42px;border-radius:999px;padding:9px 12px;border:1px solid rgba(83,58,26,.24);background:rgba(255,255,255,.58);font-size:13px;font-weight:1000}.hero{border:2px solid rgba(83,58,26,.24);border-radius:26px;background:linear-gradient(160deg,rgba(255,250,238,.98),rgba(246,232,202,.96));padding:16px;margin-bottom:12px;box-shadow:0 10px 24px rgba(77,52,22,.12)}h1{margin:0;font-size:clamp(38px,12vw,72px);line-height:.86;letter-spacing:-.07em;color:#241a0d}.lead{margin:12px 0 0;color:#3d3324;line-height:1.45;font-size:15px}.bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.kpi{border:1px solid rgba(83,58,26,.22);border-radius:18px;background:rgba(255,255,255,.62);padding:12px}.kpi small{display:block;color:#6b4e09;font-size:11px;text-transform:uppercase;letter-spacing:.07em}.kpi b{display:block;margin-top:4px;font-size:22px;color:#241a0d}.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tools button,.tools a{min-height:42px;border-radius:999px;padding:9px 12px;border:1px solid rgba(83,58,26,.24);background:rgba(255,255,255,.64);font-weight:1000;color:#1f2a1f}.tools button.primary{background:linear-gradient(135deg,#22c55e,#facc15);border:none}.list{display:grid;gap:9px}.row{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;border:1px solid rgba(83,58,26,.22);border-radius:18px;background:rgba(255,255,255,.70);padding:11px}.ico{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:rgba(250,204,21,.25);font-size:20px}.title{font-size:15px;font-weight:1000;color:#241a0d}.meta{font-size:12px;color:#3d3324;margin-top:3px;line-height:1.35}.amount{font-size:18px;font-weight:1000;white-space:nowrap;text-align:right}.in{color:#14532d}.out{color:#9f1239}.pending{color:#6b4e09}.empty{padding:18px;border-radius:20px;background:rgba(255,255,255,.62);border:1px dashed rgba(83,58,26,.24);text-align:center;color:#3d3324}.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(246,237,216,.96);border-top:1px solid rgba(83,58,26,.24);padding:8px 10px}.bottomIn{width:min(760px,100%);margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.bottom a{min-height:56px;border-radius:16px;background:rgba(255,255,255,.62);border:1px solid rgba(83,58,26,.18);display:grid;place-items:center;text-align:center;font-size:12px;font-weight:1000}.bottom a.active{background:linear-gradient(135deg,#22c55e,#facc15);color:#102015}@media(max-width:680px){.bar{grid-template-columns:1fr 1fr}.row{grid-template-columns:38px 1fr}.amount{text-align:left;grid-column:2}.top{align-items:flex-start}.brand b{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand"><div class="logo">💳</div><div><b>Caisse PAY</b><small id="who">Chargement session…</small></div></div><a class="pill" href="./cockpit.html">← Cockpit</a></header>
+<section class="hero"><h1>Mouvements caisse.</h1><p class="lead">Ici tu vois les vraies lignes inscrites dans PAY : recettes, dépenses, restes à recevoir. Si une preuve dit “INSCRIT”, elle doit remonter ici après rechargement.</p></section>
+<section class="bar"><div class="kpi"><small>Entrées</small><b id="sumIn">—</b></div><div class="kpi"><small>Sorties</small><b id="sumOut">—</b></div><div class="kpi"><small>Net</small><b id="sumNet">—</b></div><div class="kpi"><small>Lignes</small><b id="sumCount">—</b></div></section>
+<div class="tools"><button class="primary" id="refresh" type="button">🔄 Recharger caisse</button><a href="./action.html">🎙️ ACTION PAY</a><a href="./admin.html">➕ Ajouter manuel</a></div>
+<section class="list" id="list"><div class="empty">Chargement des mouvements…</div></section>
+</div>
+<nav class="bottom"><div class="bottomIn"><a href="./cockpit.html">🏠<br>Accueil</a><a class="active" href="./mouvements.html">📜<br>Caisse</a><a href="./action.html">🎙️<br>ACTION</a><a href="./admin.html">➕<br>Ajouter</a></div></nav>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+function money(n){return (Number(n)||0).toLocaleString('fr-FR')+' F'}
+function esc(v){return String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function normalizePhone(v){return String(v||'').replace(/[^0-9+]/g,'').trim()}
+function normalizeSlug(v){return String(v||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'')}
+function icon(row){if(row.status==='pending')return'🤝';if(row.direction==='out')return'💸';return'💰'}
+function cls(row){if(row.status==='pending')return'pending';if(row.direction==='out')return'out';return'in'}
+function label(row){return String(row.label||row.category||row.note_text||'Mouvement PAY')}
+function meta(row){let d=String(row.movement_date||row.created_at||'').slice(0,10);let src=String(row.source_module||'PAY').toUpperCase();let chan=String(row.channel||'').replace('_',' ');let status=String(row.status||'posted');return [src,chan,status,d].filter(Boolean).join(' · ')}
+let sb=null, SLUG='', PHONE='';
+async function callRpc(name,args){const {data,error}=await sb.rpc(name,args||{});if(error)throw error;const p=data&&typeof data==='object'?data:{};if(p.ok===false)throw new Error(p.error||'rpc_failed');return p}
+function getSession(){const S=window.DIGIY_SESSION||null;try{if(S&&typeof S.require==='function')return S.require('./pin.html?redirect=mouvements');if(S&&typeof S.get==='function')return S.get()}catch(e){}return null}
+async function load(){
+  $('list').innerHTML='<div class="empty">Chargement des mouvements…</div>';
+  if(!window.supabase||!window.supabase.createClient){$('list').innerHTML='<div class="empty">Supabase non chargé.</div>';return}
+  sb=window.supabase.createClient(window.DIGIY_SUPABASE_URL,window.DIGIY_SUPABASE_ANON_KEY);
+  const session=getSession();
+  if(!session){$('list').innerHTML='<div class="empty">Session PAY non reconnue. Repasse par le code.</div>';return}
+  SLUG=normalizeSlug(session.slug||'');PHONE=normalizePhone(session.phone||'');
+  $('who').textContent='Session protégée · '+(SLUG||'PAY');
+  if(!SLUG||!PHONE){$('list').innerHTML='<div class="empty">Session PAY incomplète : slug ou téléphone manquant.</div>';return}
+  try{
+    const payload=await callRpc('digiy_pay_pro_list_movements',{p_slug:SLUG,p_phone:PHONE,p_limit:200});
+    const rows=Array.isArray(payload.items)?payload.items:[];
+    let sumIn=0,sumOut=0;
+    rows.forEach(r=>{const a=Number(r.amount_xof)||0;if(String(r.direction).toLowerCase()==='out')sumOut+=a;else sumIn+=a});
+    $('sumIn').textContent=money(sumIn);$('sumOut').textContent=money(sumOut);$('sumNet').textContent=money(sumIn-sumOut);$('sumCount').textContent=String(rows.length);
+    if(!rows.length){$('list').innerHTML='<div class="empty">Aucun mouvement trouvé dans la caisse PAY.</div>';return}
+    $('list').innerHTML=rows.map(r=>`<article class="row"><div class="ico">${icon(r)}</div><div><div class="title">${esc(label(r))}</div><div class="meta">${esc(meta(r))}</div><div class="meta">${esc(r.note_text||'')}</div></div><div class="amount ${cls(r)}">${r.direction==='out'?'-':'+'}${esc(money(r.amount_xof))}</div></article>`).join('');
+  }catch(e){$('list').innerHTML='<div class="empty">Lecture caisse refusée : '+esc(e.message||e)+'</div>'}
+}
+$('refresh').addEventListener('click',load);
+load();
+})();
+</script>
+</body>
+</html>
