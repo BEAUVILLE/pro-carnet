@@ -1,369 +1,174 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Mon argent — HUB PAY</title>
-  <meta name="theme-color" content="#f4ead2"/>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
-  <meta name="description" content="PAY PRO — HUB mobile terrain en pavés : ACTION PAY, caisse, ajouter, température, fiche, session et accès."/>
-  <meta name="digiy-build" content="pay-hub-moteur-complet-caisse-20260528-v3"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <script>
-    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-    window.DIGIY_SUPABASE_KEY = window.DIGIY_SUPABASE_ANON_KEY;
+<title>DIGIY GO PAY — Caisse</title>
 
-    window.DIGIY_MODULE = "PAY";
-    window.DIGIY_ABOS_MODULE = "PAY";
-    window.DIGIY_LOGIN_URL = "./pin.html";
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="theme-color" content="#0b5f34">
 
-    /* PAY est transverse : il ne doit pas être bloqué comme un abonnement métier. */
-    window.DIGIY_TRANSVERSE_MODULE = true;
-  </script>
+<script>
+window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
+window.DIGIY_SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+window.DIGIY_SUPABASE_ANON=window.DIGIY_SUPABASE_ANON_KEY;
+window.DIGIY_MODULE="PAY";
+window.DIGIY_LOGIN_URL="./pin.html";
+</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
-  <script src="./session.js?v=pay-hub-moteur-complet-caisse-20260528-v3"></script>
-  <script src="./assets/js/action-digiy-receiver.js?v=20260526-v2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./session.js?v=pay-action-rpc-direct-20260602-v4"></script>
 
-  <link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+<script>
+  window.DIGIY_SESSION?.require?.("./pin.html");
+</script>
 
-  <style>
-:root{
-  --bg:#f4ead2;--bg2:#ead9b7;--bg3:#dec99c;--bar:rgba(246,237,216,.97);
-  --gold:#facc15;--gold2:#fde68a;--green:#16a34a;--green2:#22c55e;--blue:#2563eb;
-  --text:#1f2a1f;--muted:rgba(31,42,31,.78);--line:rgba(83,58,26,.24);
-  --shadow:0 14px 34px rgba(77,52,22,.16);--r:22px;--hdrH:52px;--barH:78px;--max:980px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{
-  margin:0;min-height:100dvh;color:var(--text);
-  font-family:Outfit,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:950;
-  background:
-    radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
-    radial-gradient(circle at 100% 100%,rgba(22,101,52,.10),transparent 30%),
-    linear-gradient(180deg,var(--bg),var(--bg2) 58%,var(--bg3));
-  padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
-}
-a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}
-.topHeader{
-  position:fixed;top:0;left:0;right:0;height:var(--hdrH);z-index:100;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;
-  background:var(--bar);border-bottom:1px solid rgba(83,58,26,.24);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-}
-.hdrBack{min-height:36px;display:inline-flex;align-items:center;justify-content:center;color:rgba(31,42,31,.70);font-size:14px;font-weight:1000;white-space:nowrap}
-.hdrTitle{font-size:12px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#6b4e09;white-space:nowrap}
-.hdrPill{min-height:32px;display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--muted);font-size:12px;font-weight:1000;white-space:nowrap;max-width:38vw;overflow:hidden;text-overflow:ellipsis}
-.hdrPill.ok{color:#14532d;border-color:rgba(22,101,52,.28);background:rgba(220,252,231,.72)}
-.hdrPill.warn{color:#6b4e09;border-color:rgba(250,204,21,.36);background:rgba(250,204,21,.18)}
-.wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:16px}
-.hubHead,.hero{padding:2px 2px 4px}
-.eyebrow,.kicker{color:#6b4e09;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:1000;margin-bottom:8px}
-h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:.94;letter-spacing:-.05em;color:#241a0d}
-.hubSub,.lead{color:var(--muted);font-size:18px;font-weight:1000;line-height:1.38;max-width:780px}
-.rule,.card,.panel{
-  border:2px solid var(--line);border-radius:var(--r);background:rgba(255,255,255,.60);
-  box-shadow:var(--shadow);
-}
-.rule{margin-top:10px;padding:14px 15px;border-style:dashed;color:#14532d;font-size:16px;font-weight:1000;line-height:1.38}
-.rule b{color:#6b4e09}
-.group{display:grid;gap:9px}
-.groupLabel{font-size:12px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(31,42,31,.60);padding:0 2px}
-.tileGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.tile{
-  min-height:156px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:16px;border-radius:var(--r);
-  border:2px solid var(--line);background:rgba(255,255,255,.60);box-shadow:var(--shadow);
-  transition:transform .12s ease,background .12s ease,border-color .12s ease;-webkit-tap-highlight-color:transparent;
-}
-.tile:hover{transform:translateY(-1px);background:rgba(255,255,255,.75);border-color:rgba(121,83,12,.36)}
-.tileTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.tileIcon{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:rgba(250,204,21,.18);border:1px solid rgba(83,58,26,.22);font-size:30px;flex:0 0 auto}
-.tileTag{min-height:31px;display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:999px;border:1px solid rgba(83,58,26,.22);background:rgba(255,255,255,.58);color:#6b4e09;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-.tile b{display:block;font-size:23px;font-weight:1000;line-height:1.02;letter-spacing:-.025em;color:#241a0d}
-.tile span{display:block;margin-top:6px;color:#3d3324;font-size:15px;font-weight:1000;line-height:1.28}
-.tile.primary{border-color:rgba(22,101,52,.34);background:linear-gradient(180deg,rgba(220,252,231,.72),rgba(255,255,255,.62))}
-.tile.gold{border-color:rgba(250,204,21,.48);background:linear-gradient(180deg,rgba(250,204,21,.24),rgba(255,255,255,.62))}
-.tile.blue{border-color:rgba(37,99,235,.24);background:linear-gradient(180deg,rgba(219,234,254,.72),rgba(255,255,255,.62))}
-.tile.pay{border-color:rgba(250,204,21,.56);background:linear-gradient(135deg,var(--green2),var(--gold))}
-.tile.pay b,.tile.pay span{color:#102014}
-.tileLogoImg{width:100px;height:100px;object-fit:contain;border-radius:25px;background:#fff;padding:8px;box-shadow:0 12px 26px rgba(77,52,22,.20);border:1px solid rgba(83,58,26,.22);flex:0 0 auto}
-.blasonTile{min-height:184px!important}
-.bottomBar{position:fixed;left:0;right:0;bottom:0;height:var(--barH);z-index:100;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(246,237,216,.97);border-top:1px solid rgba(83,58,26,.22);backdrop-filter:blur(18px)}
-.bottomInner{width:min(100%,760px);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.bottomInner a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(31,42,31,.70);font-size:11px;font-weight:1000;text-align:center;border:1px solid rgba(83,58,26,.12);background:rgba(255,255,255,.50)}
-.bottomInner a.active{color:#102014;background:linear-gradient(135deg,var(--green2),var(--gold));border-color:rgba(22,101,52,.24)}
-.bottomInner .bi{font-size:21px;line-height:1}
-.btn{min-height:62px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.70);display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:12px 16px;font-weight:1000;font-size:17px}
-.btn.primary{background:linear-gradient(135deg,var(--green2),var(--gold));color:#102014;border:0}
-.btn.warn{background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.30);color:#6b4e09}
-.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}
-
-@media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.tileGrid,.grid2{grid-template-columns:1fr}.actions .btn{width:100%}}
-@media(max-width:520px){
-  body{font-size:19px;padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px)}
-  .topHeader{padding:0 10px;gap:7px}.hdrBack{font-size:13px}.hdrTitle{font-size:11px;letter-spacing:.12em}.hdrPill{font-size:11px;padding:6px 8px;max-width:34vw}
-  h1{font-size:38px}.hubSub,.lead{font-size:17px}.tile{min-height:154px;padding:14px}.tileIcon{width:52px;height:52px;font-size:29px}
-  .tileLogoImg{width:94px;height:94px;border-radius:23px}.tile b{font-size:22px}.tile span{font-size:14.5px}.tileTag{font-size:10px}
-}
-
-/* ══ LECTEUR DIGIY — PAY ══ */
-.digiyReader{
-  display:grid;
-  gap:12px;
-  padding:16px;
-  border-radius:var(--r);
-  border:2px solid rgba(250,204,21,.42);
-  background:
-    radial-gradient(520px 190px at 100% 0%,rgba(250,204,21,.24),transparent 70%),
-    linear-gradient(135deg,rgba(34,197,94,.18),rgba(255,255,255,.66));
-  box-shadow:var(--shadow);
-}
-.digiyReaderTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.digiyReaderKicker{
-  color:#6b4e09;
-  font-size:11px;
-  font-weight:1000;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin-bottom:6px;
-}
-.digiyReader h2{
-  margin:0;
-  color:#241a0d;
-  font-size:clamp(25px,6vw,40px);
-  line-height:.98;
-  letter-spacing:-.045em;
-  font-weight:1000;
-}
-.digiyReaderText{
-  color:#14532d;
-  font-size:16px;
-  font-weight:1000;
-  line-height:1.45;
-  max-width:800px;
-}
-.digiyReaderActions{
-  display:flex;
-  gap:9px;
-  flex-wrap:wrap;
-}
-.digiyReaderActions button{
-  min-height:54px;
-  border-radius:999px;
-  border:1px solid rgba(83,58,26,.22);
-  background:rgba(255,255,255,.72);
-  color:#241a0d;
-  padding:0 15px;
-  font:inherit;
-  font-size:14px;
-  font-weight:1000;
-  cursor:pointer;
-}
-.digiyReaderActions .main{
-  background:linear-gradient(135deg,var(--green2),var(--gold));
-  color:#102014;
-  border-color:rgba(22,101,52,.24);
-  box-shadow:0 12px 28px rgba(77,52,22,.14);
-}
-.digiyReaderActions .stop{
-  background:rgba(239,68,68,.12);
-  color:#9f1239;
-  border-color:rgba(159,18,57,.30);
-}
-.digiyReaderStatus{
-  min-height:20px;
-  color:#6b4e09;
-  font-size:13px;
-  font-weight:1000;
-}
-@media(max-width:520px){
-  .digiyReaderActions{display:grid;grid-template-columns:1fr 1fr}
-  .digiyReaderActions button{width:100%}
-}
-
+<script src="./pay-tools.js?v=pay-action-rpc-direct-20260602-v4"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(720px 380px at 8% -10%,rgba(34,197,94,.30),transparent 62%),linear-gradient(180deg,#0b5f34,#04130d);color:white;padding:10px;font-weight:900}a{color:inherit;text-decoration:none}button,textarea{font:inherit}.wrap{width:min(880px,100%);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.top b{color:#fff3cf}.top a{font-size:12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.08)}.box{border:1px solid rgba(246,196,83,.36);border-radius:22px;background:rgba(255,255,255,.07);padding:12px;box-shadow:0 18px 44px rgba(0,0,0,.24)}h1{font-size:clamp(34px,9vw,58px);line-height:.9;letter-spacing:-.06em;margin:4px 0 8px}.gold{color:#f6c453}.lead{font-size:14px;line-height:1.36;color:rgba(255,255,255,.82);margin:0 0 10px}.models{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.model{min-height:62px;border-radius:14px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:white;padding:8px;text-align:left;font-weight:1000}.model small{display:block;color:#fff3cf;font-size:11px;margin-bottom:3px}.model span{font-size:12px;color:rgba(255,255,255,.82)}label{display:block;color:#fff3cf;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px}textarea{width:100%;min-height:88px;border-radius:16px;border:1px solid rgba(246,196,83,.28);background:#06140f;color:white;padding:12px;font-size:16px;font-weight:850;outline:none;resize:vertical}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.valid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}button{cursor:pointer}.btn,.vbtn{min-height:42px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(255,255,255,.08);color:white;padding:7px 6px;font-size:11.5px;font-weight:1000;line-height:1.08}.main{background:linear-gradient(135deg,#fff1bd,#f6c453,#22c55e);color:#06140f}.pay{background:linear-gradient(135deg,#bbf7d0,#22c55e,#f6c453);color:#06140f;border-color:rgba(34,197,94,.55);box-shadow:0 8px 18px rgba(0,0,0,.18)}.state,.proof{margin-top:8px;border:1px dashed rgba(246,196,83,.28);border-radius:14px;background:rgba(0,0,0,.16);padding:9px;font-size:12.5px;color:#dfffe9;line-height:1.32;white-space:pre-wrap}.proof{display:none;color:#fff3cf}.proof.show{display:block}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.chips span{font-size:10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 8px;color:rgba(255,255,255,.8)}@media(max-width:520px){body{padding:8px}.models{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr 1fr}.valid{grid-template-columns:1fr}.vbtn{min-height:40px}.chips{display:none}}@media(max-width:360px){.models{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-  <header class="topHeader"><a class="hdrBack" href="./index.html">← Entrée</a><div class="hdrTitle">HUB PAY</div><div class="hdrPill warn" id="sessionPill">session…</div></header>
-  <main class="wrap">
-    <section class="hubHead">
-      <div class="eyebrow">💰 MON ARGENT</div><h1>Toutes tes portes.</h1>
-      <div class="hubSub">PAY est la caisse centrale : tu parles, tu cliques, DIGIY prépare, puis tu valides.</div>
-      <div class="rule"><b>Index</b> = porte courte. <b>HUB</b> = navigation. <b>ACTION PAY</b> = parler l’argent. <b>CAISSE PAY</b> = vraies lignes inscrites. <b>Ajouter</b> = saisie manuelle. <b>Température</b> = cerveau complet : dettes, crédits, maison, réserve, pression.</div>
-    </section>
-
-    <section class="digiyReader" aria-label="Lecteur DIGIY PAY">
-      <div class="digiyReaderTop">
-        <div>
-          <div class="digiyReaderKicker">🎧 Lecteur DIGIY · PAY</div>
-          <h2>Comprendre le cerveau argent.</h2>
-        </div>
-        <div class="digiyReaderActions">
-          <button class="main" id="digiyPayAudioPlay" type="button">▶ Écouter</button>
-          <button class="stop" id="digiyPayAudioStop" type="button">⏹ Stop</button>
-        </div>
-      </div>
-      <div class="digiyReaderText" id="digiyPayAudioText">
-        PAY est la caisse centrale : chaque recette, dépense, dette, acompte, réserve ou reste à recevoir
-        doit laisser une trace. Le pro parle ou clique, DIGIY prépare, puis le terrain valide avec vérité.
-      </div>
-      <div class="digiyReaderStatus" id="digiyPayAudioStatus">Prêt à lire · indications courtes</div>
-    </section>
-
-
-
-    <section class="group"><div class="groupLabel">Action immédiate</div><div class="tileGrid">
-      <a class="tile pay" href="./action.html"><div class="tileTop"><div class="tileIcon">🎙️</div><div class="tileTag">ACTION</div></div><div><b>ACTION PAY</b><span>Dire ou écrire une recette, dépense, dette ou encaissement.</span></div></a>
-      <a class="tile gold" href="./mouvements.html"><div class="tileTop"><div class="tileIcon">📜</div><div class="tileTag">CAISSE</div></div><div><b>CAISSE PAY</b><span>Voir les vraies lignes inscrites : recettes, dépenses, dettes.</span></div></a>
-      <a class="tile primary" href="./admin.html"><div class="tileTop"><div class="tileIcon">➕</div><div class="tileTag">Ajouter</div></div><div><b>Ajouter manuel</b><span>Entrée, dépense, dette, réserve.</span></div></a>
-      <a class="tile gold" href="./cockpit.html"><div class="tileTop"><div class="tileIcon">🌡️</div><div class="tileTag">Lecture</div></div><div><b>Ma température</b><span>Ce qui entre, sort, reste et pèse.</span></div></a>
-      <a class="tile gold blasonTile" href="https://digiylyfe.com/"><div class="tileTop"><img class="tileLogoImg" src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/><div class="tileTag">DIGIY</div></div><div><b>Métiers pro</b><span>Le blason commun des portes métier.</span></div></a>
-    </div></section>
-
-    <section class="group"><div class="groupLabel">Gestion · repères</div><div class="tileGrid">
-      <a class="tile blue" href="./brain-admin.html"><div class="tileTop"><div class="tileIcon">⚙️</div><div class="tileTag">Réglages</div></div><div><b>Réglages utiles</b><span>Réserve, dettes, projets, repères.</span></div></a>
-      <a class="tile gold" href="./fiche.html"><div class="tileTop"><div class="tileIcon">🪪</div><div class="tileTag">Fiche</div></div><div><b>Ma fiche PAY</b><span>Identité, contact, QR et lien public.</span></div></a>
-      <a class="tile" href="./oreille.html"><div class="tileTop"><div class="tileIcon">🎧</div><div class="tileTag">Oreille</div></div><div><b>Mon oreille PAY</b><span>Dicter, préparer, garder une trace.</span></div></a>
-      <a class="tile primary" href="./cockpit.html#modules"><div class="tileTop"><div class="tileIcon">📦</div><div class="tileTag">Modules</div></div><div><b>Modules liés</b><span>POS, MARKET, DRIVER, LOC, RESA.</span></div></a>
-    </div></section>
-
-    <section class="group"><div class="groupLabel">Accès · session</div><div class="tileGrid">
-      <a class="tile blue" href="./session.html"><div class="tileTop"><div class="tileIcon">🛡️</div><div class="tileTag">Session</div></div><div><b>Ma session</b><span>État d’accès, nettoyage local.</span></div></a>
-      <a class="tile" href="./pin.html"><div class="tileTop"><div class="tileIcon">🔐</div><div class="tileTag">PIN</div></div><div><b>Mon accès</b><span>Ouvrir ou renouveler PAY.</span></div></a>
-      <a class="tile" href="https://digiylyfe.com/"><div class="tileTop"><div class="tileIcon">🌍</div><div class="tileTag">Site</div></div><div><b>Site DIGIY</b><span>Maison publique DIGIYLYFE.</span></div></a>
-      <a class="tile gold" href="https://digiy-hub.digiylyfe.com/"><div class="tileTop"><div class="tileIcon">🧭</div><div class="tileTag">HUB</div></div><div><b>HUB général</b><span>Retour aux portes DIGIY.</span></div></a>
-    </div></section>
-  </main>
-  <nav class="bottomBar"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./action.html"><span class="bi">🎙️</span><span>ACTION</span></a><a href="./admin.html"><span class="bi">➕</span><span>Ajouter</span></a><a href="./mouvements.html"><span class="bi">📜</span><span>Caisse</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
-  <script>
-    (()=>{try{if(window.DIGIY_SESSION?.cleanVisibleUrl)window.DIGIY_SESSION.cleanVisibleUrl();}catch(_ ){}
-    const p=document.getElementById("sessionPill");let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}
-    if(p&&s){p.textContent="session ouverte";p.className="hdrPill ok";}else if(p){p.textContent="accès à vérifier";p.className="hdrPill warn";}})();
-  </script>
-
+<main class="wrap">
+  <div class="top"><b>💳 DIGIY GO PAY</b><a href="./mouvements.html">📜 Caisse</a></div>
+  <section class="box">
+    <h1>Dis l’argent.<br><span class="gold">PAY encaisse.</span></h1>
+    <p class="lead">PAY reçoit l’argent final. Le pro vérifie puis valide. Le mouvement entre dans la vraie caisse si la session PAY est bonne.</p>
+    <div class="models">
+      <button class="model" data-t="recette boutique 10000 Wave"><small>💰 Recette</small><span>boutique Wave</span></button>
+      <button class="model" data-t="dépense emballage 3000 cash"><small>💸 Dépense</small><span>emballage cash</span></button>
+      <button class="model" data-t="recette course DRIVER 20000 Wave"><small>🚕 DRIVER</small><span>course Wave</span></button>
+      <button class="model" data-t="acompte logement LOC 20000 Wave"><small>🏠 LOC</small><span>acompte Wave</span></button>
+      <button class="model" data-t="Awa doit 15000"><small>🤝 Dette</small><span>à recevoir</span></button>
+      <button class="model" data-t="dépense essence 6700 cash"><small>⛽ Essence</small><span>dépense</span></button>
+    </div>
+    <label for="txt">Mouvement PAY</label>
+    <textarea id="txt">recette course DRIVER 20000 Wave</textarea>
+    <div class="actions">
+      <button class="btn main" id="listen">🎙️ Écouter</button>
+      <button class="btn" id="prepare">⚡ Préparer</button>
+      <button class="btn" id="copy">📋 Copier</button>
+      <button class="btn" id="clear">🧹 Effacer</button>
+    </div>
+    <div class="valid">
+      <button class="vbtn pay" id="validate">✅ Valider dans la caisse PAY</button>
+      <a class="vbtn" href="./admin.html">➕ Ajouter manuel</a>
+    </div>
+    <div class="state" id="state">Prêt. Clique “Valider dans la caisse PAY”.</div>
+    <div class="proof" id="proof"></div>
+    <div class="chips"><span>vraie caisse</span><span>preuve locale secours</span><span>session PAY requise</span></div>
+  </section>
+</main>
 <script>
-/* ══ DIGIY VOICE — PAY ══ */
 (function(){
-  "use strict";
-
-  var SPEAK =
-    "Bienvenue dans PAY, le cerveau argent de DIGIYLYFE. " +
-    "Ici, le pro garde la trace de ce qui entre, de ce qui sort, de ce qui reste, et de ce qui pèse sur la caisse. " +
-    "Ajouter sert à poser un mouvement : recette, dépense, dette client, réserve, acompte ou solde. " +
-    "ACTION PAY permet de parler simplement : par exemple, j’ai encaissé quinze mille francs avec Wave pour une vente POS, ou j’ai payé du carburant en cash pour DRIVER. " +
-    "Mouvements caisse montre les lignes inscrites. La température lit plus loin : argent reçu, argent sorti, dettes ouvertes, crédits, maison, réserve, restes à recevoir et pression du mois. " +
-    "Oreille PAY prépare une trace claire, mais le pro vérifie et valide. Rien ne devient cash sans paiement réel confirmé. Une promesse, une réservation ou un devis reste une trace à suivre, pas une recette encaissée. " +
-    "Les modules travaillent : POS vend, MARKET annonce, DRIVER roule, LOC loue, RESA réserve, JOBS relie, Mes services intervient. PAY comprend. " +
-    "Règle importante : si l’activité ne remonte pas à PAY, il n’y a pas de lecture. Pas de lecture, pas de contrôle. Le terrain agit, PAY enregistre, DIGIY lit, le pro décide.";
-
-  var play = document.getElementById("digiyPayAudioPlay");
-  var stop = document.getElementById("digiyPayAudioStop");
-  var status = document.getElementById("digiyPayAudioStatus");
-
-  function digiySpeakText(text){
-    return String(text || "")
-      .replace(/\bWave\b/g, "Ouève")
-      .replace(/\bWhatsApp\b/g, "Ouatsap")
-      .replace(/\bDIGIY GO\b/g, "diji go")
-      .replace(/\bDIGIYLYFE\b/g, "diji laïfe");
-  }
-
-  function setStatus(message){
-    if(status) status.textContent = message;
-  }
-
-  function canSpeak(){
-    return "speechSynthesis" in window;
-  }
-
-  function pickVoice(){
-    if(!canSpeak()) return null;
-    var voices = window.speechSynthesis.getVoices() || [];
-    return voices.find(function(v){ return /^fr/i.test(v.lang || "") && /FR/i.test(v.lang || ""); })
-        || voices.find(function(v){ return /^fr/i.test(v.lang || ""); })
-        || voices[0]
-        || null;
-  }
-
-  function stopSpeech(){
-    if(canSpeak()) window.speechSynthesis.cancel();
-    if(play) play.textContent = "▶ Écouter";
-    setStatus("Lecture arrêtée");
-  }
-
-  function speak(){
-    if(!canSpeak()){
-      setStatus("Lecture vocale non disponible ici");
-      return;
+const txt=document.getElementById('txt'), state=document.getElementById('state'), proof=document.getElementById('proof');let rec=null;
+function norm(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function amount(v){const m=String(v||'').match(/(\d[\d\s.,]*)/);return m?Number(String(m[1]).replace(/[^0-9]/g,'')):null}
+function channel(v){const t=norm(v);if(t.includes('wave'))return'wave';if(t.includes('orange'))return'orange_money';if(t.includes('cash')||t.includes('espece'))return'cash';if(t.includes('carte'))return'other';return'other'}
+function rawChannel(v){const t=norm(v);if(t.includes('wave'))return'Wave';if(t.includes('orange'))return'Orange Money';if(t.includes('cash')||t.includes('espece'))return'Cash';if(t.includes('carte'))return'Carte';return'Autre'}
+function kind(v){const t=norm(v);if(/depense|sortie|achat|essence|carburant|fournisseur|loyer|emballage/.test(t))return'expense';if(/doit|dette|a recevoir|reste|credit/.test(t))return'receivable';return'income'}
+function source(v){const t=norm(v);if(t.includes('driver'))return'DRIVER';if(t.includes('loc')||t.includes('logement'))return'LOC';if(t.includes('build')||t.includes('chantier'))return'BUILD';if(t.includes('market'))return'MARKET';if(t.includes('commerce')||t.includes('boutique'))return'POS';return'PAY'}
+function category(k,v){const t=norm(v);if(k==='expense'){if(t.includes('essence')||t.includes('carburant'))return'fuel';return'business_expense'}if(k==='receivable')return'quick_note';return'payment_received'}
+function label(k,v){const s=source(v);if(k==='expense')return tIncludes(v,'essence')?'Dépense essence':'Dépense activité';if(k==='receivable')return'À recevoir';return s==='PAY'?'Recette PAY':'Recette '+s}
+function tIncludes(v,x){return norm(v).includes(x)}
+function proofText(m,ok,msg){return ['PREUVE PAY — DIGIYLYFE','Statut caisse : '+(ok?'INSCRIT':'NON INSCRIT'),msg?'Message : '+msg:null,'Référence : '+(m.source_id||'—'),'Date : '+new Date().toLocaleString('fr-FR'),'Type : '+(m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette'),'Montant : '+(m.amount_xof||0).toLocaleString('fr-FR')+' F','Canal : '+rawChannel(txt.value),'Origine : '+m.source_module,'Libellé : '+m.label,'Note : '+(m.note_text||'—'),'Validation humaine : oui'].filter(Boolean).join('\n')}
+function build(){const text=txt.value.trim(), k=kind(text), a=amount(text), s=source(text);return{direction:k==='expense'?'out':'in',scope:'pro',kind:k==='expense'?'expense':k==='receivable'?'other':'sale',category:category(k,text),amount_xof:a||0,channel:channel(text),label:label(k,text),note_text:text,source_module:s,source_id:'PAY-ACTION-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),origin:'manual',status:k==='receivable'?'pending':'posted',meta:{action_pay:true,type_from_text:k,raw_channel:rawChannel(text)}}}
+function set(m){state.textContent=m}
+function saveLocal(m,ok,msg){const movement={source:m.source_module,module:'PAY',type:m.direction==='out'?'expense':m.status==='pending'?'receivable':'income',typeLabel:m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette',amount:m.amount_xof,channel:rawChannel(txt.value),who:m.source_module,category:m.label,note:m.note_text,status:'validated',validatedAt:new Date().toISOString(),insertedInMovements:ok,proofText:proofText(m,ok,msg)};try{const list=JSON.parse(localStorage.getItem('DIGIY_PAY_ACTIONS')||'[]');list.unshift(movement);localStorage.setItem('DIGIY_PAY_ACTIONS',JSON.stringify(list.slice(0,200)));localStorage.setItem('DIGIY_PAY_PENDING_ACTION',JSON.stringify(movement))}catch(e){}proof.textContent=movement.proofText;proof.classList.add('show')}
+function getPaySession(){
+  try{
+    if(window.DIGIY_SESSION && typeof window.DIGIY_SESSION.require === 'function'){
+      return window.DIGIY_SESSION.require('./pin.html') || null;
     }
-
-    if(window.speechSynthesis.paused){
-      window.speechSynthesis.resume();
-      if(play) play.textContent = "⏸ Pause";
-      setStatus("▶ Reprise…");
-      return;
+  }catch(e){}
+  try{
+    if(window.DIGIY_SESSION && typeof window.DIGIY_SESSION.get === 'function'){
+      return window.DIGIY_SESSION.get() || null;
     }
-
-    if(window.speechSynthesis.speaking){
-      window.speechSynthesis.pause();
-      if(play) play.textContent = "▶ Reprendre";
-      setStatus("⏸ En pause");
-      return;
-    }
-
-    stopSpeech();
-
-    var u = new SpeechSynthesisUtterance(digiySpeakText(SPEAK));
-    u.lang = "fr-FR";
-    u.rate = 0.86;
-    u.pitch = 1.02;
-    u.volume = 1;
-
-    var voice = pickVoice();
-    if(voice) u.voice = voice;
-
-    u.onstart = function(){
-      if(play) play.textContent = "⏸ Pause";
-      setStatus("▶ DIGIY explique PAY…");
-    };
-    u.onend = function(){
-      if(play) play.textContent = "▶ Écouter";
-      setStatus("✓ Lecture terminée");
-    };
-    u.onerror = function(){
-      if(play) play.textContent = "▶ Écouter";
-      setStatus("Lecture interrompue");
-    };
-
-    window.speechSynthesis.speak(u);
+  }catch(e){}
+  const keys=['digiy_pay_session','DIGIY_PAY_PRO_SESSION','DIGIY_PAY_PIN_SESSION','DIGIY_SESSION_PAY','DIGIY_PIN_SESSION'];
+  for(const k of keys){
+    try{const d=JSON.parse(localStorage.getItem(k)||'null');if(d&&(d.slug||d.compte||d.phone||d.tel))return d;}catch(e){}
   }
-
-  if(play) play.addEventListener("click", speak);
-  if(stop) stop.addEventListener("click", stopSpeech);
-
-  if(canSpeak()){
-    window.speechSynthesis.onvoiceschanged = pickVoice;
+  return null;
+}
+function getSupabaseClient(){
+  if(window.__DIGIY_PAY_SB) return window.__DIGIY_PAY_SB;
+  if(!window.supabase || typeof window.supabase.createClient !== 'function') return null;
+  window.__DIGIY_PAY_SB = window.supabase.createClient(window.DIGIY_SUPABASE_URL, window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON);
+  return window.__DIGIY_PAY_SB;
+}
+function adminPayloadFromAction(m,session){
+  const slug=String((session&&(session.slug||session.compte||session.workspace_slug))||'').trim().toLowerCase();
+  const phone=String((session&&(session.phone||session.tel))||'').replace(/[^0-9]/g,'');
+  const today=new Date().toISOString().slice(0,10);
+  return {
+    slug:slug,
+    phone:phone||null,
+    direction:m.direction,
+    scope:m.scope||'pro',
+    kind:m.kind||'sale',
+    category:m.category||null,
+    amount_xof:Math.round(Number(m.amount_xof||0)),
+    currency_code:'XOF',
+    channel:m.channel||'other',
+    label:m.label||'Mouvement PAY',
+    note_text:m.note_text||null,
+    source_module:m.source_module||'PAY',
+    source_id:m.source_id||null,
+    origin:'manual',
+    movement_date:today,
+    status:m.status||'posted',
+    meta:Object.assign({},m.meta||{},{
+      action_pay:true,
+      validation_humaine:true,
+      source_text:m.note_text||'',
+      inserted_from:'action.html'
+    })
+  };
+}
+async function insertMovementRpc(m){
+  const session=getPaySession();
+  const slug=String((session&&(session.slug||session.compte||session.workspace_slug))||'').trim().toLowerCase();
+  const phone=String((session&&(session.phone||session.tel))||'').replace(/[^0-9]/g,'');
+  if(!slug || !phone){return {ok:false,error:'Session PAY incomplète : repasse par le PIN PAY.'};}
+  const sb=getSupabaseClient();
+  if(!sb){return {ok:false,error:'Supabase non chargé sur cette page.'};}
+  const payload=adminPayloadFromAction(m,{slug,phone});
+  const {data,error}=await sb.rpc('digiy_pay_pro_insert_movement',{p_slug:slug,p_phone:phone,p_payload:payload});
+  if(error){return {ok:false,error:error.message||'RPC PAY bloquée',details:error.details||'',code:error.code||''};}
+  return {ok:true,data:data,payload:payload};
+}
+async function validate(){
+  const m=build();
+  if(!m.amount_xof){set('Montant manquant : ajoute un montant.');return;}
+  set('Insertion directe dans la vraie caisse PAY…');
+  let res={ok:false,error:'Insertion non lancée'};
+  try{res=await insertMovementRpc(m);}catch(e){res={ok:false,error:e&&e.message?e.message:'Erreur insertion directe PAY'};}
+  if(res&&res.ok){
+    saveLocal(m,true,'Mouvement inscrit via RPC PAY digiy_pay_pro_insert_movement.');
+    set('✅ Mouvement inscrit dans Mouvements PAY. Recharge Mouvements si besoin.');
+  }else{
+    const msg=[res&&res.error,res&&res.details,res&&res.code].filter(Boolean).join(' · ')||'Session PAY / téléphone / slug à vérifier.';
+    saveLocal(m,false,msg);
+    set('⚠️ Non inscrit dans Mouvements : '+msg);
   }
-
-  window.addEventListener("pagehide", stopSpeech);
+}
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{txt.value=b.dataset.t;set('Brouillon prêt : '+b.dataset.t)});
+document.getElementById('prepare').onclick=()=>{const m=build();set((m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette')+' · '+(m.amount_xof||0).toLocaleString('fr-FR')+' F · '+rawChannel(txt.value)+' · '+m.source_module)};
+document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(txt.value);set('Copié.')}catch(e){prompt('Copie le texte :',txt.value)}};
+document.getElementById('clear').onclick=()=>{txt.value='';proof.classList.remove('show');set('Effacé.')};
+document.getElementById('validate').onclick=validate;
+function speech(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('listen').textContent='🎙️ Micro non dispo';return}rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.onstart=()=>set('J’écoute...');rec.onend=()=>set('Prêt.');rec.onerror=()=>set('Micro fragile.');rec.onresult=e=>{let v='';for(let i=e.resultIndex;i<e.results.length;i++)v+=e.results[i][0].transcript;txt.value=v.trim();document.getElementById('prepare').click()}}
+speech();document.getElementById('listen').onclick=()=>{if(!rec){set('Micro non disponible.');return}try{rec.start()}catch(e){set('Micro déjà lancé.')}};
 })();
 </script>
-
 </body>
 </html>
+
+
+
 
 
 
