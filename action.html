@@ -18,13 +18,13 @@ window.DIGIY_LOGIN_URL="./pin.html";
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./session.js?v=pay-action-caisse-directe-20260528-v2"></script>
+<script src="./session.js?v=pay-action-rpc-direct-20260602-v4"></script>
 
 <script>
   window.DIGIY_SESSION?.require?.("./pin.html");
 </script>
 
-<script src="./pay-tools.js?v=pay-action-caisse-directe-20260528-v2"></script>
+<script src="./pay-tools.js?v=pay-action-rpc-direct-20260602-v4"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(720px 380px at 8% -10%,rgba(34,197,94,.30),transparent 62%),linear-gradient(180deg,#0b5f34,#04130d);color:white;padding:10px;font-weight:900}a{color:inherit;text-decoration:none}button,textarea{font:inherit}.wrap{width:min(880px,100%);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.top b{color:#fff3cf}.top a{font-size:12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.08)}.box{border:1px solid rgba(246,196,83,.36);border-radius:22px;background:rgba(255,255,255,.07);padding:12px;box-shadow:0 18px 44px rgba(0,0,0,.24)}h1{font-size:clamp(34px,9vw,58px);line-height:.9;letter-spacing:-.06em;margin:4px 0 8px}.gold{color:#f6c453}.lead{font-size:14px;line-height:1.36;color:rgba(255,255,255,.82);margin:0 0 10px}.models{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.model{min-height:62px;border-radius:14px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.07);color:white;padding:8px;text-align:left;font-weight:1000}.model small{display:block;color:#fff3cf;font-size:11px;margin-bottom:3px}.model span{font-size:12px;color:rgba(255,255,255,.82)}label{display:block;color:#fff3cf;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px}textarea{width:100%;min-height:88px;border-radius:16px;border:1px solid rgba(246,196,83,.28);background:#06140f;color:white;padding:12px;font-size:16px;font-weight:850;outline:none;resize:vertical}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.valid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}button{cursor:pointer}.btn,.vbtn{min-height:42px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(255,255,255,.08);color:white;padding:7px 6px;font-size:11.5px;font-weight:1000;line-height:1.08}.main{background:linear-gradient(135deg,#fff1bd,#f6c453,#22c55e);color:#06140f}.pay{background:linear-gradient(135deg,#bbf7d0,#22c55e,#f6c453);color:#06140f;border-color:rgba(34,197,94,.55);box-shadow:0 8px 18px rgba(0,0,0,.18)}.state,.proof{margin-top:8px;border:1px dashed rgba(246,196,83,.28);border-radius:14px;background:rgba(0,0,0,.16);padding:9px;font-size:12.5px;color:#dfffe9;line-height:1.32;white-space:pre-wrap}.proof{display:none;color:#fff3cf}.proof.show{display:block}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.chips span{font-size:10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 8px;color:rgba(255,255,255,.8)}@media(max-width:520px){body{padding:8px}.models{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr 1fr}.valid{grid-template-columns:1fr}.vbtn{min-height:40px}.chips{display:none}}@media(max-width:360px){.models{grid-template-columns:1fr}}
 </style>
@@ -76,144 +76,99 @@ function proofText(m,ok,msg){return ['PREUVE PAY — DIGIYLYFE','Statut caisse :
 function build(){const text=txt.value.trim(), k=kind(text), a=amount(text), s=source(text);return{direction:k==='expense'?'out':'in',scope:'pro',kind:k==='expense'?'expense':k==='receivable'?'other':'sale',category:category(k,text),amount_xof:a||0,channel:channel(text),label:label(k,text),note_text:text,source_module:s,source_id:'PAY-ACTION-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),origin:'manual',status:k==='receivable'?'pending':'posted',meta:{action_pay:true,type_from_text:k,raw_channel:rawChannel(text)}}}
 function set(m){state.textContent=m}
 function saveLocal(m,ok,msg){const movement={source:m.source_module,module:'PAY',type:m.direction==='out'?'expense':m.status==='pending'?'receivable':'income',typeLabel:m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette',amount:m.amount_xof,channel:rawChannel(txt.value),who:m.source_module,category:m.label,note:m.note_text,status:'validated',validatedAt:new Date().toISOString(),insertedInMovements:ok,proofText:proofText(m,ok,msg)};try{const list=JSON.parse(localStorage.getItem('DIGIY_PAY_ACTIONS')||'[]');list.unshift(movement);localStorage.setItem('DIGIY_PAY_ACTIONS',JSON.stringify(list.slice(0,200)));localStorage.setItem('DIGIY_PAY_PENDING_ACTION',JSON.stringify(movement))}catch(e){}proof.textContent=movement.proofText;proof.classList.add('show')}
-async function validate(){const m=build();if(!m.amount_xof){set('Montant manquant : ajoute un montant.');return}set('Insertion dans la caisse PAY…');let res={ok:false,error:'Outil PAY non chargé'};try{if(window.DIGIY_PAY_TOOLS&&typeof window.DIGIY_PAY_TOOLS.insertMovement==='function')res=await window.DIGIY_PAY_TOOLS.insertMovement(m)}catch(e){res={ok:false,error:e&&e.message?e.message:'Erreur insertion'}}if(res&&res.ok){saveLocal(m,true,'Mouvement inscrit dans les vrais mouvements PAY.');set('✅ Mouvement inscrit dans la caisse PAY. Ouvre Mouvements pour vérifier.')}else{const msg=(res&&res.error)||res.code||'Session PAY / téléphone / slug à vérifier.';saveLocal(m,false,msg);set('⚠️ Preuve gardée, mais non inscrit dans Mouvements : '+msg)}}
+function getPaySession(){
+  try{
+    if(window.DIGIY_SESSION && typeof window.DIGIY_SESSION.require === 'function'){
+      return window.DIGIY_SESSION.require('./pin.html') || null;
+    }
+  }catch(e){}
+  try{
+    if(window.DIGIY_SESSION && typeof window.DIGIY_SESSION.get === 'function'){
+      return window.DIGIY_SESSION.get() || null;
+    }
+  }catch(e){}
+  const keys=['digiy_pay_session','DIGIY_PAY_PRO_SESSION','DIGIY_PAY_PIN_SESSION','DIGIY_SESSION_PAY','DIGIY_PIN_SESSION'];
+  for(const k of keys){
+    try{const d=JSON.parse(localStorage.getItem(k)||'null');if(d&&(d.slug||d.compte||d.phone||d.tel))return d;}catch(e){}
+  }
+  return null;
+}
+function getSupabaseClient(){
+  if(window.__DIGIY_PAY_SB) return window.__DIGIY_PAY_SB;
+  if(!window.supabase || typeof window.supabase.createClient !== 'function') return null;
+  window.__DIGIY_PAY_SB = window.supabase.createClient(window.DIGIY_SUPABASE_URL, window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON);
+  return window.__DIGIY_PAY_SB;
+}
+function adminPayloadFromAction(m,session){
+  const slug=String((session&&(session.slug||session.compte||session.workspace_slug))||'').trim().toLowerCase();
+  const phone=String((session&&(session.phone||session.tel))||'').replace(/[^0-9]/g,'');
+  const today=new Date().toISOString().slice(0,10);
+  return {
+    slug:slug,
+    phone:phone||null,
+    direction:m.direction,
+    scope:m.scope||'pro',
+    kind:m.kind||'sale',
+    category:m.category||null,
+    amount_xof:Math.round(Number(m.amount_xof||0)),
+    currency_code:'XOF',
+    channel:m.channel||'other',
+    label:m.label||'Mouvement PAY',
+    note_text:m.note_text||null,
+    source_module:m.source_module||'PAY',
+    source_id:m.source_id||null,
+    origin:'action_pay',
+    movement_date:today,
+    status:m.status||'posted',
+    meta:Object.assign({},m.meta||{},{
+      action_pay:true,
+      validation_humaine:true,
+      source_text:m.note_text||'',
+      inserted_from:'action.html'
+    })
+  };
+}
+async function insertMovementRpc(m){
+  const session=getPaySession();
+  const slug=String((session&&(session.slug||session.compte||session.workspace_slug))||'').trim().toLowerCase();
+  const phone=String((session&&(session.phone||session.tel))||'').replace(/[^0-9]/g,'');
+  if(!slug || !phone){return {ok:false,error:'Session PAY incomplète : repasse par le PIN PAY.'};}
+  const sb=getSupabaseClient();
+  if(!sb){return {ok:false,error:'Supabase non chargé sur cette page.'};}
+  const payload=adminPayloadFromAction(m,{slug,phone});
+  const {data,error}=await sb.rpc('digiy_pay_pro_insert_movement',{p_slug:slug,p_phone:phone,p_payload:payload});
+  if(error){return {ok:false,error:error.message||'RPC PAY bloquée',details:error.details||'',code:error.code||''};}
+  return {ok:true,data:data,payload:payload};
+}
+async function validate(){
+  const m=build();
+  if(!m.amount_xof){set('Montant manquant : ajoute un montant.');return;}
+  set('Insertion directe dans la vraie caisse PAY…');
+  let res={ok:false,error:'Insertion non lancée'};
+  try{res=await insertMovementRpc(m);}catch(e){res={ok:false,error:e&&e.message?e.message:'Erreur insertion directe PAY'};}
+  if(res&&res.ok){
+    saveLocal(m,true,'Mouvement inscrit via RPC PAY digiy_pay_pro_insert_movement.');
+    set('✅ Mouvement inscrit dans Mouvements PAY. Recharge Mouvements si besoin.');
+  }else{
+    const msg=[res&&res.error,res&&res.details,res&&res.code].filter(Boolean).join(' · ')||'Session PAY / téléphone / slug à vérifier.';
+    saveLocal(m,false,msg);
+    set('⚠️ Non inscrit dans Mouvements : '+msg);
+  }
+}
 document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{txt.value=b.dataset.t;set('Brouillon prêt : '+b.dataset.t)});
 document.getElementById('prepare').onclick=()=>{const m=build();set((m.direction==='out'?'Dépense':m.status==='pending'?'À recevoir':'Recette')+' · '+(m.amount_xof||0).toLocaleString('fr-FR')+' F · '+rawChannel(txt.value)+' · '+m.source_module)};
 document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(txt.value);set('Copié.')}catch(e){prompt('Copie le texte :',txt.value)}};
 document.getElementById('clear').onclick=()=>{txt.value='';proof.classList.remove('show');set('Effacé.')};
 document.getElementById('validate').onclick=validate;
 function speech(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('listen').textContent='🎙️ Micro non dispo';return}rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.onstart=()=>set('J’écoute...');rec.onend=()=>set('Prêt.');rec.onerror=()=>set('Micro fragile.');rec.onresult=e=>{let v='';for(let i=e.resultIndex;i<e.results.length;i++)v+=e.results[i][0].transcript;txt.value=v.trim();document.getElementById('prepare').click()}}
-
-function readJSONSafe(key){
-  try{
-    const raw=localStorage.getItem(key);
-    return raw?JSON.parse(raw):null;
-  }catch(e){return null}
-}
-function firstIncomingPayload(){
-  const params=new URLSearchParams(location.search);
-  const hasUrl=["from","source_module","module","amount","amount_xof","channel","mode","label","note","category","direction","kind","type","client","who","source_id"].some(k=>params.has(k));
-  if(hasUrl){
-    return {
-      source_module:params.get("source_module")||params.get("from")||params.get("module")||"PAY",
-      amount_xof:params.get("amount_xof")||params.get("amount")||"",
-      channel:params.get("channel")||params.get("mode")||params.get("payment_mode")||"",
-      label:params.get("label")||params.get("category")||params.get("objet")||"",
-      note_text:params.get("note")||params.get("text")||params.get("phrase")||"",
-      direction:params.get("direction")||"",
-      kind:params.get("kind")||params.get("type")||"",
-      source_id:params.get("source_id")||"",
-      client:params.get("client")||params.get("who")||""
-    };
-  }
-
-  const keys=[
-    "DIGIY_PAY_PENDING_MOVEMENT",
-    "DIGIY_PAY_INCOMING_DRAFT",
-    "DIGIY_POS_PAY_BRIDGE",
-    "DIGIY_LOC_PAY_BRIDGE",
-    "DIGIY_BUILD_PAY_BRIDGE",
-    "DIGIY_DRIVER_PAY_BRIDGE",
-    "DIGIY_POS_LATEST_ACTION",
-    "DIGIY_LOC_LATEST_ACTION",
-    "DIGIY_BUILD_LATEST_ACTION",
-    "DIGIY_DRIVER_LATEST_ACTION",
-    "DIGIY_PAY_PENDING_ACTION"
-  ];
-
-  for(const key of keys){
-    const value=readJSONSafe(key);
-    if(value && typeof value==="object"){
-      value.__incomingKey=key;
-      return value;
-    }
-  }
-  return null;
-}
-function pickIncoming(p, names, fallback){
-  for(const name of names){
-    const v=p && p[name];
-    if(v!==undefined && v!==null && String(v).trim()!=="") return v;
-  }
-  return fallback;
-}
-function incomingSource(p){
-  return String(pickIncoming(p,["source_module","sourceModule","source","module","from"],"PAY")).toUpperCase();
-}
-function incomingKind(p){
-  const raw=norm([
-    pickIncoming(p,["type","kind","payType","direction","status"],""),
-    pickIncoming(p,["label","labelText","category","objet","note","note_text","text"],"")
-  ].join(" "));
-  if(raw.includes("depense")||raw.includes("expense")||raw.includes("sortie")) return "expense";
-  if(raw.includes("receivable")||raw.includes("reste")||raw.includes("doit")||raw.includes("dette")||raw.includes("a recevoir")) return "receivable";
-  return "income";
-}
-function incomingAmount(p){
-  return Number(pickIncoming(p,["amount_xof","amount","total","total_xof","price","deposit","solde"],0))||0;
-}
-function incomingChannel(p){
-  return String(pickIncoming(p,["channel","mode","payment_mode","paymentMode","raw_channel"],"")).trim();
-}
-function incomingPhrase(p){
-  const s=incomingSource(p);
-  const k=incomingKind(p);
-  const a=incomingAmount(p);
-  const ch=incomingChannel(p)||"Wave";
-  const label=String(pickIncoming(p,["label","labelText","category","objet","note","note_text","text","phrase"],"")).trim();
-  const client=String(pickIncoming(p,["client","client_name","who","name"],"")).trim();
-
-  let head="recette";
-  if(k==="expense") head="dépense";
-  if(k==="receivable") head="à recevoir";
-
-  const parts=[head, s, a?String(a):"", ch, client?("client "+client):"", label?("- "+label):""]
-    .filter(Boolean)
-    .join(" ")
-    .replace(/\s+/g," ")
-    .trim();
-
-  return parts || String(pickIncoming(p,["text","phrase","note","note_text"],"")).trim();
-}
-function loadIncomingDraft(){
-  const p=firstIncomingPayload();
-  if(!p) return false;
-
-  const phrase=incomingPhrase(p);
-  if(!phrase) return false;
-
-  txt.value=phrase;
-  try{
-    localStorage.setItem("DIGIY_PAY_INCOMING_LAST",JSON.stringify({
-      ...p,
-      normalized_phrase:phrase,
-      normalized_at:new Date().toISOString(),
-      receiver:"PAY_ACTION"
-    }));
-    localStorage.setItem("DIGIY_PAY_PENDING_MOVEMENT",JSON.stringify({
-      ...p,
-      source_module:incomingSource(p),
-      amount_xof:incomingAmount(p),
-      channel:incomingChannel(p),
-      note_text:String(pickIncoming(p,["note_text","note","text","phrase"],phrase)),
-      label:String(pickIncoming(p,["label","labelText","category","objet"],"Mouvement "+incomingSource(p))),
-      status:"draft_received_by_pay",
-      receiver:"PAY_ACTION",
-      updated_at:new Date().toISOString()
-    }));
-  }catch(e){}
-
-  set("📥 Brouillon reçu depuis "+incomingSource(p)+" · vérifie puis valide dans PAY.");
-  try{document.getElementById("prepare").click()}catch(e){}
-  return true;
-}
-
-loadIncomingDraft();
 speech();document.getElementById('listen').onclick=()=>{if(!rec){set('Micro non disponible.');return}try{rec.start()}catch(e){set('Micro déjà lancé.')}};
 })();
 </script>
 </body>
 </html>
+
+
+
 
 
 
