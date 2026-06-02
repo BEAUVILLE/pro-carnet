@@ -1,403 +1,607 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Mon argent — HUB PAY</title>
+  <meta name="theme-color" content="#f4ead2"/>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
+  <meta name="description" content="PAY PRO — HUB mobile terrain en pavés : DIGIY GO PAY, ajouter, température, fiche, session et accès."/>
+  <meta name="digiy-build" content="pay-hub-moteur-complet-caisse-20260528-v3"/>
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_SUPABASE_KEY = window.DIGIY_SUPABASE_ANON_KEY;
+
+    window.DIGIY_MODULE = "PAY";
+    window.DIGIY_ABOS_MODULE = "PAY";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+
+    /* PAY est transverse : il ne doit pas être bloqué comme un abonnement métier. */
+    window.DIGIY_TRANSVERSE_MODULE = true;
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
+  <script src="./session.js?v=pay-hub-moteur-complet-caisse-20260528-v3"></script>
+  <script>
+    window.DIGIY_SESSION?.require?.("./pin.html");
+  </script>
+  <script src="./assets/js/action-digiy-receiver.js?v=20260526-v2"></script>
+
+  <link rel="preload" as="image" href="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+
+  <style>
+:root{
+  --bg:#f4ead2;--bg2:#ead9b7;--bg3:#dec99c;--bar:rgba(246,237,216,.97);
+  --gold:#facc15;--gold2:#fde68a;--green:#16a34a;--green2:#22c55e;--blue:#2563eb;
+  --text:#1f2a1f;--muted:rgba(31,42,31,.78);--line:rgba(83,58,26,.24);
+  --shadow:0 14px 34px rgba(77,52,22,.16);--r:22px;--hdrH:52px;--barH:78px;--max:980px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;min-height:100dvh;color:var(--text);
+  font-family:Outfit,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:950;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
+    radial-gradient(circle at 100% 100%,rgba(22,101,52,.10),transparent 30%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 58%,var(--bg3));
+  padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 18px);
+}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}
+.topHeader{
+  position:fixed;top:0;left:0;right:0;height:var(--hdrH);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;
+  background:var(--bar);border-bottom:1px solid rgba(83,58,26,.24);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.hdrBack{min-height:36px;display:inline-flex;align-items:center;justify-content:center;color:rgba(31,42,31,.70);font-size:14px;font-weight:1000;white-space:nowrap}
+.hdrTitle{font-size:12px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:#6b4e09;white-space:nowrap}
+.hdrPill{min-height:32px;display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--muted);font-size:12px;font-weight:1000;white-space:nowrap;max-width:38vw;overflow:hidden;text-overflow:ellipsis}
+.hdrPill.ok{color:#14532d;border-color:rgba(22,101,52,.28);background:rgba(220,252,231,.72)}
+.hdrPill.warn{color:#6b4e09;border-color:rgba(250,204,21,.36);background:rgba(250,204,21,.18)}
+.wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:16px}
+.hubHead,.hero{padding:2px 2px 4px}
+.eyebrow,.kicker{color:#6b4e09;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:1000;margin-bottom:8px}
+h1{margin:0 0 8px;font-size:clamp(36px,8.5vw,58px);font-weight:1000;line-height:.94;letter-spacing:-.05em;color:#241a0d}
+.hubSub,.lead{color:var(--muted);font-size:18px;font-weight:1000;line-height:1.38;max-width:780px}
+.rule,.card,.panel{
+  border:2px solid var(--line);border-radius:var(--r);background:rgba(255,255,255,.60);
+  box-shadow:var(--shadow);
+}
+.rule{margin-top:10px;padding:14px 15px;border-style:dashed;color:#14532d;font-size:16px;font-weight:1000;line-height:1.38}
+.rule b{color:#6b4e09}
+.group{display:grid;gap:9px}
+.groupLabel{font-size:12px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(31,42,31,.60);padding:0 2px}
+.tileGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{
+  min-height:156px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:16px;border-radius:var(--r);
+  border:2px solid var(--line);background:rgba(255,255,255,.60);box-shadow:var(--shadow);
+  transition:transform .12s ease,background .12s ease,border-color .12s ease;-webkit-tap-highlight-color:transparent;
+}
+.tile:hover{transform:translateY(-1px);background:rgba(255,255,255,.75);border-color:rgba(121,83,12,.36)}
+.tileTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.tileIcon{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:rgba(250,204,21,.18);border:1px solid rgba(83,58,26,.22);font-size:30px;flex:0 0 auto}
+.tileTag{min-height:31px;display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:999px;border:1px solid rgba(83,58,26,.22);background:rgba(255,255,255,.58);color:#6b4e09;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.tile b{display:block;font-size:23px;font-weight:1000;line-height:1.02;letter-spacing:-.025em;color:#241a0d}
+.tile span{display:block;margin-top:6px;color:#3d3324;font-size:15px;font-weight:1000;line-height:1.28}
+.tile.primary{border-color:rgba(22,101,52,.34);background:linear-gradient(180deg,rgba(220,252,231,.72),rgba(255,255,255,.62))}
+.tile.gold{border-color:rgba(250,204,21,.48);background:linear-gradient(180deg,rgba(250,204,21,.24),rgba(255,255,255,.62))}
+.tile.blue{border-color:rgba(37,99,235,.24);background:linear-gradient(180deg,rgba(219,234,254,.72),rgba(255,255,255,.62))}
+.tile.pay{border-color:rgba(250,204,21,.56);background:linear-gradient(135deg,var(--green2),var(--gold))}
+.tile.pay b,.tile.pay span{color:#102014}
+.tileLogoImg{width:100px;height:100px;object-fit:contain;border-radius:25px;background:#fff;padding:8px;box-shadow:0 12px 26px rgba(77,52,22,.20);border:1px solid rgba(83,58,26,.22);flex:0 0 auto}
+.blasonTile{min-height:184px!important}
+.bottomBar{position:fixed;left:0;right:0;bottom:0;height:var(--barH);z-index:100;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(246,237,216,.97);border-top:1px solid rgba(83,58,26,.22);backdrop-filter:blur(18px)}
+.bottomInner{width:min(100%,760px);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.bottomInner a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(31,42,31,.70);font-size:11px;font-weight:1000;text-align:center;border:1px solid rgba(83,58,26,.12);background:rgba(255,255,255,.50)}
+.bottomInner a.active{color:#102014;background:linear-gradient(135deg,var(--green2),var(--gold));border-color:rgba(22,101,52,.24)}
+.bottomInner .bi{font-size:21px;line-height:1}
+.btn{min-height:62px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.70);display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:12px 16px;font-weight:1000;font-size:17px}
+.btn.primary{background:linear-gradient(135deg,var(--green2),var(--gold));color:#102014;border:0}
+.btn.warn{background:rgba(250,204,21,.18);border-color:rgba(250,204,21,.30);color:#6b4e09}
+.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(159,18,57,.30);color:#9f1239}
+
+@media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.tileGrid,.grid2{grid-template-columns:1fr}.actions .btn{width:100%}}
+@media(max-width:520px){
+  body{font-size:19px;padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px)}
+  .topHeader{padding:0 10px;gap:7px}.hdrBack{font-size:13px}.hdrTitle{font-size:11px;letter-spacing:.12em}.hdrPill{font-size:11px;padding:6px 8px;max-width:34vw}
+  h1{font-size:38px}.hubSub,.lead{font-size:17px}.tile{min-height:154px;padding:14px}.tileIcon{width:52px;height:52px;font-size:29px}
+  .tileLogoImg{width:94px;height:94px;border-radius:23px}.tile b{font-size:22px}.tile span{font-size:14.5px}.tileTag{font-size:10px}
+}
+
+/* ══ LECTEUR DIGIY — PAY ══ */
+.digiyReader{
+  display:grid;
+  gap:12px;
+  padding:16px;
+  border-radius:var(--r);
+  border:2px solid rgba(250,204,21,.42);
+  background:
+    radial-gradient(520px 190px at 100% 0%,rgba(250,204,21,.24),transparent 70%),
+    linear-gradient(135deg,rgba(34,197,94,.18),rgba(255,255,255,.66));
+  box-shadow:var(--shadow);
+}
+.digiyReaderTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.digiyReaderKicker{
+  color:#6b4e09;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.digiyReader h2{
+  margin:0;
+  color:#241a0d;
+  font-size:clamp(25px,6vw,40px);
+  line-height:.98;
+  letter-spacing:-.045em;
+  font-weight:1000;
+}
+.digiyReaderText{
+  color:#14532d;
+  font-size:16px;
+  font-weight:1000;
+  line-height:1.45;
+  max-width:800px;
+}
+.digiyReaderActions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+.digiyReaderActions button{
+  min-height:54px;
+  border-radius:999px;
+  border:1px solid rgba(83,58,26,.22);
+  background:rgba(255,255,255,.72);
+  color:#241a0d;
+  padding:0 15px;
+  font:inherit;
+  font-size:14px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.digiyReaderActions .main{
+  background:linear-gradient(135deg,var(--green2),var(--gold));
+  color:#102014;
+  border-color:rgba(22,101,52,.24);
+  box-shadow:0 12px 28px rgba(77,52,22,.14);
+}
+.digiyReaderActions .stop{
+  background:rgba(239,68,68,.12);
+  color:#9f1239;
+  border-color:rgba(159,18,57,.30);
+}
+.digiyReaderStatus{
+  min-height:20px;
+  color:#6b4e09;
+  font-size:13px;
+  font-weight:1000;
+}
+@media(max-width:520px){
+  .digiyReaderActions{display:grid;grid-template-columns:1fr 1fr}
+  .digiyReaderActions button{width:100%}
+}
+
+</style>
+</head>
+<body>
+  <header class="topHeader"><a class="hdrBack" href="./index.html">← Entrée</a><div class="hdrTitle">HUB PAY</div><div class="hdrPill warn" id="sessionPill">session…</div></header>
+  <main class="wrap">
+    <section class="hubHead">
+      <div class="eyebrow">💰 MON ARGENT</div><h1>Toutes tes portes.</h1>
+      <div class="hubSub">PAY est la caisse centrale : tu parles, tu cliques, DIGIY prépare, puis tu valides.</div>
+      <div class="rule"><b>Index</b> = porte courte. <b>HUB</b> = navigation. <b>DIGIY GO PAY</b> = parler l’argent. <b>Ajouter</b> = saisie manuelle. <b>Mouvements</b> = journal caisse. <b>Température</b> = cerveau complet : dettes, crédits, maison, réserve, pression.</div>
+    </section>
+
+    <section class="digiyReader" aria-label="Lecteur DIGIY PAY">
+      <div class="digiyReaderTop">
+        <div>
+          <div class="digiyReaderKicker">🎧 Lecteur DIGIY · PAY</div>
+          <h2>Comprendre le cerveau argent.</h2>
+        </div>
+        <div class="digiyReaderActions">
+          <button class="main" id="digiyPayAudioPlay" type="button">▶ Écouter</button>
+          <button class="stop" id="digiyPayAudioStop" type="button">⏹ Stop</button>
+        </div>
+      </div>
+      <div class="digiyReaderText" id="digiyPayAudioText">
+        PAY est la caisse centrale : chaque recette, dépense, dette, acompte, réserve ou reste à recevoir
+        doit laisser une trace. Le pro parle ou clique, DIGIY prépare, puis le terrain valide avec vérité.
+      </div>
+      <div class="digiyReaderStatus" id="digiyPayAudioStatus">Prêt à lire · indications courtes</div>
+    </section>
+
+
+
+    <section class="group"><div class="groupLabel">Action immédiate</div><div class="tileGrid">
+      <a class="tile gold blasonTile" href="https://digiylyfe.com/"><div class="tileTop"><img class="tileLogoImg" src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/><div class="tileTag">DIGIY</div></div><div><b>Métiers pro</b><span>Le blason commun des portes métier.</span></div></a>
+      <a class="tile pay" href="./action.html"><div class="tileTop"><div class="tileIcon">🎙️</div><div class="tileTag">DIGIY GO</div></div><div><b>DIGIY GO PAY</b><span>Dire recette, dépense ou dette à la voix.</span></div></a>
+      <a class="tile primary" href="./admin.html"><div class="tileTop"><div class="tileIcon">➕</div><div class="tileTag">Ajouter</div></div><div><b>Ajouter</b><span>Entrée, dépense, dette, réserve.</span></div></a>
+      <a class="tile gold" href="./mouvements.html"><div class="tileTop"><div class="tileIcon">📜</div><div class="tileTag">Caisse</div></div><div><b>Mouvements caisse</b><span>Voir les vraies lignes inscrites dans PAY.</span></div></a>
+      <a class="tile gold" href="./cockpit.html"><div class="tileTop"><div class="tileIcon">🌡️</div><div class="tileTag">Lecture</div></div><div><b>Ma température</b><span>Ce qui entre, sort, reste et pèse.</span></div></a>
+    </div></section>
+
+    <section class="group"><div class="groupLabel">Gestion · repères</div><div class="tileGrid">
+      <a class="tile blue" href="./brain-admin.html"><div class="tileTop"><div class="tileIcon">⚙️</div><div class="tileTag">Réglages</div></div><div><b>Réglages utiles</b><span>Réserve, dettes, projets, repères.</span></div></a>
+      <a class="tile gold" href="./fiche.html"><div class="tileTop"><div class="tileIcon">🪪</div><div class="tileTag">Fiche</div></div><div><b>Ma fiche PAY</b><span>Identité, contact, QR et lien public.</span></div></a>
+      <a class="tile" href="./oreille.html"><div class="tileTop"><div class="tileIcon">🎧</div><div class="tileTag">Oreille</div></div><div><b>Mon oreille PAY</b><span>Dicter, préparer, garder une trace.</span></div></a>
+      <a class="tile primary" href="./cockpit.html#modules"><div class="tileTop"><div class="tileIcon">📦</div><div class="tileTag">Modules</div></div><div><b>Modules liés</b><span>POS, MARKET, DRIVER, LOC, RESA.</span></div></a>
+    </div></section>
+
+    <section class="group"><div class="groupLabel">Accès · session</div><div class="tileGrid">
+      <a class="tile blue" href="./session.html"><div class="tileTop"><div class="tileIcon">🛡️</div><div class="tileTag">Session</div></div><div><b>Ma session</b><span>État d’accès, nettoyage local.</span></div></a>
+      <a class="tile" href="./pin.html"><div class="tileTop"><div class="tileIcon">🔐</div><div class="tileTag">PIN</div></div><div><b>Mon accès</b><span>Ouvrir ou renouveler PAY.</span></div></a>
+      <a class="tile" href="https://digiylyfe.com/"><div class="tileTop"><div class="tileIcon">🌍</div><div class="tileTag">Site</div></div><div><b>Site DIGIY</b><span>Maison publique DIGIYLYFE.</span></div></a>
+      <a class="tile gold" href="https://digiy-hub.digiylyfe.com/"><div class="tileTop"><div class="tileIcon">🧭</div><div class="tileTag">HUB</div></div><div><b>HUB général</b><span>Retour aux portes DIGIY.</span></div></a>
+    </div></section>
+  </main>
+  <nav class="bottomBar"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./action.html"><span class="bi">🎙️</span><span>GO</span></a><a href="./admin.html"><span class="bi">➕</span><span>Ajouter</span></a><a href="./mouvements.html"><span class="bi">📜</span><span>Caisse</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
+  <script>
+    (()=>{try{if(window.DIGIY_SESSION?.cleanVisibleUrl)window.DIGIY_SESSION.cleanVisibleUrl();}catch(_ ){}
+    const p=document.getElementById("sessionPill");let s=null;try{s=window.DIGIY_SESSION?.get?.();}catch(_ ){}
+    if(p&&s){p.textContent="session ouverte";p.className="hdrPill ok";}else if(p){p.textContent="accès à vérifier";p.className="hdrPill warn";}})();
+  </script>
+
+<script>
+/* ══ DIGIY VOICE — PAY ══ */
 (function(){
   "use strict";
 
-  /*
-    session.js — MON ARGENT / PRO PAY
-    Rôle : garder la session locale 8h.
-    Règle : ne jamais remettre phone / slug dans l’URL visible.
-  */
+  var SPEAK =
+    "Bienvenue dans PAY, le cerveau argent de DIGIYLYFE. " +
+    "Ici, le pro garde la trace de ce qui entre, de ce qui sort, de ce qui reste, et de ce qui pèse sur la caisse. " +
+    "Ajouter sert à poser un mouvement : recette, dépense, dette client, réserve, acompte ou solde. " +
+    "DIGIY GO PAY permet de parler simplement : par exemple, j’ai encaissé quinze mille francs avec Wave pour une vente POS, ou j’ai payé du carburant en cash pour DRIVER. " +
+    "Mouvements caisse montre les lignes inscrites. La température lit plus loin : argent reçu, argent sorti, dettes ouvertes, crédits, maison, réserve, restes à recevoir et pression du mois. " +
+    "Oreille PAY prépare une trace claire, mais le pro vérifie et valide. Rien ne devient cash sans paiement réel confirmé. Une promesse, une réservation ou un devis reste une trace à suivre, pas une recette encaissée. " +
+    "Les modules travaillent : POS vend, MARKET annonce, DRIVER roule, LOC loue, RESA réserve, JOBS relie, Mes services intervient. PAY comprend. " +
+    "Règle importante : si l’activité ne remonte pas à PAY, il n’y a pas de lecture. Pas de lecture, pas de contrôle. Le terrain agit, PAY enregistre, DIGIY lit, le pro décide.";
 
-  const SESSION_KEY = "digiy_pay_session";
-  const MAIN_PRO_SESSION_KEY = "DIGIY_PAY_PRO_SESSION";
+  var play = document.getElementById("digiyPayAudioPlay");
+  var stop = document.getElementById("digiyPayAudioStop");
+  var status = document.getElementById("digiyPayAudioStatus");
 
-  const SESSION_KEYS = [
-    "digiy_pay_session",
-    "DIGIY_PAY_PRO_SESSION",
-    "DIGIY_PAY_PIN_SESSION",
-    "DIGIY_PIN_SESSION",
-    "DIGIY_ACCESS",
-    "DIGIY_SESSION_PAY"
-  ];
-
-  const MAX_AGE_MS = 8 * 60 * 60 * 1000; // 8h
-  const MODULE_NAME = "PAY";
-
-  const SENSITIVE_URL_KEYS = [
-    "phone",
-    "tel",
-    "owner_phone",
-    "owner_id",
-    "slug",
-    "pay_slug",
-    "subscription_slug",
-    "business_phone",
-    "wave_phone",
-    "wallet_phone",
-    "pay_phone",
-    "access_note",
-    "keybox_code",
-    "keybox_location"
-  ];
-
-  function normalizeSlug(v){
-    return String(v || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
+  function digiySpeakText(text){
+    return String(text || "")
+      .replace(/\bWave\b/g, "Ouève")
+      .replace(/\bWhatsApp\b/g, "Ouatsap")
+      .replace(/\bDIGIY GO\b/g, "diji go")
+      .replace(/\bDIGIYLYFE\b/g, "diji laïfe");
   }
 
-  function normalizePhone(v){
-    return String(v || "").replace(/[^\d]/g, "");
+  function setStatus(message){
+    if(status) status.textContent = message;
   }
 
-  function safeJsonParse(raw){
-    try{
-      return JSON.parse(raw);
-    }catch(_){
-      return null;
+  function canSpeak(){
+    return "speechSynthesis" in window;
+  }
+
+  function pickVoice(){
+    if(!canSpeak()) return null;
+    var voices = window.speechSynthesis.getVoices() || [];
+    return voices.find(function(v){ return /^fr/i.test(v.lang || "") && /FR/i.test(v.lang || ""); })
+        || voices.find(function(v){ return /^fr/i.test(v.lang || ""); })
+        || voices[0]
+        || null;
+  }
+
+  function stopSpeech(){
+    if(canSpeak()) window.speechSynthesis.cancel();
+    if(play) play.textContent = "▶ Écouter";
+    setStatus("Lecture arrêtée");
+  }
+
+  function speak(){
+    if(!canSpeak()){
+      setStatus("Lecture vocale non disponible ici");
+      return;
     }
-  }
 
-  function cleanVisibleUrl(){
-    try{
-      const url = new URL(window.location.href);
-      let changed = false;
-
-      SENSITIVE_URL_KEYS.forEach(function(key){
-        if(url.searchParams.has(key)){
-          url.searchParams.delete(key);
-          changed = true;
-        }
-      });
-
-      if(changed){
-        window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-      }
-    }catch(_){}
-  }
-
-  function cleanInternalUrl(target){
-    try{
-      const url = new URL(target || "./pin.html", window.location.href);
-
-      SENSITIVE_URL_KEYS.forEach(function(key){
-        url.searchParams.delete(key);
-      });
-
-      if(url.origin !== window.location.origin){
-        return "./pin.html";
-      }
-
-      const file = url.pathname.split("/").pop() || "pin.html";
-      return "./" + file + url.search + url.hash;
-    }catch(_){
-      return target || "./pin.html";
+    if(window.speechSynthesis.paused){
+      window.speechSynthesis.resume();
+      if(play) play.textContent = "⏸ Pause";
+      setStatus("▶ Reprise…");
+      return;
     }
-  }
 
-  function safeRedirectName(value){
-    const raw = String(value || "").trim().toLowerCase();
+    if(window.speechSynthesis.speaking){
+      window.speechSynthesis.pause();
+      if(play) play.textContent = "▶ Reprendre";
+      setStatus("⏸ En pause");
+      return;
+    }
 
-    const map = {
-      "cockpit": "cockpit.html",
-      "cockpit.html": "cockpit.html",
-      "admin": "admin.html",
-      "admin.html": "admin.html",
-      "brain": "brain-admin.html",
-      "brain-admin": "brain-admin.html",
-      "brain-admin.html": "brain-admin.html",
-      "pin": "pin.html",
-      "pin.html": "pin.html"
+    stopSpeech();
+
+    var u = new SpeechSynthesisUtterance(digiySpeakText(SPEAK));
+    u.lang = "fr-FR";
+    u.rate = 0.86;
+    u.pitch = 1.02;
+    u.volume = 1;
+
+    var voice = pickVoice();
+    if(voice) u.voice = voice;
+
+    u.onstart = function(){
+      if(play) play.textContent = "⏸ Pause";
+      setStatus("▶ DIGIY explique PAY…");
+    };
+    u.onend = function(){
+      if(play) play.textContent = "▶ Écouter";
+      setStatus("✓ Lecture terminée");
+    };
+    u.onerror = function(){
+      if(play) play.textContent = "▶ Écouter";
+      setStatus("Lecture interrompue");
     };
 
-    return map[raw] || "cockpit.html";
+    window.speechSynthesis.speak(u);
   }
 
-  function buildPayload(slug, phone){
-    const cleanSlug = normalizeSlug(slug);
-    const cleanPhone = normalizePhone(phone);
-    const nowMs = Date.now();
+  if(play) play.addEventListener("click", speak);
+  if(stop) stop.addEventListener("click", stopSpeech);
 
-    if(!cleanSlug) return null;
-
-    return {
-      slug: cleanSlug,
-      phone: cleanPhone,
-      module: MODULE_NAME,
-
-      access: true,
-      access_ok: true,
-      ok: true,
-      verified: true,
-      has_access: true,
-
-      verified_at: nowMs,
-      validated_at: new Date(nowMs).toISOString(),
-      ts: nowMs,
-
-      reason: "pin_ok"
-    };
+  if(canSpeak()){
+    window.speechSynthesis.onvoiceschanged = pickVoice;
   }
 
-  function writePayload(payload){
-    if(!payload) return null;
-
-    SESSION_KEYS.forEach((key) => {
-      try{
-        localStorage.setItem(key, JSON.stringify(payload));
-      }catch(_){}
-
-      try{
-        sessionStorage.setItem(key, JSON.stringify(payload));
-      }catch(_){}
-    });
-
-    try{
-      localStorage.setItem(MAIN_PRO_SESSION_KEY, JSON.stringify(payload));
-      sessionStorage.setItem(MAIN_PRO_SESSION_KEY, JSON.stringify(payload));
-    }catch(_){}
-
-    /*
-      Compatibilité interne :
-      ces valeurs restent en stockage local pour les pages PRO,
-      mais elles ne sont plus propagées dans les URLs visibles.
-    */
-    try{
-      localStorage.setItem("digiy_pay_slug", payload.slug || "");
-      localStorage.setItem("digiy_pay_phone", payload.phone || "");
-      localStorage.setItem("digiy_pay_last_slug", payload.slug || "");
-
-      sessionStorage.setItem("digiy_pay_slug", payload.slug || "");
-      sessionStorage.setItem("digiy_pay_phone", payload.phone || "");
-      sessionStorage.setItem("digiy_pay_last_slug", payload.slug || "");
-    }catch(_){}
-
-    /*
-      Ne pas exposer phone/slug dans window.DIGIY_ACCESS.
-      Les pages qui ont besoin de l’identité doivent passer par DIGIY_SESSION.get().
-    */
-    try{
-      window.DIGIY_ACCESS = Object.assign({}, window.DIGIY_ACCESS || {}, {
-        module: MODULE_NAME,
-        ok: true,
-        access_ok: true,
-        verified: true,
-        ts: payload.ts || Date.now()
-      });
-    }catch(_){}
-
-    cleanVisibleUrl();
-    return payload;
-  }
-
-  function save(slug, phone){
-    const payload = buildPayload(slug, phone);
-    return writePayload(payload);
-  }
-
-  function clear(){
-    SESSION_KEYS.forEach((key) => {
-      try{
-        localStorage.removeItem(key);
-      }catch(_){}
-
-      try{
-        sessionStorage.removeItem(key);
-      }catch(_){}
-    });
-
-    try{
-      localStorage.removeItem(MAIN_PRO_SESSION_KEY);
-      sessionStorage.removeItem(MAIN_PRO_SESSION_KEY);
-    }catch(_){}
-
-    try{
-      localStorage.removeItem("digiy_pay_slug");
-      localStorage.removeItem("digiy_pay_phone");
-      localStorage.removeItem("digiy_pay_last_slug");
-
-      sessionStorage.removeItem("digiy_pay_slug");
-      sessionStorage.removeItem("digiy_pay_phone");
-      sessionStorage.removeItem("digiy_pay_last_slug");
-    }catch(_){}
-
-    try{
-      window.DIGIY_ACCESS = {
-        module: MODULE_NAME,
-        ok: false,
-        access_ok: false
-      };
-    }catch(_){}
-
-    cleanVisibleUrl();
-  }
-
-  function readOne(key){
-    try{
-      return safeJsonParse(sessionStorage.getItem(key)) || safeJsonParse(localStorage.getItem(key));
-    }catch(_){
-      return null;
-    }
-  }
-
-  function get(){
-    try{
-      cleanVisibleUrl();
-
-      let parsed = null;
-
-      for(const key of SESSION_KEYS){
-        parsed = readOne(key);
-        if(parsed && typeof parsed === "object") break;
-      }
-
-      if(!parsed || typeof parsed !== "object"){
-        clear();
-        return null;
-      }
-
-      const slug = normalizeSlug(parsed.slug);
-      const phone = normalizePhone(parsed.phone);
-      const moduleName = String(parsed.module || "").trim().toUpperCase();
-
-      const verifiedAt = Number(parsed.verified_at || parsed.ts || 0) || 0;
-      const validatedAt = parsed.validated_at ? new Date(parsed.validated_at).getTime() : 0;
-      const lastSeen = verifiedAt || validatedAt || 0;
-
-      const hasAccess =
-        !!parsed.access ||
-        !!parsed.access_ok ||
-        !!parsed.ok ||
-        !!parsed.has_access;
-
-      if(!slug){
-        clear();
-        return null;
-      }
-
-      if(moduleName && moduleName !== MODULE_NAME){
-        clear();
-        return null;
-      }
-
-      if(!hasAccess){
-        clear();
-        return null;
-      }
-
-      if(!lastSeen){
-        clear();
-        return null;
-      }
-
-      const age = Date.now() - lastSeen;
-      if(age > MAX_AGE_MS){
-        clear();
-        return null;
-      }
-
-      return writePayload({
-        ...parsed,
-        slug,
-        phone,
-        module: MODULE_NAME,
-        access: true,
-        access_ok: true,
-        ok: true,
-        verified: true,
-        has_access: true,
-        verified_at: parsed.verified_at || parsed.ts || Date.now(),
-        validated_at: parsed.validated_at || new Date(Date.now()).toISOString(),
-        ts: parsed.ts || Date.now()
-      });
-    }catch(_){
-      clear();
-      return null;
-    }
-  }
-
-  function read(){
-    return get();
-  }
-
-  function fromUrl(){
-    /*
-      Ancienne compatibilité neutralisée :
-      on ne crée plus de session depuis ?slug=... ou ?phone=...
-      car la session PRO doit venir du PIN.
-    */
-    cleanVisibleUrl();
-    return null;
-  }
-
-  function applyUrl(){
-    /*
-      Ancien comportement : ajoutait ?slug=...&phone=...
-      Nouveau comportement : nettoie seulement l’URL visible.
-    */
-    cleanVisibleUrl();
-  }
-
-  function boot(){
-    cleanVisibleUrl();
-    return get();
-  }
-
-  function buildPinUrl(pinUrl){
-    try{
-      const target = pinUrl || "./pin.html";
-      const url = new URL(target, window.location.href);
-
-      SENSITIVE_URL_KEYS.forEach(function(key){
-        url.searchParams.delete(key);
-      });
-
-      const current = new URL(window.location.href);
-      const redirect = safeRedirectName(current.searchParams.get("redirect") || current.pathname.split("/").pop() || "cockpit.html");
-
-      if(!url.searchParams.get("redirect")){
-        url.searchParams.set("redirect", redirect);
-      }
-
-      if(url.origin !== window.location.origin){
-        return "./pin.html?redirect=" + encodeURIComponent(redirect);
-      }
-
-      const file = url.pathname.split("/").pop() || "pin.html";
-      return "./" + file + url.search + url.hash;
-    }catch(_){
-      return pinUrl || "./pin.html";
-    }
-  }
-
-  function requireSession(pinUrl){
-    const s = get();
-
-    if(!s){
-      window.location.href = buildPinUrl(pinUrl);
-      return null;
-    }
-
-    cleanVisibleUrl();
-    return s;
-  }
-
-  cleanVisibleUrl();
-
-  window.DIGIY_SESSION = {
-    save,
-    get,
-    read,
-    clear,
-    require: requireSession,
-    applyUrl,
-    fromUrl,
-    boot,
-    cleanVisibleUrl,
-    normalizeSlug,
-    normalizePhone
-  };
+  window.addEventListener("pagehide", stopSpeech);
 })();
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
