@@ -117,7 +117,7 @@ function adminPayloadFromAction(m,session){
     note_text:m.note_text||null,
     source_module:m.source_module||'PAY',
     source_id:m.source_id||null,
-    origin:'action_pay',
+    origin:'manual',
     movement_date:today,
     status:m.status||'posted',
     meta:Object.assign({},m.meta||{},{
@@ -166,6 +166,8 @@ speech();document.getElementById('listen').onclick=()=>{if(!rec){set('Micro non 
 </script>
 </body>
 </html>
+
+
 
 
 
