@@ -83,10 +83,138 @@ document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.
 document.getElementById('clear').onclick=()=>{txt.value='';proof.classList.remove('show');set('Effacé.')};
 document.getElementById('validate').onclick=validate;
 function speech(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('listen').textContent='🎙️ Micro non dispo';return}rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.onstart=()=>set('J’écoute...');rec.onend=()=>set('Prêt.');rec.onerror=()=>set('Micro fragile.');rec.onresult=e=>{let v='';for(let i=e.resultIndex;i<e.results.length;i++)v+=e.results[i][0].transcript;txt.value=v.trim();document.getElementById('prepare').click()}}
+
+function readJSONSafe(key){
+  try{
+    const raw=localStorage.getItem(key);
+    return raw?JSON.parse(raw):null;
+  }catch(e){return null}
+}
+function firstIncomingPayload(){
+  const params=new URLSearchParams(location.search);
+  const hasUrl=["from","source_module","module","amount","amount_xof","channel","mode","label","note","category","direction","kind","type","client","who","source_id"].some(k=>params.has(k));
+  if(hasUrl){
+    return {
+      source_module:params.get("source_module")||params.get("from")||params.get("module")||"PAY",
+      amount_xof:params.get("amount_xof")||params.get("amount")||"",
+      channel:params.get("channel")||params.get("mode")||params.get("payment_mode")||"",
+      label:params.get("label")||params.get("category")||params.get("objet")||"",
+      note_text:params.get("note")||params.get("text")||params.get("phrase")||"",
+      direction:params.get("direction")||"",
+      kind:params.get("kind")||params.get("type")||"",
+      source_id:params.get("source_id")||"",
+      client:params.get("client")||params.get("who")||""
+    };
+  }
+
+  const keys=[
+    "DIGIY_PAY_PENDING_MOVEMENT",
+    "DIGIY_PAY_INCOMING_DRAFT",
+    "DIGIY_POS_PAY_BRIDGE",
+    "DIGIY_LOC_PAY_BRIDGE",
+    "DIGIY_BUILD_PAY_BRIDGE",
+    "DIGIY_DRIVER_PAY_BRIDGE",
+    "DIGIY_POS_LATEST_ACTION",
+    "DIGIY_LOC_LATEST_ACTION",
+    "DIGIY_BUILD_LATEST_ACTION",
+    "DIGIY_DRIVER_LATEST_ACTION",
+    "DIGIY_PAY_PENDING_ACTION"
+  ];
+
+  for(const key of keys){
+    const value=readJSONSafe(key);
+    if(value && typeof value==="object"){
+      value.__incomingKey=key;
+      return value;
+    }
+  }
+  return null;
+}
+function pickIncoming(p, names, fallback){
+  for(const name of names){
+    const v=p && p[name];
+    if(v!==undefined && v!==null && String(v).trim()!=="") return v;
+  }
+  return fallback;
+}
+function incomingSource(p){
+  return String(pickIncoming(p,["source_module","sourceModule","source","module","from"],"PAY")).toUpperCase();
+}
+function incomingKind(p){
+  const raw=norm([
+    pickIncoming(p,["type","kind","payType","direction","status"],""),
+    pickIncoming(p,["label","labelText","category","objet","note","note_text","text"],"")
+  ].join(" "));
+  if(raw.includes("depense")||raw.includes("expense")||raw.includes("sortie")) return "expense";
+  if(raw.includes("receivable")||raw.includes("reste")||raw.includes("doit")||raw.includes("dette")||raw.includes("a recevoir")) return "receivable";
+  return "income";
+}
+function incomingAmount(p){
+  return Number(pickIncoming(p,["amount_xof","amount","total","total_xof","price","deposit","solde"],0))||0;
+}
+function incomingChannel(p){
+  return String(pickIncoming(p,["channel","mode","payment_mode","paymentMode","raw_channel"],"")).trim();
+}
+function incomingPhrase(p){
+  const s=incomingSource(p);
+  const k=incomingKind(p);
+  const a=incomingAmount(p);
+  const ch=incomingChannel(p)||"Wave";
+  const label=String(pickIncoming(p,["label","labelText","category","objet","note","note_text","text","phrase"],"")).trim();
+  const client=String(pickIncoming(p,["client","client_name","who","name"],"")).trim();
+
+  let head="recette";
+  if(k==="expense") head="dépense";
+  if(k==="receivable") head="à recevoir";
+
+  const parts=[head, s, a?String(a):"", ch, client?("client "+client):"", label?("- "+label):""]
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+/g," ")
+    .trim();
+
+  return parts || String(pickIncoming(p,["text","phrase","note","note_text"],"")).trim();
+}
+function loadIncomingDraft(){
+  const p=firstIncomingPayload();
+  if(!p) return false;
+
+  const phrase=incomingPhrase(p);
+  if(!phrase) return false;
+
+  txt.value=phrase;
+  try{
+    localStorage.setItem("DIGIY_PAY_INCOMING_LAST",JSON.stringify({
+      ...p,
+      normalized_phrase:phrase,
+      normalized_at:new Date().toISOString(),
+      receiver:"PAY_ACTION"
+    }));
+    localStorage.setItem("DIGIY_PAY_PENDING_MOVEMENT",JSON.stringify({
+      ...p,
+      source_module:incomingSource(p),
+      amount_xof:incomingAmount(p),
+      channel:incomingChannel(p),
+      note_text:String(pickIncoming(p,["note_text","note","text","phrase"],phrase)),
+      label:String(pickIncoming(p,["label","labelText","category","objet"],"Mouvement "+incomingSource(p))),
+      status:"draft_received_by_pay",
+      receiver:"PAY_ACTION",
+      updated_at:new Date().toISOString()
+    }));
+  }catch(e){}
+
+  set("📥 Brouillon reçu depuis "+incomingSource(p)+" · vérifie puis valide dans PAY.");
+  try{document.getElementById("prepare").click()}catch(e){}
+  return true;
+}
+
+loadIncomingDraft();
 speech();document.getElementById('listen').onclick=()=>{if(!rec){set('Micro non disponible.');return}try{rec.start()}catch(e){set('Micro déjà lancé.')}};
 })();
 </script>
 </body>
 </html>
+
+
 
 
