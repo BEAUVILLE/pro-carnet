@@ -6,13 +6,12 @@
 (function(){
   "use strict";
 
-  const VERSION = "pay-session-js-clean-20260602";
-
+  const VERSION = "pay-session-js-clean-final-20260602";
   const MODULE = "PAY";
 
   const SENSITIVE_KEYS = [
     "phone","tel","p_phone","owner_phone","subscription_phone","checkout_phone",
-    "pin","pin4","token","session_token","slug","module","return","redirect",
+    "pin","pin4","token","session_token","slug","compte","module","return","redirect",
     "redirect_url","url","from","v"
   ];
 
@@ -24,9 +23,11 @@
     "DIGIY_SESSION_PAY",
     "DIGIY_PIN_SESSION",
     "DIGIY_ACCESS",
-    "digiy_session",
+    "digiy_session_pay",
+    "digiy_guard_session:PAY",
+    "digiy_guard_session",
     "DIGIY_SESSION",
-    "digiy_guard_session"
+    "digiy_session"
   ];
 
   const SLUG_KEYS = [
@@ -55,44 +56,34 @@
       const s = sessionStorage.getItem(key);
       if(s) return s;
     }catch(_){}
-
     try{
       const l = localStorage.getItem(key);
       if(l) return l;
     }catch(_){}
-
     return "";
   }
 
   function writeStore(key, value, localToo){
     if(value == null || String(value).trim() === "") return;
-
-    try{
-      sessionStorage.setItem(key, String(value).trim());
-    }catch(_){}
-
+    const v = String(value).trim();
+    try{ sessionStorage.setItem(key, v); }catch(_){}
     if(localToo){
-      try{
-        localStorage.setItem(key, String(value).trim());
-      }catch(_){}
+      try{ localStorage.setItem(key, v); }catch(_){}
     }
+  }
+
+  function removeStore(key){
+    try{ sessionStorage.removeItem(key); }catch(_){}
+    try{ localStorage.removeItem(key); }catch(_){}
   }
 
   function parseJson(raw){
     if(!raw) return null;
-    try{
-      return JSON.parse(raw);
-    }catch(_){
-      return null;
-    }
-  }
-
-  function digits(v){
-    return String(v || "").replace(/[^\d]/g, "");
+    try{ return JSON.parse(raw); }catch(_){ return null; }
   }
 
   function normPhone(v){
-    const d = digits(v);
+    const d = String(v || "").replace(/[^\d]/g, "");
     if(!d) return "";
     if(d.length === 9) return "221" + d;
     return d.slice(0, 15);
@@ -176,21 +167,15 @@
   function getFromJsonKeys(){
     for(const key of SESSION_JSON_KEYS){
       const parsed = normalizeCandidate(parseJson(readStore(key)));
-
-      if(parsed.slug || parsed.phone || parsed.access || parsed.ok){
-        return parsed;
-      }
+      if(parsed.slug || parsed.phone || parsed.access || parsed.ok) return parsed;
     }
-
     return {};
   }
 
   function getFromSimpleKeys(){
     const slug = normSlug(firstRaw(SLUG_KEYS));
     const phone = normPhone(firstRaw(PHONE_KEYS));
-
     if(!slug && !phone) return {};
-
     return {
       module: MODULE,
       slug,
@@ -207,9 +192,7 @@
       const u = new URL(location.href);
       const slug = normSlug(u.searchParams.get("slug") || u.searchParams.get("compte") || "");
       const phone = normPhone(u.searchParams.get("phone") || u.searchParams.get("tel") || "");
-
       if(!slug && !phone) return {};
-
       return {
         module: MODULE,
         slug,
@@ -239,6 +222,7 @@
       compte: slug,
       phone,
       access,
+      access_ok: access,
       ok: access,
       source: url.slug || url.phone ? "url" : json.slug || json.phone ? "json" : simple.slug || simple.phone ? "storage" : "none",
       created_at: new Date().toISOString()
@@ -247,17 +231,20 @@
     if(slug){
       writeStore("digiy_pay_slug", slug, true);
       writeStore("digiy_pay_last_slug", slug, true);
+      writeStore("DIGIY_PAY_SLUG", slug, true);
     }
 
     if(phone){
       writeStore("digiy_pay_phone", phone, true);
       writeStore("digiy_pay_last_phone", phone, true);
+      writeStore("DIGIY_PAY_PHONE", phone, true);
     }
 
     if(access){
       try{
         sessionStorage.setItem("digiy_pay_session", JSON.stringify(session));
         sessionStorage.setItem("DIGIY_SESSION_PAY", JSON.stringify(session));
+        sessionStorage.setItem("DIGIY_PAY_SESSION", JSON.stringify(session));
       }catch(_){}
     }
 
@@ -308,7 +295,7 @@
   }
 
   function clear(){
-    const keys = [
+    [
       ...SESSION_JSON_KEYS,
       ...SLUG_KEYS,
       ...PHONE_KEYS,
@@ -316,12 +303,7 @@
       "DIGIY_SESSION_PAY",
       "digiy_pay_access_ok",
       "DIGIY_PAY_ACCESS_OK"
-    ];
-
-    keys.forEach(function(key){
-      try{ sessionStorage.removeItem(key); }catch(_){}
-      try{ localStorage.removeItem(key); }catch(_){}
-    });
+    ].forEach(removeStore);
   }
 
   function boot(){
