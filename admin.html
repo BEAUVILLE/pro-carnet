@@ -2158,7 +2158,8 @@
 
     function applyDraftPrefillFromUrl(){
       const params = new URLSearchParams(window.location.search);
-      if(params.get("fromDraft") !== "1") return;
+      const hasDraftParams = params.get("fromDraft") === "1" || ["from","source_module","module","amount","amount_xof","channel","mode","label","note","category","direction","kind","type","source_id"].some(k => params.has(k));
+      if(!hasDraftParams) return;
 
       const direction = params.get("direction") || "";
       const scope = normalizePrefillScope(params.get("scope") || "");
@@ -2167,7 +2168,7 @@
       const channel = normalizePrefillChannel(params.get("channel") || "");
       const category = params.get("category") || "";
       const movementDate = params.get("movement_date") || todayStr();
-      const sourceModule = normalizePrefillSourceModule(params.get("source_module") || "PAY");
+      const sourceModule = normalizePrefillSourceModule(params.get("source_module") || params.get("from") || params.get("module") || "PAY");
       const sourceId = params.get("source_id") || "";
       const label = params.get("label") || "";
       const note = params.get("note") || "";
@@ -2199,6 +2200,112 @@
       }
 
       toast("✅ Brouillon reçu. Vérifie puis enregistre.", 3200);
+    }
+
+
+    function readJsonSafePay(key){
+      try{
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      }catch(_){
+        return null;
+      }
+    }
+
+    function firstPayIncomingPayload(){
+      const keys = [
+        "DIGIY_PAY_PENDING_MOVEMENT",
+        "DIGIY_PAY_INCOMING_DRAFT",
+        "DIGIY_POS_PAY_BRIDGE",
+        "DIGIY_LOC_PAY_BRIDGE",
+        "DIGIY_BUILD_PAY_BRIDGE",
+        "DIGIY_DRIVER_PAY_BRIDGE",
+        "DIGIY_POS_LATEST_ACTION",
+        "DIGIY_LOC_LATEST_ACTION",
+        "DIGIY_BUILD_LATEST_ACTION",
+        "DIGIY_DRIVER_LATEST_ACTION"
+      ];
+
+      for(const key of keys){
+        const payload = readJsonSafePay(key);
+        if(payload && typeof payload === "object"){
+          payload.__incomingKey = key;
+          return payload;
+        }
+      }
+
+      return null;
+    }
+
+    function pickPayIncoming(payload, names, fallback){
+      for(const name of names){
+        const value = payload && payload[name];
+        if(value !== undefined && value !== null && String(value).trim() !== "") return value;
+      }
+      return fallback;
+    }
+
+    function applyDraftPrefillFromStorage(){
+      const payload = firstPayIncomingPayload();
+      if(!payload) return false;
+
+      const sourceModule = normalizePrefillSourceModule(
+        pickPayIncoming(payload, ["source_module","sourceModule","source","module","from"], "PAY")
+      );
+
+      const amount = pickPayIncoming(payload, ["amount_xof","amount","total","total_xof","deposit","price"], "");
+      const rawDirection = String(pickPayIncoming(payload, ["direction"], "") || "").toLowerCase();
+      const rawKind = String(pickPayIncoming(payload, ["kind","type","payType"], "") || "").toLowerCase();
+      const label = String(pickPayIncoming(payload, ["label","labelText","category","objet"], "") || "");
+      const note = String(pickPayIncoming(payload, ["note_text","note","text","phrase"], "") || "");
+      const channel = normalizePrefillChannel(pickPayIncoming(payload, ["channel","mode","payment_mode","paymentMode"], ""));
+      const sourceId = String(pickPayIncoming(payload, ["source_id","id","ref"], "") || "");
+
+      const joined = (rawDirection + " " + rawKind + " " + label + " " + note).toLowerCase();
+      const isExpense = /depense|dépense|expense|sortie|achat|carburant|essence|mat[eé]riel/.test(joined);
+      const isReceivable = /receivable|reste|dette|doit|à recevoir|a recevoir|credit|crédit/.test(joined);
+
+      const direction = isExpense ? "out" : "in";
+      const scope = "pro";
+      const kind = isExpense ? "expense" : isReceivable ? "other" : "sale";
+      const category = label || (isExpense ? "Dépense " + sourceModule : isReceivable ? "À recevoir " + sourceModule : "Recette " + sourceModule);
+
+      setFieldValue("direction", direction);
+      setFieldValue("scope", scope);
+      setFieldValue("amount", amount);
+      setFieldValue("kind", kind);
+      setFieldValue("channel", channel || "other");
+      setFieldValue("category", category);
+      setFieldValue("movementDate", todayStr());
+      setFieldValue("sourceModule", sourceModule);
+      setFieldValue("sourceId", sourceId || "PAY-INBOX-" + Date.now());
+      setFieldValue("labelText", category);
+      setFieldValue("noteText", note || label || "Brouillon reçu depuis " + sourceModule);
+
+      syncKindByScope();
+
+      const box = $("draftPrefillBox");
+      if(box){
+        box.style.display = "block";
+        box.innerHTML = `
+          <strong>📥 Brouillon reçu depuis ${esc(sourceModule)}.</strong><br>
+          ${amount ? "Montant : <strong>" + esc(money(amount)) + "</strong><br>" : ""}
+          ${category ? "Libellé : <strong>" + esc(category) + "</strong><br>" : ""}
+          Source locale : <strong>${esc(payload.__incomingKey || "PAY")}</strong><br>
+          Vérifie les champs puis clique sur <strong>💾 Enregistrer</strong>.
+        `;
+      }
+
+      try{
+        localStorage.setItem("DIGIY_PAY_INCOMING_LAST", JSON.stringify({
+          ...payload,
+          receiver: "PAY_ADMIN",
+          normalized_at: new Date().toISOString()
+        }));
+      }catch(_){}
+
+      toast("📥 Brouillon reçu. Vérifie puis enregistre.", 3200);
+      return true;
     }
 
     function fmtDate(v){
@@ -3759,6 +3866,7 @@
         $("compteBadge").style.display = "flex";
         $("movementDate").value = todayStr();
         applyDraftPrefillFromUrl();
+        applyDraftPrefillFromStorage();
 
         const cockpitHref = cleanInternalHref("./cockpit.html");
         $("topCockpitLink").href = cockpitHref;
@@ -3809,6 +3917,338 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
