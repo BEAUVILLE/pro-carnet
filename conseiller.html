@@ -3,378 +3,121 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Conseiller PAY · DIGIY</title>
+  <title>Conseiller PAY · Température réelle</title>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <meta name="theme-color" content="#f4ead2" />
-  <meta name="digiy-build" content="conseiller-pay-standalone-20260605-v1" />
+  <meta name="digiy-build" content="conseiller-pay-temperature-reelle-20260605-v2" />
   <style>
     :root{
-      --bg:#f4ead2;
-      --bg2:#ead9b7;
-      --card:#fff9ec;
-      --card2:#f7e8c8;
-      --text:#241a0d;
-      --muted:#443827;
-      --line:rgba(83,58,26,.24);
-      --gold:#facc15;
-      --green:#16a34a;
-      --green2:#22c55e;
-      --red:#9f1239;
-      --shadow:0 12px 28px rgba(77,52,22,.14);
-      --ff:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --bg:#f4ead2;--bg2:#ead9b7;--card:#fffaf0;--line:rgba(83,58,26,.24);
+      --text:#241a0d;--muted:#453827;--gold:#facc15;--green:#16a34a;--red:#9f1239;--orange:#9a3412;
+      --shadow:0 12px 28px rgba(77,52,22,.14);--ff:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      min-height:100vh;
-      font-family:var(--ff);
-      color:var(--text);
-      background:
-        radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),
-        radial-gradient(circle at 100% 100%,rgba(22,163,74,.10),transparent 30%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      padding:14px 12px 96px;
-      font-weight:850;
-      line-height:1.45;
-    }
+    *{box-sizing:border-box} html,body{margin:0;padding:0}
+    body{min-height:100vh;font-family:var(--ff);color:var(--text);background:radial-gradient(circle at 10% 0%,rgba(250,204,21,.22),transparent 34%),linear-gradient(180deg,var(--bg),var(--bg2));padding:14px 12px 100px;font-weight:850;line-height:1.45}
     .wrap{max-width:980px;margin:0 auto}
-    .top{
-      position:sticky;
-      top:0;
-      z-index:10;
-      margin:-14px -12px 14px;
-      padding:12px;
-      background:rgba(244,234,210,.96);
-      border-bottom:1px solid var(--line);
-      backdrop-filter:blur(12px);
-    }
+    .top{position:sticky;top:0;z-index:10;margin:-14px -12px 14px;padding:12px;background:rgba(244,234,210,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
     .top-in{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:10px}
-    .mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),#fff3c4);box-shadow:var(--shadow);font-size:22px}
-    .brand h1{font-size:22px;margin:0;line-height:1.05;font-weight:1000}
-    .brand p{font-size:13px;margin:3px 0 0;color:var(--muted);font-weight:900}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    a,button{text-decoration:none;font:inherit}
-    .btn{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.62);
-      color:var(--text);
-      border-radius:999px;
-      padding:11px 14px;
-      min-height:44px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:7px;
-      font-size:14px;
-      font-weight:1000;
-      cursor:pointer;
-    }
-    .btn.primary{
-      border-color:rgba(121,83,12,.30);
-      background:linear-gradient(135deg,var(--green2),var(--gold));
-      color:#102014;
-      box-shadow:0 10px 22px rgba(22,163,74,.15);
-    }
-    .hero{
-      border:2px solid var(--line);
-      border-radius:30px;
-      background:linear-gradient(160deg,rgba(255,250,238,.98),rgba(246,232,202,.96));
-      box-shadow:var(--shadow);
-      padding:22px;
-      display:grid;
-      gap:14px;
-      margin-bottom:14px;
-    }
-    .eyebrow{
-      width:max-content;
-      max-width:100%;
-      border:1px solid rgba(22,101,52,.25);
-      background:rgba(220,252,231,.75);
-      color:#14532d;
-      border-radius:999px;
-      padding:8px 12px;
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-weight:1000;
-    }
-    h2{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:0;font-weight:1000;letter-spacing:-.04em}
-    .lead{font-size:18px;color:var(--muted);font-weight:950;max-width:62ch;margin:0}
-    .doctrine{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-    }
-    .chip{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.62);
-      border-radius:20px;
-      padding:13px;
-      min-height:94px;
-    }
-    .chip b{display:block;font-size:16px;margin-bottom:5px}
-    .chip span{display:block;font-size:13px;color:var(--muted);font-weight:900}
-    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
-    .card{
-      border:2px solid var(--line);
-      border-radius:26px;
-      background:linear-gradient(160deg,rgba(255,250,238,.98),rgba(246,232,202,.96));
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .card-head{
-      padding:16px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#6b4e09;font-weight:1000}
-    .title{font-size:24px;margin:4px 0 0;font-weight:1000;line-height:1.1}
-    .body{padding:16px;display:grid;gap:12px}
-    .advice{
-      border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(255,255,255,.62);
-      padding:14px;
-      display:grid;
-      gap:8px;
-    }
-    .advice .label{font-size:12px;color:#6b4e09;text-transform:uppercase;letter-spacing:.08em;font-weight:1000}
-    .advice .text{font-size:17px;color:var(--text);font-weight:950}
-    .options{display:grid;gap:10px}
-    .option{
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.58);
-      padding:13px;
-      cursor:pointer;
-    }
-    .option:hover{background:rgba(250,204,21,.22)}
-    .option b{display:block;font-size:16px}
-    .option span{display:block;margin-top:4px;color:var(--muted);font-size:13px;font-weight:900}
-    .result{
-      border:2px solid rgba(22,101,52,.24);
-      background:rgba(220,252,231,.72);
-      color:#14532d;
-      border-radius:20px;
-      padding:14px;
-      font-size:16px;
-      font-weight:1000;
-      min-height:72px;
-    }
-    .textarea{
-      width:100%;
-      min-height:120px;
-      resize:vertical;
-      border:2px solid var(--line);
-      background:rgba(255,255,255,.72);
-      border-radius:18px;
-      padding:13px;
-      color:var(--text);
-      font:950 16px/1.45 var(--ff);
-      outline:none;
-    }
-    .footer-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:20;
-      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-      background:rgba(244,234,210,.96);
-      border-top:1px solid var(--line);
-      backdrop-filter:blur(14px);
-    }
-    .footer-in{
-      width:min(760px,100%);
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:6px;
-    }
-    .navitem{
-      min-height:58px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.62);
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      align-content:center;
-      gap:2px;
-      color:var(--text);
-      text-align:center;
-      font-size:12px;
-      font-weight:1000;
-    }
-    .navitem.active{background:linear-gradient(135deg,var(--green2),var(--gold))}
-    @media(max-width:860px){
-      .grid{grid-template-columns:1fr}
-      .doctrine{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:560px){
-      .doctrine{grid-template-columns:1fr}
-      .brand h1{font-size:20px}
-      h2{font-size:38px}
-      .footer-in{grid-template-columns:repeat(2,1fr)}
-      body{padding-bottom:150px}
-    }
+    .brand{display:flex;align-items:center;gap:10px}.mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--gold));box-shadow:var(--shadow);font-size:22px}
+    h1{font-size:22px;margin:0;line-height:1.05;font-weight:1000}.brand p{font-size:13px;margin:3px 0 0;color:var(--muted);font-weight:900}
+    a,button{text-decoration:none;font:inherit}.actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.62);color:var(--text);border-radius:999px;padding:11px 14px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:14px;font-weight:1000;cursor:pointer}
+    .btn.primary{border-color:rgba(121,83,12,.30);background:linear-gradient(135deg,var(--green),var(--gold));color:#102014;box-shadow:0 10px 22px rgba(22,163,74,.15)}
+    .hero,.card{border:2px solid var(--line);border-radius:30px;background:linear-gradient(160deg,rgba(255,250,238,.98),rgba(246,232,202,.96));box-shadow:var(--shadow);overflow:hidden}
+    .hero{padding:22px;display:grid;gap:14px;margin-bottom:14px}.eyebrow{width:max-content;max-width:100%;border:1px solid rgba(22,101,52,.25);background:rgba(220,252,231,.75);color:#14532d;border-radius:999px;padding:8px 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:1000}
+    h2{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:0;font-weight:1000;letter-spacing:-.04em}.lead{font-size:18px;color:var(--muted);font-weight:950;max-width:66ch;margin:0}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.card-head{padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}.body{padding:16px;display:grid;gap:12px}
+    .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#6b4e09;font-weight:1000}.title{font-size:24px;margin:4px 0 0;font-weight:1000;line-height:1.1}
+    .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.62);padding:13px}.metric .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6b4e09;font-weight:1000}.metric .v{font-size:24px;font-weight:1000;margin-top:4px}.metric .s{font-size:13px;color:var(--muted);font-weight:900;margin-top:3px}
+    .advice{border:2px solid rgba(22,101,52,.24);background:rgba(220,252,231,.72);color:#14532d;border-radius:22px;padding:16px;font-size:17px;font-weight:1000;line-height:1.55}
+    .warn{border-color:rgba(159,18,57,.26);background:rgba(254,226,226,.86);color:var(--red)}
+    .priority{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.62);padding:13px}.priority b{display:block;font-size:16px}.priority span{display:block;margin-top:4px;color:var(--muted);font-size:13px;font-weight:900}
+    textarea{width:100%;min-height:170px;resize:vertical;border:2px solid var(--line);background:rgba(255,255,255,.72);border-radius:18px;padding:13px;color:var(--text);font:950 16px/1.45 var(--ff);outline:none}
+    .footer-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(244,234,210,.96);border-top:1px solid var(--line);backdrop-filter:blur(14px)}
+    .footer-in{width:min(760px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.navitem{min-height:58px;border:1px solid var(--line);background:rgba(255,255,255,.62);border-radius:16px;display:grid;place-items:center;align-content:center;gap:2px;color:var(--text);text-align:center;font-size:12px;font-weight:1000}.navitem.active{background:linear-gradient(135deg,var(--green),var(--gold))}
+    @media(max-width:860px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}} @media(max-width:560px){h2{font-size:38px}.footer-in{grid-template-columns:repeat(2,1fr)}body{padding-bottom:150px}}
   </style>
 </head>
 <body>
-  <header class="top">
-    <div class="top-in">
-      <div class="brand">
-        <div class="mark">🌡️</div>
-        <div>
-          <h1>Conseiller PAY</h1>
-          <p>Lecture, température et priorités du mois.</p>
+<header class="top"><div class="top-in"><div class="brand"><div class="mark">🌡️</div><div><h1>Conseiller PAY</h1><p>Basé sur la température réelle du cockpit.</p></div></div><div class="actions"><a class="btn" href="./cockpit.html">← Cockpit</a><button class="btn" id="refreshBtn" type="button">🔄 Relire</button><a class="btn primary" href="./action.html">🎙️ ACTION PAY</a></div></div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Conseiller PAY · chiffres réels</div>
+    <h2>PAY lit. Conseiller PAY explique. Le pro décide.</h2>
+    <p class="lead">Cette page ne demande pas au pro de choisir “pression” ou “stable”. Elle lit la dernière température calculée par le cockpit PAY, puis propose une priorité.</p>
+  </section>
+  <section class="grid">
+    <article class="card">
+      <div class="card-head"><div><div class="kicker">Température lue</div><div class="title" id="verdictTitle">Chargement…</div></div><div class="kicker" id="savedAt">—</div></div>
+      <div class="body">
+        <div class="metrics">
+          <div class="metric"><div class="l">Entrées</div><div class="v" id="monthIn">—</div><div class="s">Cash/recettes du mois.</div></div>
+          <div class="metric"><div class="l">Sorties pro</div><div class="v" id="monthOut">—</div><div class="s">Dépenses pro du mois.</div></div>
+          <div class="metric"><div class="l">Net du mois</div><div class="v" id="monthNet">—</div><div class="s">Entrées − sorties.</div></div>
+          <div class="metric"><div class="l">Après pression</div><div class="v" id="afterCommitments">—</div><div class="s">Après engagements visibles.</div></div>
+          <div class="metric"><div class="l">Pression</div><div class="v" id="pressure">—</div><div class="s">Perso + crédits + dettes proches.</div></div>
+          <div class="metric"><div class="l">Réserve cible</div><div class="v" id="reserve">—</div><div class="s">Coussin de sécurité visé.</div></div>
         </div>
+        <div class="advice" id="adviceBox">Lecture en cours…</div>
       </div>
-      <div class="actions">
-        <a class="btn" href="./cockpit.html">← Cockpit</a>
-        <a class="btn primary" href="./action.html">🎙️ ACTION PAY</a>
+    </article>
+    <aside class="card">
+      <div class="card-head"><div><div class="kicker">Priorités proposées</div><div class="title">Choisir avant d’agir</div></div><button class="btn primary" id="copyBtn" type="button">📋 Copier</button></div>
+      <div class="body">
+        <div id="priorities"></div>
+        <textarea id="messageBox">Chargement du conseil…</textarea>
+        <div class="advice">Règle sacrée : Conseiller PAY propose une priorité. Il ne valide jamais un paiement, une dette ou une dépense à la place du patron.</div>
       </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="hero">
-      <div class="eyebrow">Conseiller PAY</div>
-      <h2>Ton argent parle. DIGIY t’aide à décider.</h2>
-      <p class="lead">
-        Conseiller PAY lit la température, explique les chiffres, propose des priorités
-        et laisse toujours le patron valider.
-      </p>
-      <div class="doctrine">
-        <div class="chip"><b>PAY enregistre</b><span>Recettes, dépenses, dettes, réserves, mouvements.</span></div>
-        <div class="chip"><b>PAY analyse</b><span>Entrées, sorties, net, pression, réserve, à recevoir.</span></div>
-        <div class="chip"><b>Conseiller explique</b><span>Ce que les chiffres racontent au patron terrain.</span></div>
-        <div class="chip"><b>Le pro décide</b><span>Aucune validation automatique d’argent ou de dette.</span></div>
-      </div>
-    </section>
-
-    <section class="grid">
-      <article class="card">
-        <div class="card-head">
-          <div>
-            <div class="kicker">Conseil terrain</div>
-            <div class="title">Choisis la situation du mois</div>
-          </div>
-          <button class="btn" id="resetBtn" type="button">Effacer</button>
-        </div>
-        <div class="body">
-          <div class="options">
-            <div class="option" data-advice="pression">
-              <b>🔴 Pression forte</b>
-              <span>Les sorties, dettes ou engagements serrent le mois.</span>
-            </div>
-            <div class="option" data-advice="reserve">
-              <b>🟠 Réserve fragile</b>
-              <span>Le business respire, mais le coussin de sécurité est trop faible.</span>
-            </div>
-            <div class="option" data-advice="recevoir">
-              <b>🟡 Argent à recevoir</b>
-              <span>Des clients doivent payer ; ce n’est pas encore de la caisse réelle.</span>
-            </div>
-            <div class="option" data-advice="stable">
-              <b>🟢 Situation stable</b>
-              <span>Le mois tient, il faut consolider proprement.</span>
-            </div>
-          </div>
-
-          <div class="result" id="adviceBox">
-            Choisis une situation. Conseiller PAY proposera une priorité claire.
-          </div>
-        </div>
-      </article>
-
-      <aside class="card">
-        <div class="card-head">
-          <div>
-            <div class="kicker">Message préparé</div>
-            <div class="title">Conseil à copier</div>
-          </div>
-          <button class="btn primary" id="copyBtn" type="button">📋 Copier</button>
-        </div>
-        <div class="body">
-          <textarea class="textarea" id="messageBox" spellcheck="true">Conseiller PAY : choisis une situation à gauche pour préparer une lecture claire.</textarea>
-          <div class="advice">
-            <div class="label">Règle sacrée</div>
-            <div class="text">Conseiller PAY propose. Il ne valide jamais un paiement, une dette ou une dépense à la place du patron.</div>
-          </div>
-          <a class="btn primary" href="./action.html">🎙️ Transformer en action PAY</a>
-        </div>
-      </aside>
-    </section>
-  </main>
-
-  <nav class="footer-nav">
-    <div class="footer-in">
-      <a class="navitem active" href="./conseiller.html">🌡️<br>Conseiller</a>
-      <a class="navitem" href="./cockpit.html">🏠<br>Cockpit</a>
-      <a class="navitem" href="./mouvements.html">📜<br>Mouvements</a>
-      <a class="navitem" href="./action.html">🎙️<br>ACTION</a>
-    </div>
-  </nav>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const advices = {
-        pression: {
-          text: "Décision DIGIY : stoppe les nouvelles dépenses non vitales. Traite d’abord ce qui serre le mois : dette proche, facture urgente ou sortie trop lourde. Priorité : revenir au-dessus de zéro avant de relancer un nouveau projet.",
-          message: "🌡️ Conseiller PAY — Pression forte\\n\\nLe mois serre. La priorité n’est pas d’ajouter une dépense, mais de protéger la caisse.\\n\\nActions proposées :\\n1. Relancer l’argent à recevoir.\\n2. Payer ou planifier la dette proche.\\n3. Reporter une dépense non urgente.\\n\\nLe pro décide et valide."
-        },
-        reserve: {
-          text: "Décision DIGIY : l’activité respire, mais la réserve est fragile. Avant d’accélérer, garde une somme de sécurité. Priorité : protéger le prochain pas.",
-          message: "🌡️ Conseiller PAY — Réserve fragile\\n\\nLe business respire, mais la réserve doit être protégée.\\n\\nActions proposées :\\n1. Mettre une petite somme de côté.\\n2. Éviter une dépense non urgente.\\n3. Renforcer l’activité qui encaisse le plus vite.\\n\\nLe pro décide et valide."
-        },
-        recevoir: {
-          text: "Décision DIGIY : l’argent promis n’est pas encore de l’argent réel. Relance calmement les clients ouverts avant de compter cette somme dans la caisse.",
-          message: "🌡️ Conseiller PAY — Argent à recevoir\\n\\nUne partie de l’argent est attendue, mais pas encore encaissée.\\n\\nActions proposées :\\n1. Relancer les créances ouvertes.\\n2. Noter les paiements partiels.\\n3. Compter seulement le cash réellement reçu.\\n\\nLe pro décide et valide."
-        },
-        stable: {
-          text: "Décision DIGIY : la base est saine. Continue à encaisser proprement, garde une réserve, et renforce le module qui rapporte le plus avant de lancer une nouvelle dépense.",
-          message: "🌡️ Conseiller PAY — Situation stable\\n\\nLe mois tient. La priorité est de consolider sans se disperser.\\n\\nActions proposées :\\n1. Garder une réserve.\\n2. Suivre les mouvements.\\n3. Renforcer l’activité qui produit le plus.\\n\\nLe pro décide et valide."
-        }
-      };
-
-      const adviceBox = document.getElementById("adviceBox");
-      const messageBox = document.getElementById("messageBox");
-      const resetBtn = document.getElementById("resetBtn");
-      const copyBtn = document.getElementById("copyBtn");
-
-      document.querySelectorAll(".option").forEach((el) => {
-        el.addEventListener("click", () => {
-          const key = el.getAttribute("data-advice");
-          const data = advices[key];
-          if(!data) return;
-          adviceBox.textContent = data.text;
-          messageBox.value = data.message;
-        });
-      });
-
-      resetBtn.addEventListener("click", () => {
-        adviceBox.textContent = "Choisis une situation. Conseiller PAY proposera une priorité claire.";
-        messageBox.value = "Conseiller PAY : choisis une situation à gauche pour préparer une lecture claire.";
-      });
-
-      copyBtn.addEventListener("click", async () => {
-        try{
-          await navigator.clipboard.writeText(messageBox.value);
-          adviceBox.textContent = "Message Conseiller PAY copié. Le pro garde la validation finale.";
-        }catch(_){
-          messageBox.select();
-          document.execCommand("copy");
-          adviceBox.textContent = "Message Conseiller PAY copié.";
-        }
-      });
-    })();
-  </script>
+    </aside>
+  </section>
+</main>
+<nav class="footer-nav"><div class="footer-in"><a class="navitem active" href="./conseiller.html">🌡️<br>Conseiller</a><a class="navitem" href="./cockpit.html">🏠<br>Cockpit</a><a class="navitem" href="./mouvements.html">📜<br>Mouvements</a><a class="navitem" href="./action.html">🎙️<br>ACTION</a></div></nav>
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id);
+const money=n=>{n=Number(n||0);return new Intl.NumberFormat("fr-FR",{maximumFractionDigits:0}).format(n)+" F CFA"};
+const num=v=>Number(v||0);
+function readSnap(){try{return JSON.parse(localStorage.getItem("digiy_pay_conseiller_snapshot")||"null")}catch(_){return null}}
+function buildPriorities(snap){
+  const c=snap.calc||{}; const after=num(c.afterCommitments), net=num(c.monthNet), reserve=num(c.safetyReserve), pressure=num(c.monthPressure), debts=num(c.debtsSoon), credits=num(c.creditsMonthly);
+  if(after<0) return [["Stopper les dépenses non vitales","Le mois est sous pression après engagements."],["Relancer l’argent à recevoir","Chercher le cash réel avant nouvelle dépense."],["Revenir au-dessus de zéro","Objectif minimum : "+money(Math.abs(after))+"." ]];
+  if(net<=0) return [["Ramener du flux court","Vente rapide, relance client, service simple."],["Bloquer les charges fixes","Pas de nouvel engagement tant que le net reste faible."],["Vérifier les recettes","Identifier ce qui empêche l’argent de rentrer."]];
+  if(debts>0 && after<reserve) return [["Traiter les dettes proches","Prévoir "+money(debts)+" avant le confort."],["Protéger la réserve","Reconstituer le coussin après paiement."],["Éviter la dispersion","Une priorité à la fois."]];
+  if(credits>0 && pressure>net) return [["Sécuriser les échéances","Les crédits/frais pèsent sur le mois."],["Reporter une dépense","Ne pas ajouter de pression inutile."],["Renforcer le module rentable","Faire entrer du flux avant d’accélérer."]];
+  if(reserve>0 && after<reserve) return [["Consolider la réserve","Il manque "+money(reserve-after)+" pour respirer proprement."],["Garder du cash disponible","Ne pas tout réinvestir trop vite."],["Accélérer ensuite","Après réserve couverte, renforcer l’activité qui produit."]];
+  return [["Continuer l’encaissement propre","La base est saine."],["Protéger la réserve","Garder un coussin avant nouvelle dépense."],["Renforcer le meilleur flux","Miser sur l’activité qui rapporte le plus."]];
+}
+function render(){
+  const snap=readSnap();
+  if(!snap||!snap.calc){
+    $("verdictTitle").textContent="Aucune température lue";
+    $("adviceBox").classList.add("warn");
+    $("adviceBox").textContent="Conseiller PAY n’a pas encore reçu la température du cockpit. Ouvre le Cockpit PAY, clique Recharger, puis reviens ici.";
+    $("messageBox").value="Conseiller PAY : aucune température récente. Ouvre le cockpit pour charger les chiffres avant décision.";
+    ["monthIn","monthOut","monthNet","afterCommitments","pressure","reserve"].forEach(id=>$(id).textContent="—");
+    $("priorities").innerHTML='<div class="priority"><b>1. Ouvrir le cockpit</b><span>La décision doit venir des chiffres, pas d’un choix manuel.</span></div>';
+    return;
+  }
+  const c=snap.calc||{};
+  $("verdictTitle").textContent=snap.strategic?.level||"Lecture PAY";
+  $("savedAt").textContent=snap.saved_at?("Lu : "+new Date(snap.saved_at).toLocaleString("fr-FR")):"—";
+  $("monthIn").textContent=money(c.monthIn);
+  $("monthOut").textContent=money(c.monthOut);
+  $("monthNet").textContent=money(c.monthNet);
+  $("afterCommitments").textContent=money(c.afterCommitments);
+  $("pressure").textContent=money(c.monthPressure);
+  $("reserve").textContent=money(c.safetyReserve);
+  $("adviceBox").classList.remove("warn");
+  $("adviceBox").textContent=snap.advice||"Conseiller PAY : lecture prête. Le pro décide.";
+  const ps=buildPriorities(snap);
+  $("priorities").innerHTML=ps.map((p,i)=>'<div class="priority"><b>'+(i+1)+'. '+p[0]+'</b><span>'+p[1]+'</span></div>').join("");
+  $("messageBox").value="🌡️ Conseiller PAY — Lecture du mois\\n\\nVerdict : "+(snap.strategic?.level||"—")+"\\nEntrées : "+money(c.monthIn)+"\\nSorties pro : "+money(c.monthOut)+"\\nNet : "+money(c.monthNet)+"\\nAprès pression : "+money(c.afterCommitments)+"\\n\\nConseil : "+(snap.advice||"Lecture prête.")+"\\n\\nPriorités :\\n"+ps.map((p,i)=>(i+1)+". "+p[0]+" — "+p[1]).join("\\n")+"\\n\\nLe pro décide et valide.";
+}
+$("refreshBtn").addEventListener("click",render);
+$("copyBtn").addEventListener("click",async()=>{try{await navigator.clipboard.writeText($("messageBox").value);$("adviceBox").textContent="Message Conseiller PAY copié. Le pro garde la décision finale."}catch(_){$("messageBox").select();document.execCommand("copy")}});
+render();
+})();
+</script>
 </body>
 </html>
+
