@@ -4,19 +4,6 @@
   <meta charset="utf-8" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <script src="./guard.js?v=pay-baptiste-guard-20260610"></script>
-  <script>
-    (function(){
-      "use strict";
-      const SESSION_KEY="digiy_pay_baptiste_validated_at";
-      const SESSION_MS=8*60*60*1000;
-      const PIN_PAGE="./pin.html";
-      const ts=Number(localStorage.getItem(SESSION_KEY)||0);
-      const valid=ts&&Number.isFinite(ts)&&(Date.now()-ts<SESSION_MS);
-      if(!valid){
-        window.location.replace("./pin.html?next=index.html");
-      }
-    })();
-  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>DIGIY PAY Baptiste — Lecture propre, entrées modules</title>
   <meta name="theme-color" content="#07150f" />
@@ -313,6 +300,24 @@
   
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
