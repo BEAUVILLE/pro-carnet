@@ -229,6 +229,133 @@
     }
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+
+
+    /* DEMI-PAGE FRAIS — listing large en colonnes */
+    .open-sheet-btn{
+      width:calc(100% - 28px);
+      max-width:var(--max);
+      margin:10px auto 0;
+      min-height:54px;
+      border-radius:20px;
+      border:1px solid rgba(244,210,122,.28);
+      background:linear-gradient(135deg,#fffaf0,#f1dfb8);
+      color:#172016;
+      font-weight:1100;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+    }
+    .open-sheet-btn b{font-size:15px;line-height:1.1}
+    .open-sheet-btn small{display:block;font-size:11px;color:#6b5a3b;font-weight:1000;line-height:1.15;margin-top:2px}
+    .open-sheet-btn .chev{font-size:22px;color:#7c2d12}
+
+    body.sheet-open{overflow:hidden;touch-action:none}
+    .expense-sheet-bg{
+      position:fixed;inset:0;z-index:55;
+      display:none;align-items:flex-end;justify-content:center;
+      background:rgba(0,0,0,.46);
+      padding:0;
+    }
+    .expense-sheet-bg.open{display:flex}
+    .expense-sheet{
+      width:100%;max-width:var(--max);
+      height:58vh;height:58dvh;
+      min-height:390px;
+      max-height:680px;
+      border-radius:30px 30px 0 0;
+      background:linear-gradient(180deg,#fffaf0,#ead7aa);
+      color:#172016;
+      box-shadow:0 -22px 62px rgba(0,0,0,.38);
+      border:1px solid rgba(255,255,255,.55);
+      border-bottom:none;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      animation:sheetUp .22s cubic-bezier(.22,1,.36,1);
+    }
+    @keyframes sheetUp{from{transform:translateY(34px);opacity:.75}to{transform:translateY(0);opacity:1}}
+    .sheet-handle{
+      width:52px;height:5px;border-radius:999px;
+      background:rgba(78,56,25,.28);
+      margin:9px auto 4px;
+      flex:0 0 auto;
+    }
+    .sheet-head{
+      flex:0 0 auto;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:8px 14px 10px;
+      border-bottom:1px solid rgba(78,56,25,.16);
+    }
+    .sheet-head small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.10em;color:#7c2d12;font-weight:1100}
+    .sheet-head strong{display:block;font-size:22px;line-height:1.05;color:#172016;font-weight:1100}
+    .sheet-close{
+      width:44px;height:44px;border-radius:16px;
+      border:1px solid rgba(78,56,25,.20);
+      background:#fff;color:#172016;font-size:20px;font-weight:1100;
+      flex:0 0 auto;
+    }
+    .sheet-help{
+      flex:0 0 auto;
+      margin:10px 14px 8px;
+      padding:10px 12px;
+      border-radius:18px;
+      background:rgba(34,197,94,.10);
+      border:1px solid rgba(22,101,52,.18);
+      color:#14532d;
+      font-size:12px;
+      line-height:1.35;
+      font-weight:1000;
+    }
+    .sheet-grid{
+      flex:1 1 auto;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      padding:0 14px 12px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:9px;
+      align-content:start;
+    }
+    .sheet-chip{
+      min-height:62px;
+      border-radius:20px;
+      border:1px solid rgba(78,56,25,.16);
+      background:linear-gradient(135deg,#ffedd5,#fff7ed);
+      color:#7c2d12;
+      padding:10px;
+      text-align:left;
+      display:grid;
+      grid-template-columns:30px 1fr;
+      gap:8px;
+      align-items:center;
+      font-weight:1100;
+      box-shadow:0 7px 16px rgba(0,0,0,.08);
+    }
+    .sheet-chip:active{transform:scale(.98)}
+    .sheet-chip .ico{font-size:22px;line-height:1;text-align:center}
+    .sheet-chip b{display:block;font-size:13px;line-height:1.10;color:#7c2d12}
+    .sheet-chip small{display:block;margin-top:2px;font-size:10px;line-height:1.10;color:#9a3412;font-weight:1000;opacity:.78}
+    .sheet-add-btn{
+      flex:0 0 auto;
+      margin:0 14px calc(12px + env(safe-area-inset-bottom,0px));
+      min-height:54px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg,var(--green2),#bbf7d0);
+      color:#052215;
+      font-size:15px;
+      font-weight:1100;
+      box-shadow:0 10px 24px rgba(34,197,94,.22);
+    }
+    @media(min-width:560px){
+      .expense-sheet{border-radius:30px 30px 0 0}
+      .sheet-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+
     @media(min-width:560px){
       .type-tabs,.section-head,.chips-scroll,.modes-scroll,.amount-zone,.selection-summary{
         max-width:var(--max);margin-left:auto;margin-right:auto
@@ -259,6 +386,10 @@
   <small>défile →</small>
 </div>
 <div class="chips-scroll" id="chipsWrap"></div>
+<button class="open-sheet-btn" id="openExpenseSheetBtn" type="button">
+  <span><b>📋 Voir tous les frais</b><small>Demi-page en colonnes · une touche de moins</small></span>
+  <span class="chev">⌄</span>
+</button>
 
 <!-- MODES PAIEMENT -->
 <div class="section-head">
@@ -310,6 +441,25 @@
   </div>
 </div>
 
+
+
+<!-- DEMI-PAGE FRAIS -->
+<div class="expense-sheet-bg" id="expenseSheet" aria-hidden="true">
+  <section class="expense-sheet" role="dialog" aria-modal="true" aria-label="Listing des frais">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div>
+        <small>DIGIY PAY</small>
+        <strong>Choisir un frais</strong>
+      </div>
+      <button class="sheet-close" id="closeExpenseSheet" type="button" aria-label="Fermer">×</button>
+    </div>
+    <div class="sheet-help">Touche un frais, pose le montant, confirme. Le pro peut ajouter ses propres libellés avec le bouton vert.</div>
+    <div class="sheet-grid" id="expenseSheetGrid"></div>
+    <button class="sheet-add-btn" id="sheetAddExpense" type="button">＋ Ajouter mon libellé de frais</button>
+  </section>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -334,25 +484,37 @@
     {id:'li-autres',    label:'Autres',      ico:'✨', type:'income'},
   ];
   const DEFAULT_EXPENSE = [
-    {id:'le-loyer',     label:'Loyer',       ico:'🏠', type:'expense'},
-    {id:'le-nourriture',label:'Nourriture',  ico:'🍽️', type:'expense'},
-    {id:'le-gasoil',    label:'Gasoil',      ico:'⛽', type:'expense'},
-    {id:'le-senelec',   label:'Senelec',     ico:'💡', type:'expense'},
-    {id:'le-seneau',    label:'SEN\'EAU',    ico:'💧', type:'expense'},
-    {id:'le-telephone', label:'Téléphone',   ico:'📱', type:'expense'},
-    {id:'le-wifi',      label:'Wi-Fi',       ico:'📡', type:'expense'},
-    {id:'le-ecole',     label:'École',       ico:'🎒', type:'expense'},
-    {id:'le-vetements', label:'Vêtements',   ico:'👕', type:'expense'},
-    {id:'le-sante',     label:'Santé',       ico:'🏥', type:'expense'},
-    {id:'le-transport', label:'Transport',   ico:'🚌', type:'expense'},
-    {id:'le-voiture',   label:'Voiture',     ico:'🚗', type:'expense'},
-    {id:'le-courses',   label:'Courses',     ico:'🛍️', type:'expense'},
-    {id:'le-impots',    label:'Impôts',      ico:'📋', type:'expense'},
-    {id:'le-assurance', label:'Assurance',   ico:'🛡️', type:'expense'},
-    {id:'le-dette',     label:'Remb. dette', ico:'📤', type:'expense'},
-    {id:'le-tabaski',   label:'Tabaski',     ico:'🐑', type:'expense'},
-    {id:'le-evenement', label:'Événement',   ico:'🎉', type:'expense'},
-    {id:'le-divers',    label:'Divers',      ico:'📦', type:'expense'},
+    {id:'le-loyer',        label:'Loyer',             ico:'🏠', type:'expense'},
+    {id:'le-nourriture',   label:'Nourriture',        ico:'🍽️', type:'expense'},
+    {id:'le-ravitail',     label:'Ravitaillement',    ico:'🛒', type:'expense'},
+    {id:'le-riz',          label:'Riz / huile / gaz', ico:'🍚', type:'expense'},
+    {id:'le-gasoil',       label:'Gasoil',            ico:'⛽', type:'expense'},
+    {id:'le-transport',    label:'Transport',         ico:'🚌', type:'expense'},
+    {id:'le-taxi',         label:'Taxi',              ico:'🚕', type:'expense'},
+    {id:'le-voiture',      label:'Voiture',           ico:'🚗', type:'expense'},
+    {id:'le-reparation',   label:'Réparation',        ico:'🔧', type:'expense'},
+    {id:'le-senelec',      label:'Senelec',           ico:'💡', type:'expense'},
+    {id:'le-woyofal',      label:'Woyofal',           ico:'⚡', type:'expense'},
+    {id:'le-seneau',       label:'SEN\'EAU',          ico:'💧', type:'expense'},
+    {id:'le-wifi',         label:'Wi-Fi',             ico:'📡', type:'expense'},
+    {id:'le-orange',       label:'Orange',            ico:'🟠', type:'expense'},
+    {id:'le-telephone',    label:'Crédit téléphone',  ico:'📱', type:'expense'},
+    {id:'le-ecole',        label:'École',             ico:'🎒', type:'expense'},
+    {id:'le-fournitures',  label:'Fournitures',       ico:'📚', type:'expense'},
+    {id:'le-sante',        label:'Santé',             ico:'🏥', type:'expense'},
+    {id:'le-pharmacie',    label:'Pharmacie',         ico:'💊', type:'expense'},
+    {id:'le-vetements',    label:'Vêtements',         ico:'👕', type:'expense'},
+    {id:'le-maison',       label:'Maison',            ico:'🧺', type:'expense'},
+    {id:'le-entretien',    label:'Entretien',         ico:'🧽', type:'expense'},
+    {id:'le-assurance',    label:'Assurance',         ico:'🛡️', type:'expense'},
+    {id:'le-impots',       label:'Impôts',            ico:'📋', type:'expense'},
+    {id:'le-banque',       label:'Frais bancaire',    ico:'🏦', type:'expense'},
+    {id:'le-dette',        label:'Remb. dette',       ico:'📤', type:'expense'},
+    {id:'le-aide-famille', label:'Aide famille',      ico:'🤝', type:'expense'},
+    {id:'le-tabaski',      label:'Tabaski',           ico:'🐑', type:'expense'},
+    {id:'le-evenement',    label:'Événement',         ico:'🎉', type:'expense'},
+    {id:'le-voyage',       label:'Voyage',            ico:'✈️', type:'expense'},
+    {id:'le-divers',       label:'Divers',            ico:'📦', type:'expense'},
   ];
   const MODES = [
     {id:'m-wave',   label:'Wave',         ico:'🌊'},
@@ -365,7 +527,7 @@
 
   // State
   let state = load();
-  let currentType = 'income';
+  let currentType = (new URLSearchParams(location.search).get('type') === 'income') ? 'income' : 'expense';
   let selectedLabel = null;
   let selectedMode = null;
 
@@ -392,6 +554,11 @@
   const amountInput = document.getElementById('amountInput');
   const amountHint  = document.getElementById('amountHint');
   const labelSectionTitle = document.getElementById('labelSectionTitle');
+  const openExpenseSheetBtn = document.getElementById('openExpenseSheetBtn');
+  const expenseSheet = document.getElementById('expenseSheet');
+  const expenseSheetGrid = document.getElementById('expenseSheetGrid');
+  const closeExpenseSheetBtn = document.getElementById('closeExpenseSheet');
+  const sheetAddExpenseBtn = document.getElementById('sheetAddExpense');
 
   function renderChips() {
     selectedLabel = null;
@@ -404,6 +571,8 @@
       </button>
     `).join('');
     labelSectionTitle.textContent = currentType === 'income' ? "Nature de l'entrée" : "Type de dépense";
+    if(openExpenseSheetBtn) openExpenseSheetBtn.style.display = currentType === 'expense' ? 'flex' : 'none';
+    renderExpenseSheet();
     updateSummary();
   }
 
@@ -416,17 +585,53 @@
     `).join('');
   }
 
+
+  function renderExpenseSheet(){
+    if(!expenseSheetGrid) return;
+    const frais = allExpense();
+    expenseSheetGrid.innerHTML = frais.map(c => `
+      <button class="sheet-chip" type="button" data-expense-id="${c.id}">
+        <span class="ico">${c.ico}</span>
+        <span><b>${c.label}</b><small>Frais rapide</small></span>
+      </button>
+    `).join('');
+  }
+
+  function openExpenseSheet(){
+    if(!expenseSheet) return;
+    renderExpenseSheet();
+    expenseSheet.classList.add('open');
+    expenseSheet.setAttribute('aria-hidden','false');
+    document.body.classList.add('sheet-open');
+  }
+
+  function closeExpenseSheet(){
+    if(!expenseSheet) return;
+    expenseSheet.classList.remove('open');
+    expenseSheet.setAttribute('aria-hidden','true');
+    document.body.classList.remove('sheet-open');
+  }
+
+  function selectChipById(id, closeSheetAfter){
+    const chip = currentChips().find(c => c.id === id) || allExpense().find(c => c.id === id) || allIncome().find(c => c.id === id);
+    if(!chip) return;
+    currentType = chip.type === 'income' ? 'income' : 'expense';
+    document.getElementById('tabIncome').classList.toggle('active', currentType === 'income');
+    document.getElementById('tabExpense').classList.toggle('active', currentType === 'expense');
+    renderChips();
+    selectedLabel = chip;
+    chipsWrap.querySelectorAll('.chip').forEach(c => c.classList.toggle('selected', c.getAttribute('data-chip-id') === id));
+    amountHint.textContent = 'Entre le montant';
+    updateSummary();
+    if(closeSheetAfter) closeExpenseSheet();
+    setTimeout(() => amountInput.focus(), 120);
+  }
+
   // EVENTS CHIPS
   chipsWrap.addEventListener('click', e => {
     const btn = e.target.closest('[data-chip-id]');
     if (!btn) return;
-    chipsWrap.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-    btn.classList.add('selected');
-    const id = btn.getAttribute('data-chip-id');
-    selectedLabel = currentChips().find(c => c.id === id);
-    amountHint.textContent = selectedLabel ? 'Entre le montant' : 'Choisis d\'abord un libellé';
-    updateSummary();
-    setTimeout(() => amountInput.focus(), 120);
+    selectChipById(btn.getAttribute('data-chip-id'), false);
   });
 
   // EVENTS MODES
@@ -440,18 +645,36 @@
   });
 
   // TABS
-  document.getElementById('tabIncome').addEventListener('click', () => {
-    currentType = 'income';
-    document.getElementById('tabIncome').classList.add('active');
-    document.getElementById('tabExpense').classList.remove('active');
+  function setType(type, openSheet){
+    currentType = type === 'income' ? 'income' : 'expense';
+    document.getElementById('tabIncome').classList.toggle('active', currentType === 'income');
+    document.getElementById('tabExpense').classList.toggle('active', currentType === 'expense');
     renderChips();
+    if(currentType === 'expense' && openSheet) openExpenseSheet();
+    if(currentType === 'income') closeExpenseSheet();
+  }
+
+  document.getElementById('tabIncome').addEventListener('click', () => setType('income', false));
+  document.getElementById('tabExpense').addEventListener('click', () => setType('expense', true));
+
+  if(openExpenseSheetBtn) openExpenseSheetBtn.addEventListener('click', openExpenseSheet);
+  if(closeExpenseSheetBtn) closeExpenseSheetBtn.addEventListener('click', closeExpenseSheet);
+  if(expenseSheet) expenseSheet.addEventListener('click', e => { if(e.target === expenseSheet) closeExpenseSheet(); });
+  if(expenseSheetGrid) expenseSheetGrid.addEventListener('click', e => {
+    const btn = e.target.closest('[data-expense-id]');
+    if(!btn) return;
+    selectChipById(btn.getAttribute('data-expense-id'), true);
   });
-  document.getElementById('tabExpense').addEventListener('click', () => {
+  if(sheetAddExpenseBtn) sheetAddExpenseBtn.addEventListener('click', () => {
+    closeExpenseSheet();
     currentType = 'expense';
-    document.getElementById('tabExpense').classList.add('active');
-    document.getElementById('tabIncome').classList.remove('active');
-    renderChips();
+    document.getElementById('newLabel').value = '';
+    document.getElementById('newIcon').value = '';
+    document.getElementById('newType').value = 'expense';
+    document.getElementById('addModal').classList.add('open');
+    setTimeout(() => document.getElementById('newLabel').focus(), 150);
   });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeExpenseSheet(); });
 
   // SUMMARY + CONFIRM
   function updateSummary() {
@@ -539,6 +762,8 @@
     save();
     document.getElementById('addModal').classList.remove('open');
     if (type === currentType) renderChips();
+    renderExpenseSheet();
+    if (type === 'expense') openExpenseSheet();
     showToast('✅ ' + label + ' ajouté');
   });
 
@@ -551,9 +776,10 @@
   }
 
   // INIT
-  renderChips();
+  setType(currentType, false);
   renderModes();
   updateSummary();
+  if(currentType === 'expense') setTimeout(openExpenseSheet, 220);
 
 })();
 </script>
