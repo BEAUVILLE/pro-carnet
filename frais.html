@@ -318,15 +318,9 @@
 
   const STORAGE_KEY = 'digiy_pay_frais_v1';
   const PAY_STORAGE_KEY = 'digiy_pay_baptiste_reel_v2';
-  const SESSION_KEY = 'digiy_pay_baptiste_validated_at';
-  const SESSION_MS = 8 * 60 * 60 * 1000;
-
-  // Guard session
-  const ts = Number(localStorage.getItem(SESSION_KEY) || 0);
-  if (!ts || Date.now() - ts >= SESSION_MS) {
-    window.location.replace('./pin.html?next=frais.html');
-    return;
-  }
+  // Page appelée depuis le cockpit PRO.
+  // Pas de PIN ici : la protection reste portée par index.html / guard.js
+  // et, plus tard, par le VPS côté serveur.
 
   // Données par défaut
   const DEFAULT_INCOME = [
@@ -565,3 +559,4 @@
 </script>
 </body>
 </html>
+
