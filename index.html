@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#07150f" />
   <meta name="description" content="DIGIY PAY : chiffre roi, bouton Ajouter magique, saisie rapide plein écran, frais, entrées, réserve, historique et sauvegarde." />
   <!-- Sécurité : bouton Ouvrir retiré, aucun lien module ne peut allonger l’URL. -->
-  <!-- DIGIY PATCH : menu allégé, sources ajoutables, frais.html rattaché côté PRO. Bouton fermer session retiré. -->
+  <!-- DIGIY PATCH : menu allégé, sources ajoutables, frais.html rattaché, micro entrées/sorties PRO avec correction + listing visible. -->
   <style>
     :root{--bg:#06140f;--ink:#172016;--green:#167a46;--green2:#22c55e;--gold:#c4973f;--gold2:#f4d27a;--red:#9a3412;--line:rgba(78,56,25,.22);--max:560px;--shadow:0 18px 48px rgba(0,0,0,.24)}
     *{box-sizing:border-box}html,body{margin:0;padding:0;min-height:100%}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 32%),linear-gradient(180deg,var(--bg),#020806);color:#fff8e8;font-weight:850;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}.app{width:min(var(--max),100%);margin:0 auto;min-height:100vh;padding:10px 10px 118px}.shell{min-height:calc(100vh - 20px);border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(7,21,15,.98),rgba(7,21,15,.86));border-radius:34px;overflow:hidden;box-shadow:var(--shadow)}
@@ -65,6 +65,30 @@
       #movementModal .field:first-of-type{margin-top:2px}
       .amount-first input{min-height:82px!important;font-size:38px;border-radius:22px;background:#fff}
     }
+
+    /* DIGIY PAY — micro entrées/sorties PRO */
+    .voice-income-fab{position:fixed;left:14px;bottom:96px;z-index:92;width:68px;height:68px;border-radius:24px;border:1px solid rgba(34,197,94,.42);background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;box-shadow:0 18px 40px rgba(0,0,0,.34);font-size:24px;font-weight:1100;display:grid;place-items:center;align-content:center;gap:1px}
+    .voice-income-fab small{display:block;font-size:10px;font-weight:1100;line-height:1;text-transform:uppercase;letter-spacing:.04em}
+    .voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .voice-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .voice-start{min-height:58px;border-radius:18px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-size:16px;font-weight:1100}
+    .voice-confirm{min-height:58px;border-radius:18px;border:none;background:linear-gradient(135deg,var(--gold2),#fff2bf);color:#142016;font-size:16px;font-weight:1100}
+    .voice-status{padding:11px 12px;border-radius:16px;background:#fff7df;border:1px solid rgba(78,56,25,.18);color:#4d3e1e;font-size:13px;font-weight:1000;line-height:1.35;margin:0 0 12px}
+    .voice-status.ok{background:#dcfce7;color:#14532d}.voice-status.err{background:#ffedd5;color:#9a3412}
+    .voice-readbox{margin:12px 0 12px;padding:11px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff8e8}
+    .voice-readbox-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+    .voice-readbox-title{font-size:13px;font-weight:1100;color:#fde68a;letter-spacing:.08em;text-transform:uppercase}
+    .voice-readbox-head small{font-size:11px;color:rgba(255,255,255,.58);font-weight:1000}
+    .voice-readgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:152px;overflow:auto;-webkit-overflow-scrolling:touch;padding-right:2px}
+    .voice-list-title{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.70);font-weight:1100;margin:0 0 6px}
+    .voice-list-chips,.voice-mode-row{display:flex;flex-wrap:wrap;gap:6px}
+    .voice-chip,.voice-mode-chip{border:none;border-radius:999px;padding:8px 10px;font-size:12px;font-weight:1100;line-height:1;background:#fff;color:#172016;box-shadow:0 6px 14px rgba(0,0,0,.10)}
+    .voice-chip.income{background:linear-gradient(135deg,#dcfce7,#f0fdf4);color:#052215}
+    .voice-chip.expense{background:linear-gradient(135deg,#ffedd5,#fff7ed);color:#7c2d12}
+    .voice-mode-row{margin-top:8px}.voice-mode-chip{background:linear-gradient(135deg,#fffaf0,#f1dfb8);color:#172016}
+    .voice-mode-chip.active{background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#142016;box-shadow:0 0 0 3px rgba(244,210,122,.22)}
+    @media(max-width:430px){.voice-income-fab{left:12px;bottom:92px;width:62px;height:62px;border-radius:21px}.voice-grid,.voice-actions{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -86,6 +110,7 @@
         <div class="magic-panel" id="magicPanel" hidden>
           <div class="magic-actions" aria-label="Menu PAY rapide">
             <button class="magic-action green" type="button" data-go-frais><span>⚡</span><b>Saisie</b><small>plein écran</small></button>
+            <button class="magic-action green" type="button" data-income-voice><span>🎙</span><b>Voix</b><small>entrée/sortie</small></button>
             <button class="magic-action green" type="button" data-open-preset-kind="income"><span>＋</span><b>Entrée</b><small>CA modules</small></button>
             <button class="magic-action orange" type="button" data-open-preset-kind="expense"><span>−</span><b>Frais</b><small>tout voir</small></button>
             <button class="magic-action gold" type="button" data-pay-action="reserve"><span>🏦</span><b>Coffre</b><small>réserve</small></button>
@@ -127,11 +152,46 @@
     <button class="fab-action gold" type="button" data-fab="modules"><span>⠿ Sources</span><small>listing + rentrée</small></button>
     <button class="fab-action green" type="button" data-fab="frais"><span>⚡ Saisie</span><small>plein écran</small></button>
     <button class="fab-action green" type="button" data-fab="add"><span>＋ Ajouter</span><small>mouvement libre</small></button>
+    <button class="fab-action green" type="button" data-income-voice><span>🎙 Voix PAY</span><small>Entrée ou sortie</small></button>
     <button class="fab-action" type="button" data-fab="admin"><span>⚙ Admin</span><small>modules, libellés</small></button>
     <button class="fab-action" type="button" data-fab="backup"><span>💾 Sauvegarde</span><small>export / import JSON</small></button>
     <button class="fab-action" type="button" data-fab="top"><span>🏦 Accueil</span><small>chiffre roi</small></button>
   </div>
   <button class="fab-main" id="fabToggle" type="button" aria-label="Ouvrir le menu flottant">☰</button>
+</div>
+
+
+<button class="voice-income-fab" id="btnIncomeVoice" type="button" aria-label="Trace PAY par voix">🎙<small>PAY</small></button>
+
+<div class="modal-bg" id="incomeVoiceModal">
+  <div class="modal">
+    <div class="modal-head"><strong>🎙 Trace PAY par voix</strong><button class="close" type="button" data-close="incomeVoiceModal">×</button></div>
+    <div class="modal-body">
+      <div class="voice-status" id="incomeVoiceStatus">Touche le micro, lis la base si besoin, puis corrige avant validation.</div>
+      <button class="voice-start" id="incomeVoiceStart" type="button">🎙 Parler maintenant</button>
+      <div class="voice-readbox" aria-label="Base de lecture PAY voix">
+        <div class="voice-readbox-head"><div class="voice-readbox-title">📋 Base pour parler</div><small>touche un mot si la voix se trompe</small></div>
+        <div class="voice-readgrid">
+          <div><div class="voice-list-title">Entrées</div><div class="voice-list-chips" id="voiceIncomeList"></div></div>
+          <div><div class="voice-list-title">Sorties</div><div class="voice-list-chips" id="voiceExpenseList"></div></div>
+        </div>
+        <div class="voice-list-title" style="margin-top:10px">Modes</div><div class="voice-mode-row" id="voiceModeList"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Texte entendu / corrigé</label><textarea id="incomeVoiceText" placeholder="Ex : ABOS 5500 Wave, BUILD 19900 OM, Gasoil 15000 Cash, Senelec 8500 CB…"></textarea></div>
+      <div class="voice-grid">
+        <div class="field"><label>Nature</label><select id="incomeVoiceType"><option value="income">＋ Entrée</option><option value="expense">− Sortie</option></select></div>
+        <div class="field"><label>Mode</label><select id="incomeVoiceMode"></select></div>
+      </div>
+      <div class="voice-grid">
+        <div class="field"><label>Source / module</label><select id="incomeVoiceActivity"></select></div>
+      </div>
+      <div class="voice-grid">
+        <div class="field"><label>Libellé</label><input id="incomeVoiceLabel" type="text" placeholder="ABOS, BUILD, POS, acompte…"></div>
+        <div class="field"><label>Montant</label><input id="incomeVoiceAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0"></div>
+      </div>
+      <div class="voice-actions"><button class="soft" id="incomeVoiceReparse" type="button">🔁 Relire le texte corrigé</button><button class="voice-confirm" id="incomeVoiceConfirm" type="button">✅ Valider la trace</button></div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-bg" id="movementModal"><div class="modal"><div class="modal-head"><strong id="movementModalTitle">Ajouter un mouvement</strong><button class="close" type="button" data-close="movementModal">×</button></div><div class="modal-body"><div class="notice" id="movementNotice">PRO Wave. PERSO Cash + Wave.</div><form id="movementForm"><input type="hidden" id="editMovementId"><div class="field amount-first"><label>Montant</label><input id="moveAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0" required></div><div class="field"><label>Motif / libellé</label><input id="moveLabel" list="labelsList" type="text" placeholder="Gasoil, Senelec, Sendwave, BUILD…" required><datalist id="labelsList"></datalist></div><div class="grid2"><div class="field"><label>Mode de règlement</label><select id="moveMode"></select></div><div class="field"><label>Nature</label><select id="moveType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div></div><div class="grid2"><div class="field"><label>Poche</label><select id="movePocket"><option value="pro">PRO</option><option value="perso">PERSO</option></select></div><div class="field"><label>Source d’argent</label><select id="moveActivity"></select></div></div><div class="field"><label>Client / personne</label><input id="movePerson" list="peopleList" type="text" placeholder="#soi-même, client…"><datalist id="peopleList"></datalist></div><div class="field"><label>Trace / note courte</label><textarea id="moveNote" placeholder="Référence, précision, reçu, observation…"></textarea></div><button class="save" type="submit" id="moveSaveBtn">Confirmer la trace</button></form></div></div></div>
@@ -142,7 +202,7 @@
 
 <div class="modal-bg" id="choiceModal"><div class="modal"><div class="modal-head"><strong id="choiceTitle">Choisir</strong><button class="close" type="button" data-close="choiceModal">×</button></div><div class="modal-body" id="choiceBody"></div></div></div>
 <div class="modal-bg" id="activitiesModal"><div class="modal"><div class="modal-head"><strong>Lecture des sources</strong><button class="close" type="button" data-close="activitiesModal">×</button></div><div class="modal-body" id="activitiesBody"></div></div></div>
-<div class="modal-bg" id="menuModal"><div class="modal"><div class="modal-head"><strong>Menu PAY</strong><button class="close" type="button" data-close="menuModal">×</button></div><div class="modal-body"><div class="menu-grid"><button id="menuFrais" type="button">⚡<br>Saisie rapide</button><button id="menuActivities" type="button">⠿<br>Sources</button><button id="menuAdmin" type="button">⚙<br>Admin</button><button id="menuBackup" type="button">💾<br>Sauvegarde</button><button id="menuReset" type="button">🧹<br>Vider</button></div></div></div></div>
+<div class="modal-bg" id="menuModal"><div class="modal"><div class="modal-head"><strong>Menu PAY</strong><button class="close" type="button" data-close="menuModal">×</button></div><div class="modal-body"><div class="menu-grid"><button id="menuIncomeVoice" type="button">🎙<br>Voix PAY</button><button id="menuFrais" type="button">⚡<br>Saisie rapide</button><button id="menuActivities" type="button">⠿<br>Sources</button><button id="menuAdmin" type="button">⚙<br>Admin</button><button id="menuBackup" type="button">💾<br>Sauvegarde</button><button id="menuReset" type="button">🧹<br>Vider</button></div></div></div></div>
 
 <div class="modal-bg" id="reserveModal"><div class="modal"><div class="modal-head"><strong>Réserve DIGIY</strong><button class="close" type="button" data-close="reserveModal">×</button></div><div class="modal-body"><div class="notice">Même esprit que le coffre : tu gardes une part, ou tu reprends une part. PAY trace, le patron décide.</div><div class="reserve-actions"><button class="reserve-keep" id="btnReserveKeep" type="button">＋ Garder</button><button class="reserve-take" id="btnReserveTake" type="button">− Récupérer</button></div><div class="notice">Lecture conseillée : PROTÈGE LA RÉSERVE quand la trésorerie respire.</div></div></div></div>
 <div class="modal-bg" id="backupModal"><div class="modal"><div class="modal-head"><strong>Sauvegarde PAY</strong><button class="close" type="button" data-close="backupModal">×</button></div><div class="modal-body"><div class="notice">La sauvegarde contient mouvements + modules + répertoire.</div><div class="backup-actions"><button class="soft" id="btnBackupDownload" type="button">⬇ Télécharger JSON</button><button class="soft" id="btnBackupCopy" type="button">📋 Copier JSON</button></div><div class="backup-actions"><button class="soft" id="btnBackupChoose" type="button">📂 Importer fichier</button><button class="soft danger" id="btnBackupRestoreText" type="button">♻ Restaurer texte</button></div><input id="backupFile" type="file" accept="application/json,.json" style="display:none"><div class="field"><label>Coller une sauvegarde JSON</label><textarea id="backupText" class="backup-area" placeholder="Coller ici une sauvegarde JSON."></textarea></div><div id="backupStatus" class="status"></div></div></div></div>
@@ -189,8 +249,8 @@
   let state=normalize(load());
   const $=id=>document.getElementById(id); const els={tabPro:$("tabPro"),tabPerso:$("tabPerso"),walletName:$("walletName"),balanceNumber:$("balanceNumber"),btnEye:$("btnEye"),todayMini:$("todayMini"),modeMini:$("modeMini"),frontNotice:$("frontNotice"),homeShortcutTitle:$("homeShortcutTitle"),homeShortcutGrid:$("homeShortcutGrid"),searchInput:$("searchInput"),btnClearSearch:$("btnClearSearch"),sumDay:$("sumDay"),sumWeek:$("sumWeek"),sumMonth:$("sumMonth"),modeOneLabel:$("modeOneLabel"),modeOneValue:$("modeOneValue"),modeTwoLabel:$("modeTwoLabel"),modeTwoValue:$("modeTwoValue"),modulesTitle:$("modulesTitle"),moduleList:$("moduleList"),movementTitle:$("movementTitle"),movementList:$("movementList"),btnMore:$("btnMore"),filterAll:$("filterAll"),filterIncome:$("filterIncome"),filterExpense:$("filterExpense"),journalMini:$("journalMini"),quickLabelWrap:$("quickLabelWrap"),movePocket:$("movePocket"),moveType:$("moveType"),moveMode:$("moveMode"),moveAmount:$("moveAmount"),moveLabel:$("moveLabel"),moveActivity:$("moveActivity"),movePerson:$("movePerson"),moveNote:$("moveNote"),editMovementId:$("editMovementId"),moveSaveBtn:$("moveSaveBtn"),movementForm:$("movementForm"),movementModalTitle:$("movementModalTitle"),movementNotice:$("movementNotice"),labelsList:$("labelsList"),peopleList:$("peopleList"),adminActivityPocket:$("adminActivityPocket"),adminActivityName:$("adminActivityName"),adminActivities:$("adminActivities"),adminLabelName:$("adminLabelName"),adminLabelType:$("adminLabelType"),adminLabelPocket:$("adminLabelPocket"),adminLabelMode:$("adminLabelMode"),adminLabelCategory:$("adminLabelCategory"),labelAdminStatus:$("labelAdminStatus"),adminLabels:$("adminLabels"),adminPersonName:$("adminPersonName"),adminPeople:$("adminPeople"),activitiesBody:$("activitiesBody"),backupStatus:$("backupStatus"),contactForm:$("contactForm"),editContactId:$("editContactId"),contactName:$("contactName"),contactPhone:$("contactPhone"),contactModule:$("contactModule"),contactNote:$("contactNote"),contactSearch:$("contactSearch"),contactsList:$("contactsList"),contactSaveBtn:$("contactSaveBtn")};
   function clone(o){return JSON.parse(JSON.stringify(o))} function uid(p){return p+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4)} function unique(a){return [...new Set(a.filter(Boolean))]} function load(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?JSON.parse(raw):clone(defaults)}catch(e){return clone(defaults)}} function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
-  function normalize(s){s=Object.assign(clone(defaults),s||{}, {settings:Object.assign(clone(defaults.settings),(s&&s.settings)||{})});s.activities=Array.isArray(s.activities)?s.activities:clone(defaults.activities);s.activities=s.activities.map(a=>Object.assign({id:uid("act"),pocket:"pro",name:"Module",url:""},a));s.labelPresets=Array.isArray(s.labelPresets)?s.labelPresets:[];s.labelPresets=defaults.labelPresets.concat(s.labelPresets).filter((x,i,a)=>x&&x.label&&a.findIndex(y=>y.id===x.id||y.label===x.label&&y.pocket===x.pocket&&y.type===x.type&&y.category===x.category)===i).map(x=>Object.assign({id:uid("lp"),pocket:"both",type:"expense",label:"Libellé",mode:"Wave",activity:"",category:"Mes libellés",note:""},x));s.labels=unique(defaults.labels.concat(Array.isArray(s.labels)?s.labels:[],s.labelPresets.map(x=>x.label)));s.people=unique(defaults.people.concat(Array.isArray(s.people)?s.people:[]));s.contacts=Array.isArray(s.contacts)?s.contacts:[];s.movements=Array.isArray(s.movements)?s.movements:[];s.movements=s.movements.map(m=>Object.assign({},m,{pocket:m.pocket==="perso"?"perso":"pro",mode:cleanMode(m.pocket,m.mode),amount:Number(m.amount||0),ts:m.ts||new Date().toISOString()}));s.settings.pocket=s.settings.pocket==="perso"?"perso":"pro";s.settings.eyeOpen=s.settings.eyeOpen!==false;s.settings.visibleCount=Number(s.settings.visibleCount||10);s.settings.movementFilter=["income","expense"].includes(s.settings.movementFilter)?s.settings.movementFilter:"all";return s}
-  function esc(v){return String(v||"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]))} function fmt(n){return Math.abs(Math.round(Number(n||0))).toLocaleString("fr-FR").replace(/\u202f/g," ")+" F"} function signed(m){return (m.type==="income"?"+":"-")+fmt(m.amount)} function hidden(){return "••• F"} function pocket(){return state.settings.pocket||"pro"} function modesFor(p){return p==="perso"?["Cash","Wave","Banque France","Sendwave","Distributeur"]:["Wave"]} function cleanMode(p,m){p=p==="perso"?"perso":"pro";m=String(m||"").trim();return modesFor(p).includes(m)?m:modesFor(p)[0]} function amountValue(m){return m.type==="income"?Number(m.amount||0):-Number(m.amount||0)} function startWeek(d){const x=new Date(d),day=(x.getDay()+6)%7;x.setHours(0,0,0,0);x.setDate(x.getDate()-day);return x} function inPeriod(ts,per){const d=new Date(ts),n=new Date();if(per==="day")return d.toDateString()===n.toDateString();if(per==="week")return d>=startWeek(n);if(per==="month")return d>=new Date(n.getFullYear(),n.getMonth(),1);return true} function listFor(p){return state.movements.filter(m=>m.pocket===p).sort((a,b)=>new Date(b.ts)-new Date(a.ts))} function balance(p){return listFor(p).reduce((s,m)=>s+amountValue(m),0)} function periodNet(p,per){return listFor(p).filter(m=>inPeriod(m.ts,per)).reduce((s,m)=>s+amountValue(m),0)} function periodTotal(p,per,type){return listFor(p).filter(m=>inPeriod(m.ts,per)&&m.type===type).reduce((s,m)=>s+Number(m.amount||0),0)} function phoneClean(v){let p=String(v||"").replace(/[^0-9+]/g,""); if(p.startsWith("00"))p="+"+p.slice(2); return p} function waPhone(v){let p=phoneClean(v).replace(/^\+/,""); return p}
+  function normalize(s){s=Object.assign(clone(defaults),s||{}, {settings:Object.assign(clone(defaults.settings),(s&&s.settings)||{})});s.activities=Array.isArray(s.activities)?s.activities:clone(defaults.activities);s.activities=s.activities.map(a=>Object.assign({id:uid("act"),pocket:"pro",name:"Module",url:""},a));s.labelPresets=Array.isArray(s.labelPresets)?s.labelPresets:[];s.labelPresets=defaults.labelPresets.concat(s.labelPresets).filter((x,i,a)=>x&&x.label&&a.findIndex(y=>y.id===x.id||y.label===x.label&&y.pocket===x.pocket&&y.type===x.type&&y.category===x.category)===i).map(x=>Object.assign({id:uid("lp"),pocket:"both",type:"expense",label:"Libellé",mode:"Wave",activity:"",category:"Mes libellés",note:""},x));s.labels=unique(defaults.labels.concat(Array.isArray(s.labels)?s.labels:[],s.labelPresets.map(x=>x.label)));s.people=unique(defaults.people.concat(Array.isArray(s.people)?s.people:[]));s.contacts=Array.isArray(s.contacts)?s.contacts:[];s.movements=Array.isArray(s.movements)?s.movements:[];s.movements=s.movements.map(m=>Object.assign({},m,{pocket:m.pocket==="perso"?"perso":"pro",mode:cleanMode(m.pocket,m.mode,m.type),amount:Number(m.amount||0),ts:m.ts||new Date().toISOString()}));s.settings.pocket=s.settings.pocket==="perso"?"perso":"pro";s.settings.eyeOpen=s.settings.eyeOpen!==false;s.settings.visibleCount=Number(s.settings.visibleCount||10);s.settings.movementFilter=["income","expense"].includes(s.settings.movementFilter)?s.settings.movementFilter:"all";return s}
+  function esc(v){return String(v||"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]))} function fmt(n){return Math.abs(Math.round(Number(n||0))).toLocaleString("fr-FR").replace(/\u202f/g," ")+" F"} function signed(m){return (m.type==="income"?"+":"-")+fmt(m.amount)} function hidden(){return "••• F"} function pocket(){return state.settings.pocket||"pro"} function modesFor(p,type){p=p==="perso"?"perso":"pro";if(p==="pro")return ["Wave","OM","Cash","Chèque","CB","Virement"];return ["Cash","Wave","Banque France","Sendwave","Distributeur"]} function cleanMode(p,m,type){p=p==="perso"?"perso":"pro";m=String(m||"").trim();const list=modesFor(p,type);return list.includes(m)?m:list[0]} function amountValue(m){return m.type==="income"?Number(m.amount||0):-Number(m.amount||0)} function startWeek(d){const x=new Date(d),day=(x.getDay()+6)%7;x.setHours(0,0,0,0);x.setDate(x.getDate()-day);return x} function inPeriod(ts,per){const d=new Date(ts),n=new Date();if(per==="day")return d.toDateString()===n.toDateString();if(per==="week")return d>=startWeek(n);if(per==="month")return d>=new Date(n.getFullYear(),n.getMonth(),1);return true} function listFor(p){return state.movements.filter(m=>m.pocket===p).sort((a,b)=>new Date(b.ts)-new Date(a.ts))} function balance(p){return listFor(p).reduce((s,m)=>s+amountValue(m),0)} function periodNet(p,per){return listFor(p).filter(m=>inPeriod(m.ts,per)).reduce((s,m)=>s+amountValue(m),0)} function periodTotal(p,per,type){return listFor(p).filter(m=>inPeriod(m.ts,per)&&m.type===type).reduce((s,m)=>s+Number(m.amount||0),0)} function phoneClean(v){let p=String(v||"").replace(/[^0-9+]/g,""); if(p.startsWith("00"))p="+"+p.slice(2); return p} function waPhone(v){let p=phoneClean(v).replace(/^\+/,""); return p}
   function syncModalLock(){document.body.classList.toggle("modal-open",!!document.querySelector(".modal-bg.open"))} function openModal(id){$(id).classList.add("open");syncModalLock()} function closeModal(id){$(id).classList.remove("open");syncModalLock()} document.addEventListener("click",e=>{const c=e.target.closest("[data-close]");if(c)closeModal(c.getAttribute("data-close"));if(e.target.classList.contains("modal-bg")){e.target.classList.remove("open");syncModalLock()}});
   function flash(el){if(!el)return;el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash")}
   function renderHeader(p,eye){p=p||pocket();eye=eye!==undefined?eye:state.settings.eyeOpen;els.tabPro.classList.toggle("active",p==="pro");els.tabPerso.classList.toggle("active",p==="perso");els.walletName.textContent="Solde "+(p==="pro"?"PRO":"PERSO");const nb=eye?fmt(balance(p)):hidden();if(els.balanceNumber.textContent!==nb){els.balanceNumber.textContent=nb;flash(els.balanceNumber)}els.btnEye.textContent=eye?"👁 Ouvert":"🙈 Fermé";els.todayMini.textContent="Aujourd’hui "+(eye?fmt(periodNet(p,"day")):hidden());els.modeMini.textContent=p==="pro"?"Wave only":"Cash + Wave";els.frontNotice.textContent=p==="pro"?"PRO : Wave only. Clique un geste, pose le montant, PAY range par source.":"PERSO : Cash + Wave. Clique un geste, pose le montant, garde la trace.";const dayIn=periodTotal(p,"day","income"),dayOut=periodTotal(p,"day","expense"),dayNet=dayIn-dayOut;const sd=eye?"+ "+fmt(dayIn):hidden();if(els.sumDay.textContent!==sd){els.sumDay.textContent=sd;flash(els.sumDay)}const sw=eye?"− "+fmt(dayOut):hidden();if(els.sumWeek.textContent!==sw){els.sumWeek.textContent=sw;flash(els.sumWeek)}const sm=eye?(dayNet>=0?"+ ":"− ")+fmt(Math.abs(dayNet)):hidden();if(els.sumMonth.textContent!==sm){els.sumMonth.textContent=sm;els.sumMonth.classList.toggle("plus",dayNet>=0);els.sumMonth.classList.toggle("minus",dayNet<0);flash(els.sumMonth)}renderModeSummary();}
@@ -207,7 +267,7 @@
     if(open)renderHomeShortcuts();
   }
   function renderModeSummary(){const p=pocket(),eye=state.settings.eyeOpen;if(p==="pro"){els.modeOneLabel.textContent="Wave entrées jour";els.modeOneValue.textContent=eye?fmt(listFor("pro").filter(m=>m.mode==="Wave"&&m.type==="income"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+Number(m.amount||0),0)):hidden();els.modeTwoLabel.textContent="Wave sorties jour";els.modeTwoValue.textContent=eye?fmt(listFor("pro").filter(m=>m.mode==="Wave"&&m.type==="expense"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+Number(m.amount||0),0)):hidden()}else{els.modeOneLabel.textContent="Cash net jour";els.modeOneValue.textContent=eye?fmt(listFor("perso").filter(m=>m.mode==="Cash"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+amountValue(m),0)):hidden();els.modeTwoLabel.textContent="Wave net jour";els.modeTwoValue.textContent=eye?fmt(listFor("perso").filter(m=>m.mode==="Wave"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+amountValue(m),0)):hidden()}}
-  function renderDatalists(){els.labelsList.innerHTML=state.labels.map(x=>`<option value="${esc(x)}"></option>`).join("");els.peopleList.innerHTML=state.people.map(x=>`<option value="${esc(x)}"></option>`).join("");renderModeSelect();renderActivitySelect();els.contactModule.innerHTML=state.activities.map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")} function renderModeSelect(){const p=els.movePocket.value||pocket();els.moveMode.innerHTML=modesFor(p).map(m=>`<option value="${m}">${m}</option>`).join("");els.moveMode.value=cleanMode(p,els.moveMode.value)} function renderActivitySelect(){const p=els.movePocket.value||pocket();els.moveActivity.innerHTML=state.activities.filter(a=>a.pocket===p).map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")}
+  function renderDatalists(){els.labelsList.innerHTML=state.labels.map(x=>`<option value="${esc(x)}"></option>`).join("");els.peopleList.innerHTML=state.people.map(x=>`<option value="${esc(x)}"></option>`).join("");renderModeSelect();renderActivitySelect();els.contactModule.innerHTML=state.activities.map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")} function renderModeSelect(){const p=els.movePocket.value||pocket();els.moveMode.innerHTML=modesFor(p,els.moveType?els.moveType.value:"income").map(m=>`<option value="${m}">${m}</option>`).join("");els.moveMode.value=cleanMode(p,els.moveMode.value,els.moveType?els.moveType.value:"income")} function renderActivitySelect(){const p=els.movePocket.value||pocket();els.moveActivity.innerHTML=state.activities.filter(a=>a.pocket===p).map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")}
   function presetVisible(pr,p){return pr&&pr.label&&(pr.pocket===p||pr.pocket==="both")} function chipClass(pr){if(pr.category&&pr.category.toLowerCase().includes("banque"))return "bank";return pr.type==="income"?"income":"expense"} function presetGroups(kind){const p=pocket();const order=kind==="income"?["Entrées / modules","Retraits / banques","Mes libellés"]:["Sorties rapides","Retraits / banques","Mes libellés"];const groups={};state.labelPresets.filter(pr=>presetVisible(pr,p)&&pr.type===kind).forEach(pr=>{const cat=pr.category||"Mes libellés";(groups[cat]||(groups[cat]=[])).push(pr)});return {order,groups}}
   function presetButton(pr){return `<button class="label-chip ${chipClass(pr)}" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(pr.label)}</b><small>${pr.type==="income"?"Entrée":"Sortie"} · ${esc(cleanMode(pr.pocket==="both"?pocket():pr.pocket,pr.mode))}</small></button>`}
   function openPresetPage(kind){
@@ -263,7 +323,7 @@
   function renderModules(){const p=pocket();const q=String(els.searchInput.value||"").trim().toLowerCase();let arr=state.activities.filter(a=>a.pocket===p);if(q)arr=arr.filter(a=>a.name.toLowerCase().includes(q));els.modulesTitle.textContent=p==="pro"?"Sources d’argent PRO":"Sources PERSO";if(!arr.length){els.moduleList.innerHTML='<div class="empty">Aucun module. Ajoute-le dans Admin.</div>';return}els.moduleList.innerHTML=arr.map(a=>{const total=listFor(p).filter(m=>m.activity===a.name).reduce((s,m)=>s+amountValue(m),0);return `<article class="module-row"><div><div class="module-title">${esc(a.name)}</div><div class="meta">Total : ${state.settings.eyeOpen?fmt(total):hidden()} · ${p==="pro"?"Wave":"Cash/Wave"}</div></div><div class="module-actions"><button class="small-btn plus" data-add-module="${esc(a.name)}" data-type="income">+ Rentrée</button><button class="small-btn minus" data-add-module="${esc(a.name)}" data-type="expense">- Sortie</button></div></article>`}).join("")}
   function movementFilter(){return ["income","expense"].includes(state.settings.movementFilter)?state.settings.movementFilter:"all"} function setMovementFilter(f){state.settings.movementFilter=["income","expense"].includes(f)?f:"all";state.settings.visibleCount=10;save();renderMovements()} function baseMovementsForJournal(){const q=String(els.searchInput.value||"").trim().toLowerCase();let l=listFor(pocket());if(q)l=l.filter(m=>[m.label,m.activity,m.person,m.note,m.mode,String(m.amount)].join(" ").toLowerCase().includes(q));return l} function filteredMovements(){let l=baseMovementsForJournal();const f=movementFilter();if(f!=="all")l=l.filter(m=>m.type===f);return l} function renderMovements(){const f=movementFilter(),base=baseMovementsForJournal(),l=filteredMovements(),limit=state.settings.visibleCount||10,shown=l.slice(0,limit);if(els.filterAll){els.filterAll.classList.toggle("active",f==="all");els.filterIncome.classList.toggle("active",f==="income");els.filterExpense.classList.toggle("active",f==="expense")}const inSum=base.filter(m=>m.type==="income").reduce((s,m)=>s+Number(m.amount||0),0),outSum=base.filter(m=>m.type==="expense").reduce((s,m)=>s+Number(m.amount||0),0);if(els.journalMini)els.journalMini.textContent=(state.settings.eyeOpen?`Entrées ${fmt(inSum)} · Sorties ${fmt(outSum)} · Net ${fmt(inSum-outSum)}`:"Entrées ••• F · Sorties ••• F · Net ••• F");els.movementTitle.textContent=els.searchInput.value?(f==="income"?"Entrées trouvées":f==="expense"?"Sorties trouvées":"Mouvements trouvés"):(f==="income"?"Entrées du jour":f==="expense"?"Frais du jour":"Mouvements du jour");els.btnMore.style.display=l.length>limit?"block":"none";if(!shown.length){els.movementList.innerHTML=f==="income"?'<div class="empty">Aucune entrée dans ce listing.</div>':f==="expense"?'<div class="empty">Aucune sortie dans ce listing.</div>':'<div class="empty">Base vierge. Ajoute ton premier mouvement réel.</div>';return}els.movementList.innerHTML=shown.map(m=>{const d=new Date(m.ts),time=d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}),plus=m.type==="income",meta=[m.mode,m.activity,m.person,m.note].filter(Boolean).join(" · ");return `<article class="movement ${plus?"income-row":"expense-row"}"><div class="move-lines"><div class="move-main"><span class="label">${esc(m.label)}</span><span class="amount ${plus?"plus":"minus"}">${state.settings.eyeOpen?signed(m):hidden()}</span></div><div class="move-sub">${esc(meta||"PAY")} · ${time}</div><div class="move-actions"><button class="small-btn" data-edit-move="${esc(m.id)}">Modifier</button><button class="small-btn" data-dup-move="${esc(m.id)}">Dupliquer</button><button class="small-btn danger" data-del-move="${esc(m.id)}">Supprimer</button></div></div></article>`}).join("")}
   function renderAdmin(){els.adminActivities.innerHTML=state.activities.map(a=>`<div class="admin-item"><span>${esc(a.name)}<small>${a.pocket.toUpperCase()}</small></span><button class="soft danger" data-del-activity="${esc(a.id)}" type="button">Supprimer</button></div>`).join("");els.adminLabels.innerHTML=state.labelPresets.map(pr=>`<div class="admin-item"><span>${esc(pr.label)}<small>${pr.category||"Mes libellés"} · ${pr.type==="income"?"Entrée":"Sortie"} · ${pr.pocket.toUpperCase()} · ${esc(pr.mode||"Wave")}</small></span><button class="soft danger" data-del-label-preset="${esc(pr.id)}" type="button">Supprimer</button></div>`).join("");els.adminPeople.innerHTML=state.people.map(n=>`<div class="admin-item"><span>${esc(n)}</span><button class="soft danger" data-del-person="${esc(n)}" type="button">Supprimer</button></div>`).join("")} function renderActivitiesModal(){const p=pocket();els.activitiesBody.innerHTML=`<div class="notice">Sources d’argent. Clique + Rentrée ou - Sortie, pose le montant, PAY range derrière.</div><button class="soft" type="button" data-open-source-admin style="width:100%;margin:0 0 12px">➕ Ajouter une source</button><div class="module-modal-list">`+state.activities.filter(a=>a.pocket===p).map(a=>{const l=listFor(p).filter(m=>m.activity===a.name),day=l.filter(m=>inPeriod(m.ts,"day")).reduce((s,m)=>s+amountValue(m),0),month=l.filter(m=>inPeriod(m.ts,"month")).reduce((s,m)=>s+amountValue(m),0);return `<article class="module-row"><div><div class="module-title">${esc(a.name)}</div><div class="meta">Jour : ${fmt(day)} · Mois : ${fmt(month)}</div></div><div class="module-actions"><button class="small-btn plus" data-add-module="${esc(a.name)}" data-type="income">+ Rentrée</button><button class="small-btn minus" data-add-module="${esc(a.name)}" data-type="expense">- Sortie</button></div></article>`}).join("")+`</div>`}
-  function openMovement(type,preset,editId){els.movementForm.reset();els.editMovementId.value=editId||"";els.movePocket.value=(preset&&preset.pocket)||pocket();els.moveType.value=(preset&&preset.type)||type||"income";renderModeSelect();renderActivitySelect();if(preset){els.moveMode.value=cleanMode(els.movePocket.value,preset.mode);els.moveAmount.value=preset.amount||"";els.moveLabel.value=preset.label||"";els.moveActivity.value=preset.activity||"";els.movePerson.value=preset.person||"";els.moveNote.value=preset.note||""}els.movementNotice.textContent=els.movePocket.value==="pro"?"PRO : chiffre devant. Libellé déjà rangé, note facultative.":"PERSO : chiffre devant. Choisis Cash ou Wave, note facultative.";els.movementModalTitle.textContent=editId?"Modifier la trace":"Poser un chiffre";els.moveSaveBtn.textContent=editId?"Modifier et recalculer":"Confirmer la trace";openModal("movementModal");setTimeout(()=>els.moveAmount.focus(),120)}
+  function openMovement(type,preset,editId){els.movementForm.reset();els.editMovementId.value=editId||"";els.movePocket.value=(preset&&preset.pocket)||pocket();els.moveType.value=(preset&&preset.type)||type||"income";renderModeSelect();renderActivitySelect();if(preset){els.moveMode.value=cleanMode(els.movePocket.value,preset.mode,els.moveType.value);els.moveAmount.value=preset.amount||"";els.moveLabel.value=preset.label||"";els.moveActivity.value=preset.activity||"";els.movePerson.value=preset.person||"";els.moveNote.value=preset.note||""}els.movementNotice.textContent=els.movePocket.value==="pro"?"PRO : chiffre devant. Libellé déjà rangé, note facultative.":"PERSO : chiffre devant. Choisis Cash ou Wave, note facultative.";els.movementModalTitle.textContent=editId?"Modifier la trace":"Poser un chiffre";els.moveSaveBtn.textContent=editId?"Modifier et recalculer":"Confirmer la trace";openModal("movementModal");setTimeout(()=>els.moveAmount.focus(),120)}
   function defaultActivityFor(label){const p=pocket();const names=state.activities.filter(a=>a.pocket===p).map(a=>a.name);if(label&&names.includes(label))return label;if(p==="perso"&&names.includes("Charges"))return "Charges";if(p==="perso"&&names.includes("Dette"))return "Dette";if(p==="perso"&&names.includes("Crédit"))return "Crédit";return names[0]||"PAY PRO"}
   function quickPreset(type,label,activity,note){const p=pocket();return {pocket:p,type,mode:cleanMode(p,"Wave"),amount:"",label:label||"",activity:defaultActivityFor(activity),person:"",note:note||""}}
   function openReserve(){openModal("reserveModal")}
@@ -277,12 +337,37 @@
   }
   function renderContacts(){const q=String(els.contactSearch.value||"").trim().toLowerCase();let arr=state.contacts.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name)));if(q)arr=arr.filter(c=>[c.name,c.phone,c.module,c.note].join(" ").toLowerCase().includes(q));if(!arr.length){els.contactsList.innerHTML='<div class="admin-item" style="display:block">Aucun contact. Ajoute un abonné avec son téléphone.</div>';return}els.contactsList.innerHTML=arr.map(c=>{const p=phoneClean(c.phone),wa=waPhone(c.phone);return `<article class="contact-row"><div><div class="contact-name">${esc(c.name)}</div><div class="meta">${esc(c.phone)} · ${esc(c.module||"Sans module")}${c.note?" · "+esc(c.note):""}</div></div><div class="contact-actions"><a class="small-btn plus" href="tel:${esc(p)}">Appel</a><a class="small-btn" href="sms:${esc(p)}">SMS</a><a class="small-btn" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a><button class="small-btn" data-edit-contact="${esc(c.id)}">Modifier</button><button class="small-btn danger" data-del-contact="${esc(c.id)}">Supprimer</button></div></article>`}).join("")} function openContact(c){els.contactForm.reset();els.editContactId.value=c?c.id:"";els.contactName.value=c?c.name:"";els.contactPhone.value=c?c.phone:"";els.contactModule.value=c?c.module:"";els.contactNote.value=c?c.note:"";els.contactSaveBtn.textContent=c?"Modifier le contact":"Garder le contact";openModal("contactsModal");setTimeout(()=>els.contactName.focus(),120)}
   function exportPayload(){return {app:"DIGIY_PAY_BAPTISTE",version:4,storage_key:STORAGE_KEY,exported_at:new Date().toISOString(),data:state}} function backupFileName(){return "digiy-pay-baptiste-"+new Date().toISOString().slice(0,10)+".json"} function downloadJson(){const blob=new Blob([JSON.stringify(exportPayload(),null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=backupFileName();document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)} function setStatus(t,err){els.backupStatus.className="status "+(err?"err":"ok");els.backupStatus.textContent=t||"";els.backupStatus.style.display=t?"block":"none"} function normalizeImport(payload){const inc=payload&&payload.data?payload.data:payload;if(!inc||typeof inc!=="object")throw new Error("Sauvegarde vide ou illisible.");if(!Array.isArray(inc.movements))throw new Error("Sauvegarde sans mouvements PAY.");return normalize(inc)} async function copyText(text){try{await navigator.clipboard.writeText(text);return true}catch(e){return false}} function restorePayload(payload){const imported=normalizeImport(payload);if(!confirm("Restaurer cette sauvegarde ? Les données actuelles seront remplacées."))return;try{localStorage.setItem("digiy_pay_baptiste_before_restore",JSON.stringify(exportPayload()))}catch(e){}state=imported;save();render();setStatus("Sauvegarde restaurée.",false)} function readFile(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||""));r.onerror=()=>rej(new Error("Lecture fichier impossible."));r.readAsText(file)})}
-  els.tabPro.onclick=()=>setPocket("pro");els.tabPerso.onclick=()=>setPocket("perso");els.btnEye.onclick=()=>{state.settings.eyeOpen=!state.settings.eyeOpen;save();render()};const btnAddIncome=$("btnAddIncome");if(btnAddIncome)btnAddIncome.onclick=()=>openPresetPage("income");const btnAddExpense=$("btnAddExpense");if(btnAddExpense)btnAddExpense.onclick=()=>openPresetPage("expense");const btnMagicAdd=$("btnMagicAdd");if(btnMagicAdd)btnMagicAdd.onclick=()=>toggleMagicPanel();$("btnMenu").onclick=()=>openModal("menuModal");$("btnBack").onclick=()=>{if(history.length>1)history.back();else window.scrollTo({top:0,behavior:"smooth"})};$("navHome").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});$("navModules").onclick=()=>{renderActivitiesModal();openModal("activitiesModal")};const navFrais=$("navFrais");if(navFrais)navFrais.onclick=()=>{location.href="./frais.html"};$("navAdd").onclick=()=>{window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>toggleMagicPanel(true),220)};const navContacts=$("navContacts");if(navContacts)navContacts.onclick=()=>openContact();$("navAdmin").onclick=()=>openModal("adminModal");$("btnAdminSmall").onclick=()=>openModal("adminModal");$("btnOpenActivities").onclick=()=>{renderActivitiesModal();openModal("activitiesModal")};document.addEventListener("click",e=>{if(e.target.closest("[data-open-source-admin]")){closeModal("activitiesModal");openModal("adminModal");setTimeout(()=>els.adminActivityName&&els.adminActivityName.focus(),120)}});const btnToggleFinance=$("btnToggleFinance");if(btnToggleFinance){btnToggleFinance.onclick=()=>{const panel=$("financePanel");if(panel){panel.hidden=!panel.hidden;btnToggleFinance.textContent=panel.hidden?"Lecture":"Masquer";}}}document.addEventListener("click",e=>{const b=e.target.closest("[data-pay-action]");if(!b)return;openQuickAction(b.getAttribute("data-pay-action"));});document.addEventListener("click",e=>{const b=e.target.closest("[data-go-frais]");if(!b)return;location.href="./frais.html";});document.addEventListener("click",e=>{const b=e.target.closest("[data-open-preset-kind]");if(!b)return;openPresetPage(b.getAttribute("data-open-preset-kind"));});document.addEventListener("click",e=>{const b=e.target.closest("[data-label-preset]");if(!b)return;openLabelPreset(b.getAttribute("data-label-preset"));});const reserveKeep=$("btnReserveKeep"),reserveTake=$("btnReserveTake");if(reserveKeep)reserveKeep.onclick=()=>{closeModal("reserveModal");openMovement("expense",quickPreset("expense","Mise en réserve",null,"Argent mis de côté."))};if(reserveTake)reserveTake.onclick=()=>{closeModal("reserveModal");openMovement("income",quickPreset("income","Reprise réserve",null,"Argent repris de la réserve."))};
-  els.searchInput.oninput=()=>{state.settings.visibleCount=10;renderModules();renderMovements()};els.btnClearSearch.onclick=()=>{els.searchInput.value="";state.settings.visibleCount=10;renderModules();renderMovements()};document.querySelectorAll("[data-move-filter]").forEach(b=>b.addEventListener("click",()=>setMovementFilter(b.getAttribute("data-move-filter"))));els.btnMore.onclick=()=>{state.settings.visibleCount=(state.settings.visibleCount||10)+10;save();renderMovements()};els.movePocket.onchange=()=>{renderModeSelect();renderActivitySelect();els.movementNotice.textContent=els.movePocket.value==="pro"?"PRO : chiffre devant. Libellé déjà rangé, note facultative.":"PERSO : chiffre devant. Choisis Cash ou Wave, note facultative."};
-  function handleModuleClick(e){const b=e.target.closest("[data-add-module]");if(!b)return;const name=b.getAttribute("data-add-module");const type=b.getAttribute("data-type");const pp=b.getAttribute("data-pocket")||pocket();closeModal("activitiesModal");closeModal("choiceModal");openMovement(type,{pocket:pp,type,mode:cleanMode(pp,"Wave"),amount:"",label:type==="income"?name:"",activity:name,person:"",note:""})}
+
+  /* DIGIY PAY — micro entrées/sorties PRO + listing visible */
+  const PAY_VOICE_MODES=["Wave","OM","Cash","Chèque","CB","Virement"];
+  const PAY_VOICE_INCOME_HINTS=["ABOS","BUILD","LOC","DRIVER","MARKET","POS","RESA","EXPLORE","JOBS","RÉSEAU","NDIMBAL","Acompte","Vente","Client","Abonnement","Autre entrée"];
+  const PAY_VOICE_EXPENSE_HINTS=["Gasoil","Senelec","SEN’EAU","Woyofal","Internet","Wi-Fi","Téléphone","Transport","Loyer","Nourriture","Ravitaillement","Courses","École","Santé","Assurance","Impôt","Réparation","Entretien","Frais banque","Matériel","Autre sortie"];
+  let incomeVoiceRecognizer=null;
+  function voiceNorm(v){return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"'").trim()}
+  function setIncomeVoiceStatus(msg,kind){const el=$("incomeVoiceStatus");if(!el)return;el.textContent=msg;el.className="voice-status"+(kind?" "+kind:"")}
+  function voiceIncomeItems(){const mods=state.activities.filter(a=>a.pocket==="pro").map(a=>a.name);const presets=state.labelPresets.filter(pr=>presetVisible(pr,"pro")&&pr.type==="income").map(pr=>pr.label);return unique(mods.concat(presets,PAY_VOICE_INCOME_HINTS)).slice(0,34)}
+  function voiceExpenseItems(){const presets=state.labelPresets.filter(pr=>presetVisible(pr,"pro")&&pr.type==="expense").map(pr=>pr.label);return unique(presets.concat(PAY_VOICE_EXPENSE_HINTS)).slice(0,38)}
+  function fillIncomeVoiceActivities(){const actEl=$("incomeVoiceActivity");if(actEl){const acts=state.activities.filter(a=>a.pocket==="pro");actEl.innerHTML=acts.map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")||'<option value="PAY PRO">PAY PRO</option>'}const modeEl=$("incomeVoiceMode");if(modeEl){modeEl.innerHTML=PAY_VOICE_MODES.map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join("");if(!PAY_VOICE_MODES.includes(modeEl.value))modeEl.value="Wave"}renderPayVoiceReadList()}
+  function renderPayVoiceReadList(){const inc=$("voiceIncomeList"), exp=$("voiceExpenseList"), modes=$("voiceModeList");if(inc)inc.innerHTML=voiceIncomeItems().map(x=>`<button class="voice-chip income" type="button" data-voice-pick="income" data-label="${esc(x)}">${esc(x)}</button>`).join("");if(exp)exp.innerHTML=voiceExpenseItems().map(x=>`<button class="voice-chip expense" type="button" data-voice-pick="expense" data-label="${esc(x)}">${esc(x)}</button>`).join("");if(modes){const current=String($("incomeVoiceMode")?.value||"Wave");modes.innerHTML=PAY_VOICE_MODES.map(m=>`<button class="voice-mode-chip ${m===current?"active":""}" type="button" data-voice-mode="${esc(m)}">${esc(m)}</button>`).join("")}}
+  function setPayVoiceFromList(type,label){fillIncomeVoiceActivities();const typeEl=$("incomeVoiceType"), actEl=$("incomeVoiceActivity"), labelEl=$("incomeVoiceLabel");if(typeEl)typeEl.value=type==="expense"?"expense":"income";const actNames=state.activities.filter(a=>a.pocket==="pro").map(a=>a.name);const preset=state.labelPresets.find(pr=>presetVisible(pr,"pro")&&pr.type===(type==="expense"?"expense":"income")&&voiceNorm(pr.label)===voiceNorm(label));let act=(preset&&preset.activity)||actNames.find(n=>voiceNorm(n)===voiceNorm(label))||"PAY PRO";if(actEl)actEl.value=act;if(labelEl)labelEl.value=label;if(!String($("incomeVoiceText")?.value||"").trim()){const t=$("incomeVoiceText");if(t)t.value=label+" "+String($("incomeVoiceAmount")?.value||"").trim()+" "+String($("incomeVoiceMode")?.value||"Wave").trim()}setIncomeVoiceStatus("Choix posé depuis le listing. Ajoute ou corrige le montant, puis valide.","ok")}
+  function setPayVoiceMode(mode){const m=PAY_VOICE_MODES.includes(mode)?mode:"Wave";const el=$("incomeVoiceMode");if(el)el.value=m;renderPayVoiceReadList();setIncomeVoiceStatus("Mode posé : "+m+". Corrige le reste puis valide.","ok")}
+  function normalizeIncomeVoiceMode(txt){const s=voiceNorm(txt);if(/\b(om|orange money|orange)\b/.test(s))return "OM";if(/\b(cash|especes?|liquide)\b/.test(s))return "Cash";if(/\b(cheque|cheques)\b/.test(s))return "Chèque";if(/\b(cb|carte|carte bancaire)\b/.test(s))return "CB";if(/\b(virement|banque|bancaire)\b/.test(s))return "Virement";return "Wave"}
+  function normalizePayVoiceType(txt,activity,matchedLabel){const s=voiceNorm(txt);if(matchedLabel){const pr=state.labelPresets.find(x=>voiceNorm(x.label)===voiceNorm(matchedLabel));if(pr&&pr.type)return pr.type}if(/\b(sortie|sortir|depense|frais|paye|payer|achat|achete|retrait|gasoil|carburant|senelec|sen'?eau|eau|woyofal|wifi|wi-fi|internet|loyer|nourriture|ravitaillement|courses|transport|ecole|sante|assurance|impot|taxe|reparation|entretien)\b/.test(s))return "expense";if(/\b(entree|rentree|recette|encaisse|recu|vente|abonnement|abos|acompte|client|build|loc|driver|market|pos|resa|explore|jobs|reseau|ndimbal)\b/.test(s))return "income";return activity&&activity!=="PAY PRO"?"income":"income"}
+  function bestVoiceLabel(raw){const lower=voiceNorm(raw);const all=voiceIncomeItems().concat(voiceExpenseItems()).sort((a,b)=>String(b).length-String(a).length);return all.find(name=>lower.includes(voiceNorm(name)))||""}
+  function parseIncomeVoiceText(txt){const raw=String(txt||"").trim();let amount="";const nums=raw.match(/\d[\d\s.,]*/g)||[];for(const n of nums){const v=Number(String(n).replace(/[\s.]/g,"").replace(",","."));if(v>0){amount=Math.round(v);break}}const match=bestVoiceLabel(raw);const acts=state.activities.filter(a=>a.pocket==="pro").map(a=>a.name);let activity=acts.find(name=>voiceNorm(raw).includes(voiceNorm(name)))||"PAY PRO";let mode=normalizeIncomeVoiceMode(raw);let type=normalizePayVoiceType(raw,activity,match);let label=match||raw.replace(/\d[\d\s.,]*/g," ").replace(/\b(wave|om|orange money|orange|cash|especes?|liquide|cheque|cb|carte bancaire|carte|virement|banque|bancaire)\b/gi," ").replace(/\b(entree|rentree|recette|encaisse|sortie|sortir|depense|frais|paye|payer|recu|par voix|voix)\b/gi," ").replace(/\s+/g," ").trim();if(type==="income"&&acts.some(a=>voiceNorm(a)===voiceNorm(label)))activity=label;if(!label||label.length<2)label=type==="income"?activity:"Sortie PAY";return {amount,activity,mode,label,type,text:raw}}
+  function applyIncomeVoiceParsed(parsed){fillIncomeVoiceActivities();const textEl=$("incomeVoiceText"), typeEl=$("incomeVoiceType"), actEl=$("incomeVoiceActivity"), modeEl=$("incomeVoiceMode"), labelEl=$("incomeVoiceLabel"), amountEl=$("incomeVoiceAmount");if(textEl)textEl.value=parsed.text||textEl.value||"";if(typeEl&&parsed.type)typeEl.value=parsed.type;if(actEl&&parsed.activity)actEl.value=parsed.activity;if(modeEl&&parsed.mode)modeEl.value=parsed.mode;if(labelEl&&parsed.label)labelEl.value=parsed.label;if(amountEl&&parsed.amount)amountEl.value=parsed.amount;renderPayVoiceReadList();setIncomeVoiceStatus("Lecture préparée. Corrige avec le listing, le texte ou les champs, puis valide.","ok")}
+  function openIncomeVoice(startNow){fillIncomeVoiceActivities();setIncomeVoiceStatus("Touche le micro ou lis la base : ABOS 5500 Wave · Gasoil 15000 Cash.","");openModal("incomeVoiceModal");if(startNow)setTimeout(startIncomeVoice,180)}
+  function startIncomeVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){setIncomeVoiceStatus("Micro non disponible sur ce navigateur. Tu peux écrire la phrase ou toucher le listing.","err");const t=$("incomeVoiceText");if(t)t.focus();return}try{if(incomeVoiceRecognizer)incomeVoiceRecognizer.abort()}catch(e){} incomeVoiceRecognizer=new SR();incomeVoiceRecognizer.lang="fr-SN";incomeVoiceRecognizer.interimResults=false;incomeVoiceRecognizer.maxAlternatives=1;incomeVoiceRecognizer.onstart=()=>setIncomeVoiceStatus("J’écoute PAY… Exemple : ABOS 5500 Wave ou Gasoil 15000 Cash.","ok");incomeVoiceRecognizer.onerror=()=>setIncomeVoiceStatus("Écoute coupée. Tu peux relancer, écrire ou toucher le listing.","err");incomeVoiceRecognizer.onresult=(ev)=>{const said=ev.results&&ev.results[0]&&ev.results[0][0]?ev.results[0][0].transcript:"";const t=$("incomeVoiceText");if(t)t.value=said;applyIncomeVoiceParsed(parseIncomeVoiceText(said))};try{incomeVoiceRecognizer.start()}catch(e){setIncomeVoiceStatus("Micro déjà en cours ou bloqué. Réessaie dans une seconde.","err")}}
+  function confirmIncomeVoice(){const amount=Math.round(Number($("incomeVoiceAmount")?.value||0));const label=String($("incomeVoiceLabel")?.value||"").trim();const mode=String($("incomeVoiceMode")?.value||"Wave").trim();const activity=String($("incomeVoiceActivity")?.value||"PAY PRO").trim();const type=String($("incomeVoiceType")?.value||"income")==="expense"?"expense":"income";const heard=String($("incomeVoiceText")?.value||"").trim();if(amount<=0){setIncomeVoiceStatus("Pose un montant avant de valider.","err");return}if(!label){setIncomeVoiceStatus("Pose un libellé avant de valider.","err");return}if(!state.labels.includes(label))state.labels.push(label);state.movements.push({id:uid("m"),pocket:"pro",type,mode:PAY_VOICE_MODES.includes(mode)?mode:"Wave",amount,label,activity,person:"",note:heard?"Voix PAY · "+heard:"Voix PAY · "+(type==="income"?"entrée":"sortie"),ts:new Date().toISOString()});state.settings.pocket="pro";state.settings.visibleCount=10;save();closeModal("incomeVoiceModal");render()}
+  document.addEventListener("click",e=>{const pick=e.target.closest("[data-voice-pick]");if(pick){setPayVoiceFromList(pick.getAttribute("data-voice-pick"),pick.getAttribute("data-label")||"");return}const mode=e.target.closest("[data-voice-mode]");if(mode){setPayVoiceMode(mode.getAttribute("data-voice-mode")||"Wave");return}});
+
+
+  els.tabPro.onclick=()=>setPocket("pro");els.tabPerso.onclick=()=>setPocket("perso");els.btnEye.onclick=()=>{state.settings.eyeOpen=!state.settings.eyeOpen;save();render()};const btnAddIncome=$("btnAddIncome");if(btnAddIncome)btnAddIncome.onclick=()=>openPresetPage("income");const btnAddExpense=$("btnAddExpense");if(btnAddExpense)btnAddExpense.onclick=()=>openPresetPage("expense");const btnMagicAdd=$("btnMagicAdd");if(btnMagicAdd)btnMagicAdd.onclick=()=>toggleMagicPanel();const btnIncomeVoice=$("btnIncomeVoice");if(btnIncomeVoice)btnIncomeVoice.onclick=()=>openIncomeVoice(true);const incomeVoiceStart=$("incomeVoiceStart");if(incomeVoiceStart)incomeVoiceStart.onclick=startIncomeVoice;const incomeVoiceReparse=$("incomeVoiceReparse");if(incomeVoiceReparse)incomeVoiceReparse.onclick=()=>applyIncomeVoiceParsed(parseIncomeVoiceText($("incomeVoiceText")?.value||""));const incomeVoiceConfirm=$("incomeVoiceConfirm");if(incomeVoiceConfirm)incomeVoiceConfirm.onclick=confirmIncomeVoice;const menuIncomeVoice=$("menuIncomeVoice");if(menuIncomeVoice)menuIncomeVoice.onclick=()=>{closeModal("menuModal");openIncomeVoice(true)};document.addEventListener("click",e=>{const b=e.target.closest("[data-income-voice]");if(!b)return;openIncomeVoice(true);});$("btnMenu").onclick=()=>openModal("menuModal");$("btnBack").onclick=()=>{if(history.length>1)history.back();else window.scrollTo({top:0,behavior:"smooth"})};$("navHome").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});$("navModules").onclick=()=>{renderActivitiesModal();openModal("activitiesModal")};const navFrais=$("navFrais");if(navFrais)navFrais.onclick=()=>{location.href="./frais.html"};$("navAdd").onclick=()=>{window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>toggleMagicPanel(true),220)};const navContacts=$("navContacts");if(navContacts)navContacts.onclick=()=>openContact();$("navAdmin").onclick=()=>openModal("adminModal");$("btnAdminSmall").onclick=()=>openModal("adminModal");$("btnOpenActivities").onclick=()=>{renderActivitiesModal();openModal("activitiesModal")};document.addEventListener("click",e=>{if(e.target.closest("[data-open-source-admin]")){closeModal("activitiesModal");openModal("adminModal");setTimeout(()=>els.adminActivityName&&els.adminActivityName.focus(),120)}});const btnToggleFinance=$("btnToggleFinance");if(btnToggleFinance){btnToggleFinance.onclick=()=>{const panel=$("financePanel");if(panel){panel.hidden=!panel.hidden;btnToggleFinance.textContent=panel.hidden?"Lecture":"Masquer";}}}document.addEventListener("click",e=>{const b=e.target.closest("[data-pay-action]");if(!b)return;openQuickAction(b.getAttribute("data-pay-action"));});document.addEventListener("click",e=>{const b=e.target.closest("[data-go-frais]");if(!b)return;location.href="./frais.html";});document.addEventListener("click",e=>{const b=e.target.closest("[data-open-preset-kind]");if(!b)return;openPresetPage(b.getAttribute("data-open-preset-kind"));});document.addEventListener("click",e=>{const b=e.target.closest("[data-label-preset]");if(!b)return;openLabelPreset(b.getAttribute("data-label-preset"));});const reserveKeep=$("btnReserveKeep"),reserveTake=$("btnReserveTake");if(reserveKeep)reserveKeep.onclick=()=>{closeModal("reserveModal");openMovement("expense",quickPreset("expense","Mise en réserve",null,"Argent mis de côté."))};if(reserveTake)reserveTake.onclick=()=>{closeModal("reserveModal");openMovement("income",quickPreset("income","Reprise réserve",null,"Argent repris de la réserve."))};
+  els.searchInput.oninput=()=>{state.settings.visibleCount=10;renderModules();renderMovements()};els.btnClearSearch.onclick=()=>{els.searchInput.value="";state.settings.visibleCount=10;renderModules();renderMovements()};document.querySelectorAll("[data-move-filter]").forEach(b=>b.addEventListener("click",()=>setMovementFilter(b.getAttribute("data-move-filter"))));els.btnMore.onclick=()=>{state.settings.visibleCount=(state.settings.visibleCount||10)+10;save();renderMovements()};els.movePocket.onchange=()=>{renderModeSelect();renderActivitySelect();els.movementNotice.textContent=els.movePocket.value==="pro"?"PRO : chiffre devant. Libellé déjà rangé, note facultative.":"PERSO : chiffre devant. Choisis Cash ou Wave, note facultative."}; if(els.moveType)els.moveType.onchange=()=>renderModeSelect();
+  function handleModuleClick(e){const b=e.target.closest("[data-add-module]");if(!b)return;const name=b.getAttribute("data-add-module");const type=b.getAttribute("data-type");const pp=b.getAttribute("data-pocket")||pocket();closeModal("activitiesModal");closeModal("choiceModal");openMovement(type,{pocket:pp,type,mode:cleanMode(pp,"Wave",type),amount:"",label:type==="income"?name:"",activity:name,person:"",note:""})}
   els.moduleList.onclick=handleModuleClick;els.activitiesBody.onclick=handleModuleClick;const choiceBodyEl=document.getElementById("choiceBody");if(choiceBodyEl)choiceBodyEl.onclick=handleModuleClick;
   els.movementList.onclick=e=>{const edit=e.target.closest("[data-edit-move]"),dup=e.target.closest("[data-dup-move]"),del=e.target.closest("[data-del-move]");if(edit){const m=state.movements.find(x=>x.id===edit.getAttribute("data-edit-move"));if(m)openMovement(m.type,m,m.id)}if(dup){const m=state.movements.find(x=>x.id===dup.getAttribute("data-dup-move"));if(m)openMovement(m.type,Object.assign({},m,{amount:""}),"")}if(del){const id=del.getAttribute("data-del-move");if(confirm("Supprimer ce mouvement ?")){state.movements=state.movements.filter(x=>x.id!==id);save();render()}}};
-  els.movementForm.onsubmit=e=>{e.preventDefault();const amount=Math.round(Number(els.moveAmount.value||0));if(amount<=0)return alert("Entre un montant propre.");const p=els.movePocket.value,id=els.editMovementId.value||uid("m"),label=String(els.moveLabel.value||"").trim(),person=String(els.movePerson.value||"").trim();if(label&&!state.labels.includes(label))state.labels.push(label);if(person&&!state.people.includes(person))state.people.push(person);const m={id,pocket:p,type:els.moveType.value,mode:cleanMode(p,els.moveMode.value),amount,label,activity:els.moveActivity.value,person,note:els.moveNote.value.trim(),ts:els.editMovementId.value?(state.movements.find(x=>x.id===id)?.ts||new Date().toISOString()):new Date().toISOString(),updatedAt:els.editMovementId.value?new Date().toISOString():""};const i=state.movements.findIndex(x=>x.id===id);if(i>=0)state.movements[i]=m;else state.movements.push(m);state.settings.pocket=p;state.settings.visibleCount=10;save();closeModal("movementModal");render()};
+  els.movementForm.onsubmit=e=>{e.preventDefault();const amount=Math.round(Number(els.moveAmount.value||0));if(amount<=0)return alert("Entre un montant propre.");const p=els.movePocket.value,id=els.editMovementId.value||uid("m"),label=String(els.moveLabel.value||"").trim(),person=String(els.movePerson.value||"").trim();if(label&&!state.labels.includes(label))state.labels.push(label);if(person&&!state.people.includes(person))state.people.push(person);const m={id,pocket:p,type:els.moveType.value,mode:cleanMode(p,els.moveMode.value,els.moveType.value),amount,label,activity:els.moveActivity.value,person,note:els.moveNote.value.trim(),ts:els.editMovementId.value?(state.movements.find(x=>x.id===id)?.ts||new Date().toISOString()):new Date().toISOString(),updatedAt:els.editMovementId.value?new Date().toISOString():""};const i=state.movements.findIndex(x=>x.id===id);if(i>=0)state.movements[i]=m;else state.movements.push(m);state.settings.pocket=p;state.settings.visibleCount=10;save();closeModal("movementModal");render()};
   $("btnAddActivity").onclick=()=>{const name=String(els.adminActivityName.value||"").trim();if(!name)return;state.activities.push({id:uid("act"),pocket:els.adminActivityPocket.value,name});els.adminActivityName.value="";save();render()};
   function showLabelStatus(txt,err){if(!els.labelAdminStatus)return;els.labelAdminStatus.className="status "+(err?"err":"ok");els.labelAdminStatus.textContent=txt;els.labelAdminStatus.style.display="block";}
   function addQuickLabelFromAdmin(){const n=String(els.adminLabelName.value||"").trim();if(!n){showLabelStatus("Écris le nom du libellé avant de valider.",true);els.adminLabelName.focus();return}const pp=els.adminLabelPocket?els.adminLabelPocket.value:"both";const type=els.adminLabelType?els.adminLabelType.value:"expense";const mode=els.adminLabelMode?els.adminLabelMode.value:"Wave";let cat=els.adminLabelCategory?els.adminLabelCategory.value:"Mes libellés";if(type==="income"&&cat==="Sorties rapides")cat="Entrées / modules";if(type==="expense"&&cat==="Entrées / modules")cat="Sorties rapides";if(!state.labels.includes(n))state.labels.push(n);const exists=state.labelPresets.some(x=>String(x.label).toLowerCase()===n.toLowerCase()&&x.pocket===pp&&x.type===type&&x.category===cat);if(exists){showLabelStatus("Ce libellé existe déjà dans cette famille.",true);return}state.labelPresets.push({id:uid("lp"),pocket:pp,type,label:n,mode,activity:pp==="pro"?"PAY PRO":"Maison",category:cat,note:"Libellé ajouté dans Réglages."});els.adminLabelName.value="";save();render();showLabelStatus("✅ Libellé ajouté : "+n,false)}
@@ -301,6 +386,234 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
