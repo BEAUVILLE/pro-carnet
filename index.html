@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#07150f" />
   <meta name="description" content="DIGIY PAY : chiffre roi, bouton Ajouter magique, saisie rapide plein écran, frais, entrées, réserve, historique et sauvegarde." />
   <!-- Sécurité : bouton Ouvrir retiré, aucun lien module ne peut allonger l’URL. -->
-  <!-- DIGIY PATCH : micro PAY avec listing visible, frais ajoutables/modifiables, exemples remontés. -->
+  <!-- DIGIY PATCH : micro PAY déclaration directe + exemples courts visibles + base complète, frais ajoutables/modifiables. -->
   <style>
     :root{--bg:#06140f;--ink:#172016;--green:#167a46;--green2:#22c55e;--gold:#c4973f;--gold2:#f4d27a;--red:#9a3412;--line:rgba(78,56,25,.22);--max:560px;--shadow:0 18px 48px rgba(0,0,0,.24)}
     *{box-sizing:border-box}html,body{margin:0;padding:0;min-height:100%}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 32%),linear-gradient(180deg,var(--bg),#020806);color:#fff8e8;font-weight:850;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}.app{width:min(var(--max),100%);margin:0 auto;min-height:100vh;padding:10px 10px 118px}.shell{min-height:calc(100vh - 20px);border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(7,21,15,.98),rgba(7,21,15,.86));border-radius:34px;overflow:hidden;box-shadow:var(--shadow)}
@@ -69,8 +69,8 @@
 
     /* DIGIY PATCH — micro PAY avec listing visible, provenance ABOS PRO/PRIVÉ, touche Effacer */
     .voice-float{position:fixed;left:14px;bottom:96px;z-index:92;width:64px;height:64px;border-radius:22px;border:1px solid rgba(244,210,122,.40);background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;box-shadow:0 18px 40px rgba(0,0,0,.34);font-size:25px;font-weight:1100}
-    .voice-panel-top{display:grid;gap:10px;margin-bottom:12px}.voice-start{width:100%;min-height:60px;border-radius:22px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-size:18px;font-weight:1100}.voice-status{min-height:42px;border-radius:18px;padding:10px 12px;background:rgba(78,56,25,.08);border:1px solid rgba(78,56,25,.12);color:#4c3d22;font-size:13px;font-weight:1000;line-height:1.35}.voice-status.ok{background:#dcfce7;color:#14532d}.voice-status.err{background:#ffedd5;color:#9a3412}.voice-read{display:grid;gap:10px;margin:10px 0 12px}.voice-read-block{border-radius:20px;padding:10px;background:rgba(255,255,255,.55);border:1px solid rgba(78,56,25,.12)}.voice-read-title{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#5f4a20;font-weight:1100;margin-bottom:8px}.voice-chip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.voice-mode-grid,.voice-prov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.voice-chip,.voice-mode-chip,.voice-prov-chip{min-height:42px;border-radius:14px;border:1px solid rgba(78,56,25,.14);background:#fff;color:#172016;font-size:12px;font-weight:1100;padding:7px;text-align:center}.voice-chip.income{background:linear-gradient(135deg,#dcfce7,#f0fdf4);color:#052215}.voice-chip.expense{background:linear-gradient(135deg,#ffedd5,#fff7ed);color:#7c2d12}.voice-mode-chip.active,.voice-prov-chip.active{background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#142016;border-color:rgba(196,151,63,.55)}.voice-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.voice-actions-row.three{grid-template-columns:1fr 1fr 1fr}.voice-add-expense{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:9px}.voice-add-expense input{min-height:42px;border-radius:14px;border:1px solid rgba(78,56,25,.18);background:#fff;color:#172016;padding:8px 10px;font-weight:1000;min-width:0}.voice-add-expense button{min-height:42px;border-radius:14px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-weight:1100;padding:8px 10px}.voice-secondary{min-height:48px;border-radius:16px;border:1px solid rgba(78,56,25,.18);background:#fff;color:#172016;font-weight:1100}.voice-clear{background:#fff7ed;color:#9a3412}.voice-confirm{width:100%;min-height:58px;border-radius:18px;border:none;background:linear-gradient(135deg,#167a46,#22c55e);color:#fff;font-size:16px;font-weight:1100;margin-top:10px}
-    @media(max-width:430px){.voice-float{left:12px;bottom:88px;width:58px;height:58px;border-radius:20px}.voice-chip-grid{grid-template-columns:repeat(2,1fr)}.voice-mode-grid{grid-template-columns:repeat(2,1fr)}.voice-prov-grid{grid-template-columns:1fr 1fr}.voice-actions-row.three{grid-template-columns:1fr}.voice-read-block{padding:9px}.voice-chip,.voice-mode-chip,.voice-prov-chip{font-size:12px;min-height:44px}}
+    .voice-panel-top{display:grid;gap:10px;margin-bottom:12px}.voice-start{width:100%;min-height:60px;border-radius:22px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-size:18px;font-weight:1100}.voice-switch{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px;padding:8px 0;background:linear-gradient(180deg,#fffaf0,#fffaf0cc)}.voice-switch button{min-height:48px;border-radius:16px;border:1px solid rgba(78,56,25,.16);background:#fff;color:#172016;font-weight:1100}.voice-switch button.active{border:none;background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#142016}.voice-page{display:none}.voice-page.active{display:block}.voice-jump{width:100%;min-height:50px;margin-top:10px;border-radius:16px;border:none;background:linear-gradient(135deg,#167a46,#22c55e);color:#fff;font-weight:1100}.voice-hint{margin:0 0 10px;padding:10px 12px;border-radius:17px;background:#fff7ed;color:#7c2d12;border:1px solid #fed7aa;font-size:13px;font-weight:1000;line-height:1.35}.voice-status{min-height:42px;border-radius:18px;padding:10px 12px;background:rgba(78,56,25,.08);border:1px solid rgba(78,56,25,.12);color:#4c3d22;font-size:13px;font-weight:1000;line-height:1.35}.voice-status.ok{background:#dcfce7;color:#14532d}.voice-status.err{background:#ffedd5;color:#9a3412}.voice-speech-box{border-radius:22px;padding:12px;background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12}.voice-speech-title{font-size:11px;letter-spacing:.10em;text-transform:uppercase;font-weight:1100;margin-bottom:8px}.voice-sample-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.voice-sample{min-height:42px;border-radius:14px;border:1px solid rgba(154,52,18,.15);background:#fff;color:#172016;font-size:12px;font-weight:1100;text-align:left;padding:8px 9px;line-height:1.12}.voice-sample small{display:block;color:#7c2d12;font-size:10px;font-weight:1000;margin-top:2px}.voice-read{display:grid;gap:10px;margin:10px 0 12px}.voice-read-block{border-radius:20px;padding:10px;background:rgba(255,255,255,.55);border:1px solid rgba(78,56,25,.12)}.voice-read-title{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#5f4a20;font-weight:1100;margin-bottom:8px}.voice-chip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.voice-mode-grid,.voice-prov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.voice-chip,.voice-mode-chip,.voice-prov-chip{min-height:42px;border-radius:14px;border:1px solid rgba(78,56,25,.14);background:#fff;color:#172016;font-size:12px;font-weight:1100;padding:7px;text-align:center}.voice-chip.income{background:linear-gradient(135deg,#dcfce7,#f0fdf4);color:#052215}.voice-chip.expense{background:linear-gradient(135deg,#ffedd5,#fff7ed);color:#7c2d12}.voice-mode-chip.active,.voice-prov-chip.active{background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#142016;border-color:rgba(196,151,63,.55)}.voice-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.voice-actions-row.three{grid-template-columns:1fr 1fr 1fr}.voice-add-expense{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:9px}.voice-add-expense input{min-height:42px;border-radius:14px;border:1px solid rgba(78,56,25,.18);background:#fff;color:#172016;padding:8px 10px;font-weight:1000;min-width:0}.voice-add-expense button{min-height:42px;border-radius:14px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-weight:1100;padding:8px 10px}.voice-secondary{min-height:48px;border-radius:16px;border:1px solid rgba(78,56,25,.18);background:#fff;color:#172016;font-weight:1100}.voice-clear{background:#fff7ed;color:#9a3412}.voice-confirm{width:100%;min-height:58px;border-radius:18px;border:none;background:linear-gradient(135deg,#167a46,#22c55e);color:#fff;font-size:16px;font-weight:1100;margin-top:10px}
+    @media(max-width:430px){.voice-float{left:12px;bottom:88px;width:58px;height:58px;border-radius:20px}.voice-chip-grid{grid-template-columns:repeat(2,1fr)}.voice-mode-grid{grid-template-columns:repeat(2,1fr)}.voice-prov-grid{grid-template-columns:1fr 1fr}.voice-sample-grid{grid-template-columns:1fr 1fr}.voice-sample{font-size:11.5px;min-height:44px}.voice-actions-row.three{grid-template-columns:1fr}.voice-read-block{padding:9px}.voice-chip,.voice-mode-chip,.voice-prov-chip{font-size:12px;min-height:44px}}
 
   </style>
 </head>
@@ -149,20 +149,43 @@
 <div class="modal-bg" id="payVoiceModal"><div class="modal"><div class="modal-head"><strong>🎙 Voix PAY</strong><button class="close" type="button" data-close="payVoiceModal">×</button></div><div class="modal-body">
   <div class="voice-panel-top">
     <button class="voice-start" id="payVoiceStart" type="button">🎙 Parler maintenant</button>
-    <div class="voice-status" id="payVoiceStatus">Parle ou touche un libellé. Exemple : facture SEN’EAU 8500 Wave.</div>
+    <div class="voice-status" id="payVoiceStatus">Parle, corrige, puis valide. La base complète reste accessible.</div>
+    <div class="voice-speech-box" aria-label="Exemples courts pour parler">
+      <div class="voice-speech-title">Quelques exemples à lire</div>
+      <div class="voice-sample-grid">
+        <button class="voice-sample" type="button" data-pay-voice-sample="ABOS 5500 Wave">ABOS 5500<small>Wave · entrée PRO</small></button>
+        <button class="voice-sample" type="button" data-pay-voice-sample="facture SEN’EAU 8500 Wave">SEN’EAU 8500<small>Wave · sortie</small></button>
+        <button class="voice-sample" type="button" data-pay-voice-sample="Gasoil 15000 Cash">Gasoil 15000<small>Cash · sortie</small></button>
+        <button class="voice-sample" type="button" data-pay-voice-sample="Acompte 10000 CB">Acompte 10000<small>CB · entrée</small></button>
+      </div>
+    </div>
   </div>
-  <div class="voice-read" aria-label="Base de lecture PAY">
-    <div class="voice-read-block"><div class="voice-read-title">Provenance ABOS</div><div class="voice-prov-grid" id="payVoiceProvenanceList"></div></div>
-    <div class="voice-read-block"><div class="voice-read-title">Modes</div><div class="voice-mode-grid" id="payVoiceModeList"></div></div>
-    <div class="voice-read-block"><div class="voice-read-title">Entrées</div><div class="voice-chip-grid" id="payVoiceIncomeList"></div></div>
-    <div class="voice-read-block"><div class="voice-read-title">Sorties / frais</div><div class="voice-chip-grid" id="payVoiceExpenseList"></div><div class="voice-add-expense"><input id="payVoiceNewExpense" type="text" placeholder="Ajouter un frais…"><button id="payVoiceAddExpense" type="button">➕ Ajouter</button></div></div>
+
+  <div class="voice-switch" aria-label="Navigation voix PAY">
+    <button class="active" type="button" data-voice-page="declare">✍️ Déclarer / valider</button>
+    <button type="button" data-voice-page="examples">📋 Base pour parler</button>
   </div>
-  <div class="field"><label>Texte entendu / corrigeable</label><textarea id="payVoiceText" placeholder="Ex : facture SEN’EAU 8500 Wave"></textarea></div>
-  <div class="grid2"><div class="field"><label>Nature</label><select id="payVoiceType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div><div class="field"><label>Provenance</label><select id="payVoiceProvenance"><option value="PRO">PRO</option><option value="PRIVÉ">PRIVÉ</option></select></div></div>
-  <div class="grid2"><div class="field"><label>Mode</label><select id="payVoiceMode"></select></div><div class="field"><label>Montant</label><input id="payVoiceAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0"></div></div>
-  <div class="field"><label>Libellé</label><input id="payVoiceLabel" type="text" placeholder="SEN’EAU, Gasoil, ABOS…"></div>
-  <div class="voice-actions-row three"><button class="voice-secondary" id="payVoiceReparse" type="button">🔁 Relire</button><button class="voice-secondary voice-clear" id="payVoiceClear" type="button">🧹 Effacer</button><button class="voice-secondary" id="payVoiceStartAgain" type="button">🎙 Relancer</button></div>
-  <button class="voice-confirm" id="payVoiceConfirm" type="button">✅ Confirmer la trace</button>
+
+  <section class="voice-page active" id="payVoiceDeclarePage" aria-label="Déclaration PAY">
+    <div class="voice-hint">Déclaration visible sans chercher : les exemples courts sont déjà au-dessus. La base complète reste dans l’onglet voisin.</div>
+    <div class="field"><label>Texte entendu / corrigeable</label><textarea id="payVoiceText" placeholder="Ex : facture SEN’EAU 8500 Wave"></textarea></div>
+    <div class="grid2"><div class="field"><label>Nature</label><select id="payVoiceType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div><div class="field"><label>Provenance</label><select id="payVoiceProvenance"><option value="PRO">PRO</option><option value="PRIVÉ">PRIVÉ</option></select></div></div>
+    <div class="grid2"><div class="field"><label>Mode</label><select id="payVoiceMode"></select></div><div class="field"><label>Montant</label><input id="payVoiceAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0"></div></div>
+    <div class="field"><label>Libellé</label><input id="payVoiceLabel" type="text" placeholder="SEN’EAU, Gasoil, ABOS…"></div>
+    <div class="voice-actions-row three"><button class="voice-secondary" id="payVoiceReparse" type="button">🔁 Relire</button><button class="voice-secondary voice-clear" id="payVoiceClear" type="button">🧹 Effacer</button><button class="voice-secondary" id="payVoiceStartAgain" type="button">🎙 Relancer</button></div>
+    <button class="voice-confirm" id="payVoiceConfirm" type="button">✅ Confirmer la trace</button>
+  </section>
+
+  <section class="voice-page" id="payVoiceExamplesPage" aria-label="Base de lecture PAY">
+    <div class="voice-hint">Lis ou touche un exemple. Dès que tu touches un libellé, PAY revient à la déclaration pour valider.</div>
+    <div class="voice-read" aria-label="Base de lecture PAY">
+      <div class="voice-read-block"><div class="voice-read-title">Provenance ABOS</div><div class="voice-prov-grid" id="payVoiceProvenanceList"></div></div>
+      <div class="voice-read-block"><div class="voice-read-title">Modes</div><div class="voice-mode-grid" id="payVoiceModeList"></div></div>
+      <div class="voice-read-block"><div class="voice-read-title">Entrées</div><div class="voice-chip-grid" id="payVoiceIncomeList"></div></div>
+      <div class="voice-read-block"><div class="voice-read-title">Sorties / frais</div><div class="voice-chip-grid" id="payVoiceExpenseList"></div><div class="voice-add-expense"><input id="payVoiceNewExpense" type="text" placeholder="Ajouter un frais…"><button id="payVoiceAddExpense" type="button">➕ Ajouter</button></div></div>
+    </div>
+    <button class="voice-jump" type="button" data-voice-page="declare">✍️ Revenir à la déclaration</button>
+  </section>
 </div></div></div>
 
 <div class="modal-bg" id="movementModal"><div class="modal"><div class="modal-head"><strong id="movementModalTitle">Ajouter un mouvement</strong><button class="close" type="button" data-close="movementModal">×</button></div><div class="modal-body"><div class="notice" id="movementNotice">Modes : Wave, OM, Cash, Chèque, CB, Virement.</div><form id="movementForm"><input type="hidden" id="editMovementId"><div class="field amount-first"><label>Montant</label><input id="moveAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0" required></div><div class="field"><label>Motif / libellé</label><input id="moveLabel" list="labelsList" type="text" placeholder="Gasoil, Senelec, Sendwave, BUILD…" required><datalist id="labelsList"></datalist></div><div class="grid2"><div class="field"><label>Mode de règlement</label><select id="moveMode"></select></div><div class="field"><label>Nature</label><select id="moveType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div></div><div class="grid2"><div class="field"><label>Poche</label><select id="movePocket"><option value="pro">PRO</option><option value="perso">PERSO</option></select></div><div class="field"><label>Source d’argent</label><select id="moveActivity"></select></div></div><div class="field"><label>Client / personne</label><input id="movePerson" list="peopleList" type="text" placeholder="#soi-même, client…"><datalist id="peopleList"></datalist></div><div class="field"><label>Trace / note courte</label><textarea id="moveNote" placeholder="Référence, précision, reçu, observation…"></textarea></div><button class="save" type="submit" id="moveSaveBtn">Confirmer la trace</button></form></div></div></div>
@@ -319,6 +342,7 @@
   let payVoiceRecognizer=null;
   function payVoiceNorm(v){return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"'").trim()}
   function setPayVoiceStatus(msg,kind){const el=$("payVoiceStatus");if(!el)return;el.textContent=msg;el.className="voice-status"+(kind?" "+kind:"")}
+  function showPayVoicePage(name){const want=name==="examples"?"examples":"declare";const d=$("payVoiceDeclarePage"),x=$("payVoiceExamplesPage");if(d)d.classList.toggle("active",want==="declare");if(x)x.classList.toggle("active",want==="examples");document.querySelectorAll("[data-voice-page]").forEach(b=>b.classList.toggle("active",(b.getAttribute("data-voice-page")||"declare")===want));}
   function payVoiceMode(txt){const s=payVoiceNorm(txt);if(/\b(om|orange money|orange)\b/.test(s))return "OM";if(/\b(cash|especes?|liquide)\b/.test(s))return "Cash";if(/\b(cheque|cheques)\b/.test(s))return "Chèque";if(/\b(cb|carte|carte bancaire)\b/.test(s))return "CB";if(/\b(virement|banque|bancaire)\b/.test(s))return "Virement";return "Wave"}
   function payVoiceProvenance(txt){const s=payVoiceNorm(txt);if(/\b(prive|privé|perso|personnel|maison|famille)\b/.test(s))return "PRIVÉ";return "PRO"}
   function payVoiceAliasLabel(txt){const s=payVoiceNorm(txt);if(/\b(scene\s*au|sen\s*eau|seneau|sen'?eau)\b/.test(s))return "SEN’EAU";if(/\b(senelec|sen\s*elec|scene\s*lec)\b/.test(s))return "Senelec";if(/\b(woyofal|woyo\s*fal)\b/.test(s))return "Woyofal";if(/\b(wifi|wi\s*fi)\b/.test(s))return "Wi-Fi";if(/\b(gasoil|carburant|essence)\b/.test(s))return "Gasoil";if(/\b(abos|abonnement)\b/.test(s))return "ABOS";return ""}
@@ -330,12 +354,12 @@
   function fillPayVoiceSelects(){const modeEl=$("payVoiceMode"), provEl=$("payVoiceProvenance");if(modeEl){const current=modeEl.value||"Wave";modeEl.innerHTML=PAY_MICRO_MODES.map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join("");modeEl.value=PAY_MICRO_MODES.includes(current)?current:"Wave"}if(provEl){const current=provEl.value||"PRO";provEl.innerHTML=PAY_MICRO_PROVENANCES.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join("");provEl.value=PAY_MICRO_PROVENANCES.includes(current)?current:"PRO"}renderPayVoiceLists()}
   function renderPayVoiceLists(){const inc=$("payVoiceIncomeList"),exp=$("payVoiceExpenseList"),modes=$("payVoiceModeList"),prov=$("payVoiceProvenanceList");if(inc)inc.innerHTML=payVoiceIncomeLabels().map(x=>`<button class="voice-chip income" type="button" data-pay-voice-label="income" data-label="${esc(x)}">${esc(x)}</button>`).join("");if(exp)exp.innerHTML=payVoiceExpenseLabels().map(x=>`<button class="voice-chip expense" type="button" data-pay-voice-label="expense" data-label="${esc(x)}">${esc(x)}</button>`).join("");if(modes){const cur=$("payVoiceMode")?.value||"Wave";modes.innerHTML=PAY_MICRO_MODES.map(x=>`<button class="voice-mode-chip ${x===cur?"active":""}" type="button" data-pay-voice-mode="${esc(x)}">${esc(x)}</button>`).join("")}if(prov){const cur=$("payVoiceProvenance")?.value||"PRO";prov.innerHTML=PAY_MICRO_PROVENANCES.map(x=>`<button class="voice-prov-chip ${x===cur?"active":""}" type="button" data-pay-voice-prov="${esc(x)}">${esc(x)}</button>`).join("")}}
   function addPayVoiceExpenseLabel(){const input=$("payVoiceNewExpense");const n=String(input&&input.value||"").trim();if(!n){if(input)input.focus();setPayVoiceStatus("Écris le nom du frais à ajouter.","err");return}const exists=(state.labelPresets||[]).some(x=>x.type==="expense"&&payVoiceNorm(x.label)===payVoiceNorm(n));if(!exists){if(!state.labels.includes(n))state.labels.push(n);state.labelPresets.push({id:uid("lp"),pocket:"both",type:"expense",label:n,mode:$("payVoiceMode")?.value||"Wave",activity:"PRO",category:"Sorties rapides",note:"Frais ajouté depuis Voix PAY."});save();renderQuickLabels();renderAdmin()}if(input)input.value="";applyPayVoiceParsed({text:$("payVoiceText")?.value||n,type:"expense",provenance:$("payVoiceProvenance")?.value||"PRO",mode:$("payVoiceMode")?.value||"Wave",amount:$("payVoiceAmount")?.value||"",label:n});setPayVoiceStatus("✅ Frais ajouté au listing : "+n,"ok")}
-  function applyPayVoiceParsed(p){fillPayVoiceSelects();const textEl=$("payVoiceText"),typeEl=$("payVoiceType"),provEl=$("payVoiceProvenance"),modeEl=$("payVoiceMode"),labelEl=$("payVoiceLabel"),amountEl=$("payVoiceAmount");if(textEl)p.text!==undefined&&(textEl.value=p.text||textEl.value||"");if(typeEl)typeEl.value=p.type||"income";if(provEl)provEl.value=PAY_MICRO_PROVENANCES.includes(p.provenance)?p.provenance:"PRO";if(modeEl)modeEl.value=PAY_MICRO_MODES.includes(p.mode)?p.mode:"Wave";if(labelEl)labelEl.value=p.label||"";if(amountEl&&p.amount)amountEl.value=p.amount;renderPayVoiceLists();setPayVoiceStatus("Lecture préparée. Corrige avec le listing, les champs ou Effacer, puis valide.","ok")}
-  function clearPayVoice(){["payVoiceText","payVoiceLabel","payVoiceAmount"].forEach(id=>{const el=$(id);if(el)el.value=""});const t=$("payVoiceType"),m=$("payVoiceMode"),p=$("payVoiceProvenance");if(t)t.value="income";if(m)m.value="Wave";if(p)p.value="PRO";renderPayVoiceLists();setPayVoiceStatus("Effacé. Parle à nouveau ou touche un libellé.","")}
-  function openPayVoice(startNow){fillPayVoiceSelects();setPayVoiceStatus("Parle ou lis la base. Exemple : facture SEN’EAU 8500 Wave.","");openModal("payVoiceModal");if(startNow)setTimeout(startPayVoice,180)}
+  function applyPayVoiceParsed(p){fillPayVoiceSelects();const textEl=$("payVoiceText"),typeEl=$("payVoiceType"),provEl=$("payVoiceProvenance"),modeEl=$("payVoiceMode"),labelEl=$("payVoiceLabel"),amountEl=$("payVoiceAmount");if(textEl)p.text!==undefined&&(textEl.value=p.text||textEl.value||"");if(typeEl)typeEl.value=p.type||"income";if(provEl)provEl.value=PAY_MICRO_PROVENANCES.includes(p.provenance)?p.provenance:"PRO";if(modeEl)modeEl.value=PAY_MICRO_MODES.includes(p.mode)?p.mode:"Wave";if(labelEl)labelEl.value=p.label||"";if(amountEl&&p.amount)amountEl.value=p.amount;renderPayVoiceLists();showPayVoicePage("declare");setPayVoiceStatus("Lecture préparée. Corrige les champs ou Effacer, puis valide.","ok")}
+  function clearPayVoice(){["payVoiceText","payVoiceLabel","payVoiceAmount"].forEach(id=>{const el=$(id);if(el)el.value=""});const t=$("payVoiceType"),m=$("payVoiceMode"),p=$("payVoiceProvenance");if(t)t.value="income";if(m)m.value="Wave";if(p)p.value="PRO";renderPayVoiceLists();showPayVoicePage("declare");setPayVoiceStatus("Effacé. Parle à nouveau ou ouvre la base d’exemples.","")}
+  function openPayVoice(startNow){fillPayVoiceSelects();showPayVoicePage("declare");setPayVoiceStatus("Parle ou touche un exemple court. Corrige, puis valide.","");openModal("payVoiceModal");if(startNow)setTimeout(startPayVoice,180)}
   function startPayVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){setPayVoiceStatus("Micro non disponible sur ce navigateur. Écris la phrase ou touche le listing.","err");const t=$("payVoiceText");if(t)t.focus();return}try{if(payVoiceRecognizer)payVoiceRecognizer.abort()}catch(e){}payVoiceRecognizer=new SR();payVoiceRecognizer.lang="fr-SN";payVoiceRecognizer.interimResults=false;payVoiceRecognizer.maxAlternatives=1;payVoiceRecognizer.onstart=()=>setPayVoiceStatus("J’écoute PAY… Exemple : facture SEN’EAU 8500 Wave.","ok");payVoiceRecognizer.onerror=()=>setPayVoiceStatus("Écoute coupée. Relance, écris ou touche le listing.","err");payVoiceRecognizer.onresult=(ev)=>{const said=ev.results&&ev.results[0]&&ev.results[0][0]?ev.results[0][0].transcript:"";const t=$("payVoiceText");if(t)t.value=said;applyPayVoiceParsed(parsePayVoiceText(said))};try{payVoiceRecognizer.start()}catch(e){setPayVoiceStatus("Micro déjà en cours ou bloqué. Réessaie dans une seconde.","err")}}
   function confirmPayVoice(){const amount=Math.round(Number($("payVoiceAmount")?.value||0));const label=String($("payVoiceLabel")?.value||"").trim();const mode=String($("payVoiceMode")?.value||"Wave").trim();const type=String($("payVoiceType")?.value||"income")==="expense"?"expense":"income";const provenance=String($("payVoiceProvenance")?.value||"PRO").trim()==="PRIVÉ"?"PRIVÉ":"PRO";const heard=String($("payVoiceText")?.value||"").trim();if(amount<=0){setPayVoiceStatus("Pose un montant avant de valider.","err");return}if(!label){setPayVoiceStatus("Pose un libellé avant de valider.","err");return}if(!state.labels.includes(label))state.labels.push(label);const movPocket=provenance==="PRIVÉ"?"perso":"pro";state.movements.push({id:uid("m"),pocket:movPocket,type,mode:PAY_MICRO_MODES.includes(mode)?mode:"Wave",amount,label,activity:provenance,person:"",note:heard?"Voix PAY · "+heard:"Voix PAY · "+provenance,ts:new Date().toISOString()});state.settings.pocket=movPocket;state.settings.visibleCount=10;save();closeModal("payVoiceModal");render()}
-  document.addEventListener("click",e=>{if(e.target.closest("[data-pay-voice]")){openPayVoice(true);return}const lab=e.target.closest("[data-pay-voice-label]");if(lab){const type=lab.getAttribute("data-pay-voice-label")==="expense"?"expense":"income";const label=lab.getAttribute("data-label")||"";const text=$("payVoiceText");if(text&&!text.value.trim())text.value=label;const parsed={text:text?text.value:"",type,provenance:$("payVoiceProvenance")?.value||"PRO",mode:$("payVoiceMode")?.value||"Wave",amount:$("payVoiceAmount")?.value||"",label};applyPayVoiceParsed(parsed);return}const mode=e.target.closest("[data-pay-voice-mode]");if(mode){const el=$("payVoiceMode");if(el)el.value=mode.getAttribute("data-pay-voice-mode")||"Wave";renderPayVoiceLists();return}const prov=e.target.closest("[data-pay-voice-prov]");if(prov){const el=$("payVoiceProvenance");if(el)el.value=prov.getAttribute("data-pay-voice-prov")||"PRO";renderPayVoiceLists();return}});
+  document.addEventListener("click",e=>{const pageBtn=e.target.closest("[data-voice-page]");if(pageBtn){showPayVoicePage(pageBtn.getAttribute("data-voice-page"));return}if(e.target.closest("[data-pay-voice]")){openPayVoice(true);return}const sample=e.target.closest("[data-pay-voice-sample]");if(sample){const txt=sample.getAttribute("data-pay-voice-sample")||"";const t=$("payVoiceText");if(t)t.value=txt;applyPayVoiceParsed(parsePayVoiceText(txt));return}const lab=e.target.closest("[data-pay-voice-label]");if(lab){const type=lab.getAttribute("data-pay-voice-label")==="expense"?"expense":"income";const label=lab.getAttribute("data-label")||"";const text=$("payVoiceText");if(text&&!text.value.trim())text.value=label;const parsed={text:text?text.value:"",type,provenance:$("payVoiceProvenance")?.value||"PRO",mode:$("payVoiceMode")?.value||"Wave",amount:$("payVoiceAmount")?.value||"",label};applyPayVoiceParsed(parsed);return}const mode=e.target.closest("[data-pay-voice-mode]");if(mode){const el=$("payVoiceMode");if(el)el.value=mode.getAttribute("data-pay-voice-mode")||"Wave";renderPayVoiceLists();showPayVoicePage("declare");return}const prov=e.target.closest("[data-pay-voice-prov]");if(prov){const el=$("payVoiceProvenance");if(el)el.value=prov.getAttribute("data-pay-voice-prov")||"PRO";renderPayVoiceLists();showPayVoicePage("declare");return}});
   const payVoiceStart=$("payVoiceStart"),payVoiceStartAgain=$("payVoiceStartAgain"),payVoiceReparse=$("payVoiceReparse"),payVoiceClear=$("payVoiceClear"),payVoiceConfirm=$("payVoiceConfirm");if(payVoiceStart)payVoiceStart.onclick=startPayVoice;if(payVoiceStartAgain)payVoiceStartAgain.onclick=startPayVoice;if(payVoiceReparse)payVoiceReparse.onclick=()=>applyPayVoiceParsed(parsePayVoiceText($("payVoiceText")?.value||""));if(payVoiceClear)payVoiceClear.onclick=clearPayVoice;const payVoiceAddExpense=$("payVoiceAddExpense");if(payVoiceAddExpense)payVoiceAddExpense.onclick=addPayVoiceExpenseLabel;const payVoiceNewExpense=$("payVoiceNewExpense");if(payVoiceNewExpense)payVoiceNewExpense.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addPayVoiceExpenseLabel()}});if(payVoiceConfirm)payVoiceConfirm.onclick=confirmPayVoice;["payVoiceMode","payVoiceProvenance"].forEach(id=>{const el=$(id);if(el)el.addEventListener("change",renderPayVoiceLists)});
 
   els.tabPro.onclick=()=>setPocket("pro");els.tabPerso.onclick=()=>setPocket("perso");els.btnEye.onclick=()=>{state.settings.eyeOpen=!state.settings.eyeOpen;save();render()};const btnAddIncome=$("btnAddIncome");if(btnAddIncome)btnAddIncome.onclick=()=>openPresetPage("income");const btnAddExpense=$("btnAddExpense");if(btnAddExpense)btnAddExpense.onclick=()=>openPresetPage("expense");const btnMagicAdd=$("btnMagicAdd");if(btnMagicAdd)btnMagicAdd.onclick=()=>toggleMagicPanel();$("btnMenu").onclick=()=>openModal("menuModal");$("btnBack").onclick=()=>{if(history.length>1)history.back();else window.scrollTo({top:0,behavior:"smooth"})};$("navHome").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});$("navModules").onclick=()=>{renderActivitiesModal();openModal("activitiesModal")};const navFrais=$("navFrais");if(navFrais)navFrais.onclick=()=>{location.href="./frais.html"};$("navAdd").onclick=()=>{window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>toggleMagicPanel(true),220)};const navContacts=$("navContacts");if(navContacts)navContacts.onclick=()=>openContact();$("navAdmin").onclick=()=>openModal("adminModal");$("btnAdminSmall").onclick=()=>openModal("adminModal");$("btnOpenActivities").onclick=()=>{renderActivitiesModal();openModal("activitiesModal")};document.addEventListener("click",e=>{if(e.target.closest("[data-open-source-admin]")){closeModal("activitiesModal");openModal("adminModal");setTimeout(()=>els.adminActivityName&&els.adminActivityName.focus(),120)}});const btnToggleFinance=$("btnToggleFinance");if(btnToggleFinance){btnToggleFinance.onclick=()=>{const panel=$("financePanel");if(panel){panel.hidden=!panel.hidden;btnToggleFinance.textContent=panel.hidden?"Lecture":"Masquer";}}}document.addEventListener("click",e=>{const b=e.target.closest("[data-pay-action]");if(!b)return;openQuickAction(b.getAttribute("data-pay-action"));});document.addEventListener("click",e=>{const b=e.target.closest("[data-go-frais]");if(!b)return;location.href="./frais.html";});document.addEventListener("click",e=>{const b=e.target.closest("[data-open-preset-kind]");if(!b)return;openPresetPage(b.getAttribute("data-open-preset-kind"));});document.addEventListener("click",e=>{const b=e.target.closest("[data-label-preset]");if(!b)return;openLabelPreset(b.getAttribute("data-label-preset"));});const reserveKeep=$("btnReserveKeep"),reserveTake=$("btnReserveTake");if(reserveKeep)reserveKeep.onclick=()=>{closeModal("reserveModal");openMovement("expense",quickPreset("expense","Mise en réserve",null,"Argent mis de côté."))};if(reserveTake)reserveTake.onclick=()=>{closeModal("reserveModal");openMovement("income",quickPreset("income","Reprise réserve",null,"Argent repris de la réserve."))};
@@ -362,6 +386,233 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
