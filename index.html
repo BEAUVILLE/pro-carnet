@@ -5,11 +5,11 @@
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <script src="./guard.js?v=pay-baptiste-guard-20260610"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>DIGIY PAY — Mon argent</title>
+  <title>PRO CARNET — Mon activité</title>
   <meta name="theme-color" content="#07150f" />
-  <meta name="description" content="DIGIY PAY : chiffre roi, bouton Ajouter magique, saisie rapide plein écran, frais, entrées, réserve, historique et sauvegarde." />
+  <meta name="description" content="PRO CARNET : encaissements, dépenses, réserve, preuves, historique et sauvegarde de l’activité professionnelle." />
   <!-- Sécurité : bouton Ouvrir retiré, aucun lien module ne peut allonger l’URL. -->
-  <!-- DIGIY PATCH : micro PAY déclaration directe + exemples courts visibles + base complète, frais ajoutables/modifiables. -->
+  <!-- DIGIY PATCH : micro PRO CARNET déclaration directe + exemples courts visibles + base complète, frais ajoutables/modifiables. -->
   <style>
     :root{--bg:#06140f;--ink:#172016;--green:#167a46;--green2:#22c55e;--gold:#c4973f;--gold2:#f4d27a;--red:#9a3412;--line:rgba(78,56,25,.22);--max:560px;--shadow:0 18px 48px rgba(0,0,0,.24)}
     *{box-sizing:border-box}html,body{margin:0;padding:0;min-height:100%}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 32%),linear-gradient(180deg,var(--bg),#020806);color:#fff8e8;font-weight:850;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}.app{width:min(var(--max),100%);margin:0 auto;min-height:100vh;padding:10px 10px 118px}.shell{min-height:calc(100vh - 20px);border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(7,21,15,.98),rgba(7,21,15,.86));border-radius:34px;overflow:hidden;box-shadow:var(--shadow)}
@@ -67,7 +67,7 @@
     }
   
 
-    /* DIGIY PATCH — micro PAY avec listing visible, provenance ABOS PRO/PRIVÉ, touche Effacer */
+    /* DIGIY PATCH — micro PRO CARNET avec listing visible, provenance ABOS PRO/PRIVÉ, touche Effacer */
     .voice-float{position:fixed;left:14px;bottom:96px;z-index:92;width:64px;height:64px;border-radius:22px;border:1px solid rgba(244,210,122,.40);background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;box-shadow:0 18px 40px rgba(0,0,0,.34);font-size:25px;font-weight:1100}
     .voice-panel-top{display:grid;gap:10px;margin-bottom:12px}.voice-start{width:100%;min-height:60px;border-radius:22px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-size:18px;font-weight:1100}.voice-switch{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px;padding:8px 0;background:linear-gradient(180deg,#fffaf0,#fffaf0cc)}.voice-switch button{min-height:48px;border-radius:16px;border:1px solid rgba(78,56,25,.16);background:#fff;color:#172016;font-weight:1100}.voice-switch button.active{border:none;background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#142016}.voice-page{display:none}.voice-page.active{display:block}.voice-jump{width:100%;min-height:50px;margin-top:10px;border-radius:16px;border:none;background:linear-gradient(135deg,#167a46,#22c55e);color:#fff;font-weight:1100}.voice-hint{margin:0 0 10px;padding:10px 12px;border-radius:17px;background:#fff7ed;color:#7c2d12;border:1px solid #fed7aa;font-size:13px;font-weight:1000;line-height:1.35}.voice-status{min-height:42px;border-radius:18px;padding:10px 12px;background:rgba(78,56,25,.08);border:1px solid rgba(78,56,25,.12);color:#4c3d22;font-size:13px;font-weight:1000;line-height:1.35}.voice-status.ok{background:#dcfce7;color:#14532d}.voice-status.err{background:#ffedd5;color:#9a3412}.voice-speech-box{border-radius:22px;padding:12px;background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12}.voice-speech-title{font-size:11px;letter-spacing:.10em;text-transform:uppercase;font-weight:1100;margin-bottom:8px}.voice-sample-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.voice-sample{min-height:42px;border-radius:14px;border:1px solid rgba(154,52,18,.15);background:#fff;color:#172016;font-size:12px;font-weight:1100;text-align:left;padding:8px 9px;line-height:1.12}.voice-sample small{display:block;color:#7c2d12;font-size:10px;font-weight:1000;margin-top:2px}.voice-read{display:grid;gap:10px;margin:10px 0 12px}.voice-read-block{border-radius:20px;padding:10px;background:rgba(255,255,255,.55);border:1px solid rgba(78,56,25,.12)}.voice-read-title{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#5f4a20;font-weight:1100;margin-bottom:8px}.voice-chip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.voice-mode-grid,.voice-prov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.voice-chip,.voice-mode-chip,.voice-prov-chip{min-height:42px;border-radius:14px;border:1px solid rgba(78,56,25,.14);background:#fff;color:#172016;font-size:12px;font-weight:1100;padding:7px;text-align:center}.voice-chip.income{background:linear-gradient(135deg,#dcfce7,#f0fdf4);color:#052215}.voice-chip.expense{background:linear-gradient(135deg,#ffedd5,#fff7ed);color:#7c2d12}.voice-mode-chip.active,.voice-prov-chip.active{background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#142016;border-color:rgba(196,151,63,.55)}.voice-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.voice-actions-row.three{grid-template-columns:1fr 1fr 1fr}.voice-add-expense{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:9px}.voice-add-expense input{min-height:42px;border-radius:14px;border:1px solid rgba(78,56,25,.18);background:#fff;color:#172016;padding:8px 10px;font-weight:1000;min-width:0}.voice-add-expense button{min-height:42px;border-radius:14px;border:none;background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;font-weight:1100;padding:8px 10px}.voice-secondary{min-height:48px;border-radius:16px;border:1px solid rgba(78,56,25,.18);background:#fff;color:#172016;font-weight:1100}.voice-clear{background:#fff7ed;color:#9a3412}.voice-confirm{width:100%;min-height:58px;border-radius:18px;border:none;background:linear-gradient(135deg,#167a46,#22c55e);color:#fff;font-size:16px;font-weight:1100;margin-top:10px}
     @media(max-width:430px){.voice-float{left:12px;bottom:88px;width:58px;height:58px;border-radius:20px}.voice-chip-grid{grid-template-columns:repeat(2,1fr)}.voice-mode-grid{grid-template-columns:repeat(2,1fr)}.voice-prov-grid{grid-template-columns:1fr 1fr}.voice-sample-grid{grid-template-columns:1fr 1fr}.voice-sample{font-size:11.5px;min-height:44px}.voice-actions-row.three{grid-template-columns:1fr}.voice-read-block{padding:9px}.voice-chip,.voice-mode-chip,.voice-prov-chip{font-size:12px;min-height:44px}}
@@ -76,22 +76,22 @@
 </head>
 <body>
 <div class="app">
-  <section class="shell" aria-label="DIGIY PAY — Mon argent">
+  <section class="shell" aria-label="PRO CARNET — Mon activité">
     <header class="top">
-      <div class="topline"><button class="round" id="btnBack" type="button">‹</button><div class="title"><small>DIGIY PAY</small><b>Mon argent</b></div><button class="round" id="btnMenu" type="button">☰ Menu</button></div>
+      <div class="topline"><button class="round" id="btnBack" type="button">‹</button><div class="title"><small>PRO CARNET</small><b>Mon activité</b></div><button class="round" id="btnMenu" type="button">☰ Menu</button></div>
       <div class="tabs"><button class="tab active" id="tabPro" type="button">💼 PRO</button><button class="tab" id="tabPerso" type="button">🏠 PERSO</button></div>
       <div class="balance"><div class="balance-label"><span id="walletName">Solde PRO</span><button class="eye" id="btnEye" type="button">👁 Ouvert</button></div><div class="amount-big" id="balanceNumber">0 F</div><div class="mini"><span class="pill" id="todayMini">Aujourd’hui 0 F</span><span class="pill" id="modeMini">Wave</span></div></div>
       <!-- Actions rapides déplacées dans le corps : solde en haut, gestes juste après. -->
     </header>
     <main class="content">
-      <section class="magic-zone" aria-label="Bouton Ajouter PAY">
+      <section class="magic-zone" aria-label="Bouton Ajouter PRO CARNET">
         <button class="magic-add-btn" id="btnMagicAdd" type="button" aria-expanded="false" aria-controls="magicPanel">
           <span class="magic-plus">＋</span>
           <span><b>Ajouter</b><small>le bouton magique : saisie rapide, frais, entrées, coffre</small></span>
           <span class="magic-chevron" id="magicChevron">⌄</span>
         </button>
         <div class="magic-panel" id="magicPanel" hidden>
-          <div class="magic-actions" aria-label="Menu PAY rapide">
+          <div class="magic-actions" aria-label="Menu PRO CARNET rapide">
             <button class="magic-action green" type="button" data-pay-voice><span>🎙</span><b>Voix</b><small>parler / corriger</small></button>
             <button class="magic-action green" type="button" data-go-frais><span>⚡</span><b>Saisie</b><small>plein écran</small></button>
             <button class="magic-action green" type="button" data-open-preset-kind="income"><span>＋</span><b>Entrée</b><small>CA modules</small></button>
@@ -103,20 +103,20 @@
           <div class="magic-chip-grid" id="magicExpenseList"></div>
         </div>
       </section>
-      <div class="notice" id="frontNotice">Chiffre roi en haut. Ajouter déroule les frais et les entrées. Les pavés sont rangés dans le menu pour laisser la place aux mouvements du jour.</div>
+      <div class="notice" id="frontNotice">Situation du jour en haut. Ajouter déroule les encaissements, les dépenses et la réserve. Le journal garde les traces de l’activité.</div>
       <div class="finance-panel" id="financePanel" hidden>
         <div class="cards"><div class="metric"><small>Entrées jour</small><strong id="sumDay">0 F</strong></div><div class="metric"><small>Sorties jour</small><strong id="sumWeek">0 F</strong></div><div class="metric"><small>Net jour</small><strong id="sumMonth">0 F</strong></div></div>
         <div class="cards two"><div class="metric"><small id="modeOneLabel">Wave entrées</small><strong id="modeOneValue">0 F</strong></div><div class="metric"><small id="modeTwoLabel">Wave sorties</small><strong id="modeTwoValue">0 F</strong></div></div>
         <div class="search"><span>🔎</span><input id="searchInput" type="search" placeholder="Rechercher dans les dernières situations…" autocomplete="off"><button id="btnClearSearch" type="button">×</button></div>
       </div>
-      <section class="quick-labels" aria-label="Libellés rapides PAY" style="display:none">
+      <section class="quick-labels" aria-label="Libellés rapides PRO CARNET" style="display:none">
         <div class="quick-label-head"><h2>Libellés rapides</h2><small>touche puis pose le chiffre</small></div>
         <div id="quickLabelWrap"></div>
       </section>
-      <div class="section" style="display:none"><h2 id="modulesTitle">Sources d’argent</h2><button id="btnOpenActivities" type="button">Lecture</button></div>
+      <div class="section" style="display:none"><h2 id="modulesTitle">Sources d’activité</h2><button id="btnOpenActivities" type="button">Lecture</button></div>
       <div class="module-list" id="moduleList" style="display:none"></div>
       <div class="section"><h2 id="movementTitle">Dernières situations</h2><div class="section-actions"><button id="btnToggleFinance" type="button">Lecture</button><button id="btnAdminSmall" type="button">Réglages</button></div></div>
-      <div class="journal-tools" aria-label="Filtre journal PAY">
+      <div class="journal-tools" aria-label="Filtre journal PRO CARNET">
         <button class="journal-tab active" id="filterAll" type="button" data-move-filter="all">Tout</button>
         <button class="journal-tab" id="filterIncome" type="button" data-move-filter="income">Entrées</button>
         <button class="journal-tab" id="filterExpense" type="button" data-move-filter="expense">Sorties</button>
@@ -127,15 +127,15 @@
   </section>
 </div>
 <nav class="bottom"><div class="bottom-inner"><button id="navHome" type="button"><span class="ico">🏦</span><span>Accueil</span></button><button id="navModules" type="button"><span class="ico">⠿</span><span>Sources</span></button><button id="navFrais" type="button"><span class="ico">⚡</span><span>Saisie</span></button><button id="navAdd" class="main" type="button"><span class="ico">＋</span><span>Ajouter</span></button><button id="navAdmin" type="button"><span class="ico">⚙</span><span>Admin</span></button></div></nav>
-<button class="voice-float" id="btnPayVoiceFloat" type="button" data-pay-voice aria-label="Ouvrir la saisie vocale PAY">🎙</button>
+<button class="voice-float" id="btnPayVoiceFloat" type="button" data-pay-voice aria-label="Ouvrir la saisie vocale PRO CARNET">🎙</button>
 
 
 
-<div class="fab-wrap" id="fabWrap" aria-label="Menu flottant PAY">
+<div class="fab-wrap" id="fabWrap" aria-label="Menu flottant PRO CARNET">
   <div class="fab-panel" id="fabPanel">
     <button class="fab-action gold" type="button" data-fab="modules"><span>⠿ Sources</span><small>listing + rentrée</small></button>
     <button class="fab-action green" type="button" data-fab="frais"><span>⚡ Saisie</span><small>plein écran</small></button>
-    <button class="fab-action green" type="button" data-pay-voice><span>🎙 Voix PAY</span><small>parler + corriger</small></button>
+    <button class="fab-action green" type="button" data-pay-voice><span>🎙 Voix CARNET</span><small>parler + corriger</small></button>
     <button class="fab-action green" type="button" data-fab="add"><span>＋ Ajouter</span><small>mouvement libre</small></button>
     <button class="fab-action" type="button" data-fab="admin"><span>⚙ Admin</span><small>modules, libellés</small></button>
     <button class="fab-action" type="button" data-fab="backup"><span>💾 Sauvegarde</span><small>export / import JSON</small></button>
@@ -146,7 +146,7 @@
 
 
 
-<div class="modal-bg" id="payVoiceModal"><div class="modal"><div class="modal-head"><strong>🎙 Voix PAY</strong><button class="close" type="button" data-close="payVoiceModal">×</button></div><div class="modal-body">
+<div class="modal-bg" id="payVoiceModal"><div class="modal"><div class="modal-head"><strong>🎙 Voix CARNET</strong><button class="close" type="button" data-close="payVoiceModal">×</button></div><div class="modal-body">
   <div class="voice-panel-top">
     <button class="voice-start" id="payVoiceStart" type="button">🎙 Parler maintenant</button>
     <div class="voice-status" id="payVoiceStatus">Parle, corrige, puis valide. La base complète reste accessible.</div>
@@ -161,12 +161,12 @@
     </div>
   </div>
 
-  <div class="voice-switch" aria-label="Navigation voix PAY">
+  <div class="voice-switch" aria-label="Navigation voix PRO CARNET">
     <button class="active" type="button" data-voice-page="declare">✍️ Déclarer / valider</button>
     <button type="button" data-voice-page="examples">📋 Base pour parler</button>
   </div>
 
-  <section class="voice-page active" id="payVoiceDeclarePage" aria-label="Déclaration PAY">
+  <section class="voice-page active" id="payVoiceDeclarePage" aria-label="Déclaration PRO CARNET">
     <div class="voice-hint">Déclaration visible sans chercher : les exemples courts sont déjà au-dessus. La base complète reste dans l’onglet voisin.</div>
     <div class="field"><label>Texte entendu / corrigeable</label><textarea id="payVoiceText" placeholder="Ex : facture SEN’EAU 8500 Wave"></textarea></div>
     <div class="grid2"><div class="field"><label>Nature</label><select id="payVoiceType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div><div class="field"><label>Provenance</label><select id="payVoiceProvenance"><option value="PRO">PRO</option><option value="PRIVÉ">PRIVÉ</option></select></div></div>
@@ -176,9 +176,9 @@
     <button class="voice-confirm" id="payVoiceConfirm" type="button">✅ Confirmer la trace</button>
   </section>
 
-  <section class="voice-page" id="payVoiceExamplesPage" aria-label="Base de lecture PAY">
-    <div class="voice-hint">Lis ou touche un exemple. Dès que tu touches un libellé, PAY revient à la déclaration pour valider.</div>
-    <div class="voice-read" aria-label="Base de lecture PAY">
+  <section class="voice-page" id="payVoiceExamplesPage" aria-label="Base de lecture PRO CARNET">
+    <div class="voice-hint">Lis ou touche un exemple. Dès que tu touches un libellé, PRO CARNET revient à la déclaration pour valider.</div>
+    <div class="voice-read" aria-label="Base de lecture PRO CARNET">
       <div class="voice-read-block"><div class="voice-read-title">Provenance ABOS</div><div class="voice-prov-grid" id="payVoiceProvenanceList"></div></div>
       <div class="voice-read-block"><div class="voice-read-title">Modes</div><div class="voice-mode-grid" id="payVoiceModeList"></div></div>
       <div class="voice-read-block"><div class="voice-read-title">Entrées</div><div class="voice-chip-grid" id="payVoiceIncomeList"></div></div>
@@ -188,7 +188,7 @@
   </section>
 </div></div></div>
 
-<div class="modal-bg" id="movementModal"><div class="modal"><div class="modal-head"><strong id="movementModalTitle">Ajouter un mouvement</strong><button class="close" type="button" data-close="movementModal">×</button></div><div class="modal-body"><div class="notice" id="movementNotice">Modes : Wave, OM, Cash, Chèque, CB, Virement.</div><form id="movementForm"><input type="hidden" id="editMovementId"><div class="field amount-first"><label>Montant</label><input id="moveAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0" required></div><div class="field"><label>Motif / libellé</label><input id="moveLabel" list="labelsList" type="text" placeholder="Gasoil, Senelec, Sendwave, BUILD…" required><datalist id="labelsList"></datalist></div><div class="grid2"><div class="field"><label>Mode de règlement</label><select id="moveMode"></select></div><div class="field"><label>Nature</label><select id="moveType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div></div><div class="grid2"><div class="field"><label>Poche</label><select id="movePocket"><option value="pro">PRO</option><option value="perso">PERSO</option></select></div><div class="field"><label>Source d’argent</label><select id="moveActivity"></select></div></div><div class="field"><label>Client / personne</label><input id="movePerson" list="peopleList" type="text" placeholder="#soi-même, client…"><datalist id="peopleList"></datalist></div><div class="field"><label>Trace / note courte</label><textarea id="moveNote" placeholder="Référence, précision, reçu, observation…"></textarea></div><button class="save" type="submit" id="moveSaveBtn">Confirmer la trace</button></form></div></div></div>
+<div class="modal-bg" id="movementModal"><div class="modal"><div class="modal-head"><strong id="movementModalTitle">Ajouter un mouvement</strong><button class="close" type="button" data-close="movementModal">×</button></div><div class="modal-body"><div class="notice" id="movementNotice">Modes : Wave, OM, Cash, Chèque, CB, Virement.</div><form id="movementForm"><input type="hidden" id="editMovementId"><div class="field amount-first"><label>Montant</label><input id="moveAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="0" required></div><div class="field"><label>Motif / libellé</label><input id="moveLabel" list="labelsList" type="text" placeholder="Gasoil, Senelec, Sendwave, BUILD…" required><datalist id="labelsList"></datalist></div><div class="grid2"><div class="field"><label>Mode de règlement</label><select id="moveMode"></select></div><div class="field"><label>Nature</label><select id="moveType"><option value="income">+ Entrée</option><option value="expense">- Sortie</option></select></div></div><div class="grid2"><div class="field"><label>Poche</label><select id="movePocket"><option value="pro">PRO</option><option value="perso">PERSO</option></select></div><div class="field"><label>Source d’activité</label><select id="moveActivity"></select></div></div><div class="field"><label>Client / personne</label><input id="movePerson" list="peopleList" type="text" placeholder="#soi-même, client…"><datalist id="peopleList"></datalist></div><div class="field"><label>Trace / note courte</label><textarea id="moveNote" placeholder="Référence, précision, reçu, observation…"></textarea></div><button class="save" type="submit" id="moveSaveBtn">Confirmer la trace</button></form></div></div></div>
 
 <div class="modal-bg" id="contactsModal"><div class="modal"><div class="modal-head"><strong>Répertoire abonnés</strong><button class="close" type="button" data-close="contactsModal">×</button></div><div class="modal-body"><div class="notice">Nom, téléphone, module, note. Tout reste dans le téléphone et part aussi dans la sauvegarde JSON.</div><form id="contactForm"><input type="hidden" id="editContactId"><div class="field"><label>Nom</label><input id="contactName" type="text" placeholder="Nom du pro / abonné" required></div><div class="grid2"><div class="field"><label>Téléphone</label><input id="contactPhone" type="tel" placeholder="+221…" required></div><div class="field"><label>Module</label><select id="contactModule"></select></div></div><div class="field"><label>Note</label><textarea id="contactNote" placeholder="Ex : abonné BUILD, fiche à rappeler…"></textarea></div><button class="save" type="submit" id="contactSaveBtn">Garder le contact</button></form><div class="field" style="margin-top:14px"><label>Rechercher contact</label><input id="contactSearch" type="search" placeholder="Nom, téléphone, module…"></div><div class="contacts-list" id="contactsList"></div></div></div></div>
 
@@ -196,17 +196,17 @@
 
 <div class="modal-bg" id="choiceModal"><div class="modal"><div class="modal-head"><strong id="choiceTitle">Choisir</strong><button class="close" type="button" data-close="choiceModal">×</button></div><div class="modal-body" id="choiceBody"></div></div></div>
 <div class="modal-bg" id="activitiesModal"><div class="modal"><div class="modal-head"><strong>Lecture des sources</strong><button class="close" type="button" data-close="activitiesModal">×</button></div><div class="modal-body" id="activitiesBody"></div></div></div>
-<div class="modal-bg" id="menuModal"><div class="modal"><div class="modal-head"><strong>Menu PAY</strong><button class="close" type="button" data-close="menuModal">×</button></div><div class="modal-body"><div class="menu-grid"><button type="button" data-pay-voice>🎙<br>Voix PAY</button><button id="menuFrais" type="button">⚡<br>Saisie rapide</button><button id="menuActivities" type="button">⠿<br>Sources</button><button id="menuAdmin" type="button">⚙<br>Admin</button><button id="menuBackup" type="button">💾<br>Sauvegarde</button><button id="menuReset" type="button">🧹<br>Vider</button></div></div></div></div>
+<div class="modal-bg" id="menuModal"><div class="modal"><div class="modal-head"><strong>Menu PRO CARNET</strong><button class="close" type="button" data-close="menuModal">×</button></div><div class="modal-body"><div class="menu-grid"><button type="button" data-pay-voice>🎙<br>Voix CARNET</button><button id="menuFrais" type="button">⚡<br>Saisie rapide</button><button id="menuActivities" type="button">⠿<br>Sources</button><button id="menuAdmin" type="button">⚙<br>Admin</button><button id="menuBackup" type="button">💾<br>Sauvegarde</button><button id="menuReset" type="button">🧹<br>Vider</button></div></div></div></div>
 
-<div class="modal-bg" id="reserveModal"><div class="modal"><div class="modal-head"><strong>Réserve DIGIY</strong><button class="close" type="button" data-close="reserveModal">×</button></div><div class="modal-body"><div class="notice">Même esprit que le coffre : tu gardes une part, ou tu reprends une part. PAY trace, le patron décide.</div><div class="reserve-actions"><button class="reserve-keep" id="btnReserveKeep" type="button">＋ Garder</button><button class="reserve-take" id="btnReserveTake" type="button">− Récupérer</button></div><div class="notice">Lecture conseillée : PROTÈGE LA RÉSERVE quand la trésorerie respire.</div></div></div></div>
-<div class="modal-bg" id="backupModal"><div class="modal"><div class="modal-head"><strong>Sauvegarde PAY</strong><button class="close" type="button" data-close="backupModal">×</button></div><div class="modal-body"><div class="notice">La sauvegarde contient mouvements + modules + répertoire.</div><div class="backup-actions"><button class="soft" id="btnBackupDownload" type="button">⬇ Télécharger JSON</button><button class="soft" id="btnBackupCopy" type="button">📋 Copier JSON</button></div><div class="backup-actions"><button class="soft" id="btnBackupChoose" type="button">📂 Importer fichier</button><button class="soft danger" id="btnBackupRestoreText" type="button">♻ Restaurer texte</button></div><input id="backupFile" type="file" accept="application/json,.json" style="display:none"><div class="field"><label>Coller une sauvegarde JSON</label><textarea id="backupText" class="backup-area" placeholder="Coller ici une sauvegarde JSON."></textarea></div><div id="backupStatus" class="status"></div></div></div></div>
+<div class="modal-bg" id="reserveModal"><div class="modal"><div class="modal-head"><strong>Réserve DIGIY</strong><button class="close" type="button" data-close="reserveModal">×</button></div><div class="modal-body"><div class="notice">Même esprit que le coffre : tu gardes une part, ou tu reprends une part. PRO CARNET trace, le patron décide.</div><div class="reserve-actions"><button class="reserve-keep" id="btnReserveKeep" type="button">＋ Garder</button><button class="reserve-take" id="btnReserveTake" type="button">− Récupérer</button></div><div class="notice">Lecture conseillée : PROTÈGE LA RÉSERVE quand la trésorerie respire.</div></div></div></div>
+<div class="modal-bg" id="backupModal"><div class="modal"><div class="modal-head"><strong>Sauvegarde CARNET</strong><button class="close" type="button" data-close="backupModal">×</button></div><div class="modal-body"><div class="notice">La sauvegarde contient mouvements + modules + répertoire.</div><div class="backup-actions"><button class="soft" id="btnBackupDownload" type="button">⬇ Télécharger JSON</button><button class="soft" id="btnBackupCopy" type="button">📋 Copier JSON</button></div><div class="backup-actions"><button class="soft" id="btnBackupChoose" type="button">📂 Importer fichier</button><button class="soft danger" id="btnBackupRestoreText" type="button">♻ Restaurer texte</button></div><input id="backupFile" type="file" accept="application/json,.json" style="display:none"><div class="field"><label>Coller une sauvegarde JSON</label><textarea id="backupText" class="backup-area" placeholder="Coller ici une sauvegarde JSON."></textarea></div><div id="backupStatus" class="status"></div></div></div></div>
 
 <script>
 (function(){
   "use strict";
   const STORAGE_KEY="digiy_pay_baptiste_reel_v2";
   const defaults={settings:{pocket:"pro",eyeOpen:true,visibleCount:10,movementFilter:"all"},activities:[
-    {id:"pay-pro",pocket:"pro",name:"PAY PRO",url:""},{id:"abos",pocket:"pro",name:"ABOS",url:""},{id:"build",pocket:"pro",name:"BUILD",url:""},{id:"loc",pocket:"pro",name:"LOC",url:""},{id:"driver",pocket:"pro",name:"DRIVER",url:""},{id:"market",pocket:"pro",name:"MARKET",url:""},{id:"pos",pocket:"pro",name:"POS",url:""},{id:"resa",pocket:"pro",name:"RESA",url:""},{id:"explore",pocket:"pro",name:"EXPLORE",url:""},{id:"jobs",pocket:"pro",name:"JOBS",url:""},{id:"reseau",pocket:"pro",name:"RÉSEAU",url:""},{id:"ndimbal",pocket:"pro",name:"NDIMBAL",url:""},
+    {id:"pay-pro",pocket:"pro",name:"PRO CARNET",url:""},{id:"abos",pocket:"pro",name:"ABOS",url:""},{id:"build",pocket:"pro",name:"BUILD",url:""},{id:"loc",pocket:"pro",name:"LOC",url:""},{id:"driver",pocket:"pro",name:"DRIVER",url:""},{id:"market",pocket:"pro",name:"MARKET",url:""},{id:"pos",pocket:"pro",name:"POS",url:""},{id:"resa",pocket:"pro",name:"RESA",url:""},{id:"explore",pocket:"pro",name:"EXPLORE",url:""},{id:"jobs",pocket:"pro",name:"JOBS",url:""},{id:"reseau",pocket:"pro",name:"RÉSEAU",url:""},{id:"ndimbal",pocket:"pro",name:"NDIMBAL",url:""},
     {id:"perso-maison",pocket:"perso",name:"Maison",url:""},{id:"perso-retraite",pocket:"perso",name:"Retraite",url:""},{id:"perso-credit",pocket:"perso",name:"Crédit",url:""},{id:"perso-dette",pocket:"perso",name:"Dette",url:""},{id:"perso-assurance",pocket:"perso",name:"Assurance",url:""},{id:"perso-charges",pocket:"perso",name:"Charges",url:""}
   ],labelPresets:[
     {id:"lp-ravitaillement",pocket:"perso",type:"expense",label:"Ravitaillement",mode:"Cash",activity:"Maison",category:"Sorties rapides",note:"Dépense maison / nourriture."},
@@ -220,7 +220,7 @@
     {id:"lp-orange",pocket:"perso",type:"expense",label:"Orange",mode:"Wave",activity:"Charges",category:"Sorties rapides",note:"Téléphone / Orange Money."},
     {id:"lp-wifi",pocket:"perso",type:"expense",label:"Wi-Fi",mode:"Wave",activity:"Charges",category:"Sorties rapides",note:"Internet maison / bureau."},
     {id:"lp-gasoil-pro",pocket:"pro",type:"expense",label:"Gasoil",mode:"Wave",activity:"DRIVER",category:"Sorties rapides",note:"Carburant activité."},
-    {id:"lp-internet-pro",pocket:"pro",type:"expense",label:"Internet",mode:"Wave",activity:"PAY PRO",category:"Sorties rapides",note:"Connexion / téléphone pro."},
+    {id:"lp-internet-pro",pocket:"pro",type:"expense",label:"Internet",mode:"Wave",activity:"PRO CARNET",category:"Sorties rapides",note:"Connexion / téléphone pro."},
     {id:"lp-abos",pocket:"pro",type:"income",label:"ABOS",mode:"Wave",activity:"ABOS",category:"Entrées / modules",note:"Rentrée abonnement."},
     {id:"lp-build",pocket:"pro",type:"income",label:"BUILD",mode:"Wave",activity:"BUILD",category:"Entrées / modules",note:"Rentrée module BUILD."},
     {id:"lp-loc",pocket:"pro",type:"income",label:"LOC",mode:"Wave",activity:"LOC",category:"Entrées / modules",note:"Rentrée location."},
@@ -243,11 +243,11 @@
   let state=normalize(load());
   const $=id=>document.getElementById(id); const els={tabPro:$("tabPro"),tabPerso:$("tabPerso"),walletName:$("walletName"),balanceNumber:$("balanceNumber"),btnEye:$("btnEye"),todayMini:$("todayMini"),modeMini:$("modeMini"),frontNotice:$("frontNotice"),homeShortcutTitle:$("homeShortcutTitle"),homeShortcutGrid:$("homeShortcutGrid"),searchInput:$("searchInput"),btnClearSearch:$("btnClearSearch"),sumDay:$("sumDay"),sumWeek:$("sumWeek"),sumMonth:$("sumMonth"),modeOneLabel:$("modeOneLabel"),modeOneValue:$("modeOneValue"),modeTwoLabel:$("modeTwoLabel"),modeTwoValue:$("modeTwoValue"),modulesTitle:$("modulesTitle"),moduleList:$("moduleList"),movementTitle:$("movementTitle"),movementList:$("movementList"),btnMore:$("btnMore"),filterAll:$("filterAll"),filterIncome:$("filterIncome"),filterExpense:$("filterExpense"),journalMini:$("journalMini"),quickLabelWrap:$("quickLabelWrap"),movePocket:$("movePocket"),moveType:$("moveType"),moveMode:$("moveMode"),moveAmount:$("moveAmount"),moveLabel:$("moveLabel"),moveActivity:$("moveActivity"),movePerson:$("movePerson"),moveNote:$("moveNote"),editMovementId:$("editMovementId"),moveSaveBtn:$("moveSaveBtn"),movementForm:$("movementForm"),movementModalTitle:$("movementModalTitle"),movementNotice:$("movementNotice"),labelsList:$("labelsList"),peopleList:$("peopleList"),adminActivityPocket:$("adminActivityPocket"),adminActivityName:$("adminActivityName"),adminActivities:$("adminActivities"),adminLabelName:$("adminLabelName"),adminLabelType:$("adminLabelType"),adminLabelPocket:$("adminLabelPocket"),adminLabelMode:$("adminLabelMode"),adminLabelCategory:$("adminLabelCategory"),labelAdminStatus:$("labelAdminStatus"),adminLabels:$("adminLabels"),adminPersonName:$("adminPersonName"),adminPeople:$("adminPeople"),activitiesBody:$("activitiesBody"),backupStatus:$("backupStatus"),contactForm:$("contactForm"),editContactId:$("editContactId"),contactName:$("contactName"),contactPhone:$("contactPhone"),contactModule:$("contactModule"),contactNote:$("contactNote"),contactSearch:$("contactSearch"),contactsList:$("contactsList"),contactSaveBtn:$("contactSaveBtn")};
   function clone(o){return JSON.parse(JSON.stringify(o))} function uid(p){return p+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4)} function unique(a){return [...new Set(a.filter(Boolean))]} function load(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?JSON.parse(raw):clone(defaults)}catch(e){return clone(defaults)}} function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
-  function normalize(s){s=Object.assign(clone(defaults),s||{}, {settings:Object.assign(clone(defaults.settings),(s&&s.settings)||{})});s.activities=Array.isArray(s.activities)?s.activities:clone(defaults.activities);s.activities=s.activities.map(a=>Object.assign({id:uid("act"),pocket:"pro",name:"Module",url:""},a));s.labelPresets=Array.isArray(s.labelPresets)?s.labelPresets:[];s.labelPresets=s.labelPresets.concat(defaults.labelPresets).filter((x,i,a)=>x&&x.label&&a.findIndex(y=>y.id===x.id||y.label===x.label&&y.pocket===x.pocket&&y.type===x.type&&y.category===x.category)===i).map(x=>Object.assign({id:uid("lp"),pocket:"both",type:"expense",label:"Libellé",mode:"Wave",activity:"",category:"Mes libellés",note:""},x));s.labels=unique(defaults.labels.concat(Array.isArray(s.labels)?s.labels:[],s.labelPresets.map(x=>x.label)));s.people=unique(defaults.people.concat(Array.isArray(s.people)?s.people:[]));s.contacts=Array.isArray(s.contacts)?s.contacts:[];s.movements=Array.isArray(s.movements)?s.movements:[];s.movements=s.movements.map(m=>Object.assign({},m,{pocket:m.pocket==="perso"?"perso":"pro",mode:cleanMode(m.pocket,m.mode),amount:Number(m.amount||0),ts:m.ts||new Date().toISOString()}));s.settings.pocket=s.settings.pocket==="perso"?"perso":"pro";s.settings.eyeOpen=s.settings.eyeOpen!==false;s.settings.visibleCount=Number(s.settings.visibleCount||10);s.settings.movementFilter=["income","expense"].includes(s.settings.movementFilter)?s.settings.movementFilter:"all";return s}
+  function normalize(s){s=Object.assign(clone(defaults),s||{}, {settings:Object.assign(clone(defaults.settings),(s&&s.settings)||{})});s.activities=Array.isArray(s.activities)?s.activities:clone(defaults.activities);s.activities=s.activities.map(a=>{const item=Object.assign({id:uid("act"),pocket:"pro",name:"Module",url:""},a);if(item.name==="PAY PRO")item.name="PRO CARNET";return item;});s.labelPresets=Array.isArray(s.labelPresets)?s.labelPresets:[];s.labelPresets=s.labelPresets.concat(defaults.labelPresets).filter((x,i,a)=>x&&x.label&&a.findIndex(y=>y.id===x.id||y.label===x.label&&y.pocket===x.pocket&&y.type===x.type&&y.category===x.category)===i).map(x=>Object.assign({id:uid("lp"),pocket:"both",type:"expense",label:"Libellé",mode:"Wave",activity:"",category:"Mes libellés",note:""},x));s.labels=unique(defaults.labels.concat(Array.isArray(s.labels)?s.labels:[],s.labelPresets.map(x=>x.label)));s.people=unique(defaults.people.concat(Array.isArray(s.people)?s.people:[]));s.contacts=Array.isArray(s.contacts)?s.contacts:[];s.movements=Array.isArray(s.movements)?s.movements:[];s.labelPresets.forEach(x=>{if(x.activity==="PAY PRO")x.activity="PRO CARNET";});s.movements.forEach(x=>{if(x.activity==="PAY PRO")x.activity="PRO CARNET";});s.contacts.forEach(x=>{if(x.module==="PAY PRO")x.module="PRO CARNET";});s.movements=s.movements.map(m=>Object.assign({},m,{pocket:m.pocket==="perso"?"perso":"pro",mode:cleanMode(m.pocket,m.mode),amount:Number(m.amount||0),ts:m.ts||new Date().toISOString()}));s.settings.pocket=s.settings.pocket==="perso"?"perso":"pro";s.settings.eyeOpen=s.settings.eyeOpen!==false;s.settings.visibleCount=Number(s.settings.visibleCount||10);s.settings.movementFilter=["income","expense"].includes(s.settings.movementFilter)?s.settings.movementFilter:"all";return s}
   function esc(v){return String(v||"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]))} function fmt(n){return Math.abs(Math.round(Number(n||0))).toLocaleString("fr-FR").replace(/\u202f/g," ")+" F"} function signed(m){return (m.type==="income"?"+":"-")+fmt(m.amount)} function hidden(){return "••• F"} function pocket(){return state.settings.pocket||"pro"} function modesFor(p){return ["Wave","OM","Cash","Chèque","CB","Virement"]} function cleanMode(p,m){p=p==="perso"?"perso":"pro";m=String(m||"").trim();return modesFor(p).includes(m)?m:modesFor(p)[0]} function amountValue(m){return m.type==="income"?Number(m.amount||0):-Number(m.amount||0)} function startWeek(d){const x=new Date(d),day=(x.getDay()+6)%7;x.setHours(0,0,0,0);x.setDate(x.getDate()-day);return x} function inPeriod(ts,per){const d=new Date(ts),n=new Date();if(per==="day")return d.toDateString()===n.toDateString();if(per==="week")return d>=startWeek(n);if(per==="month")return d>=new Date(n.getFullYear(),n.getMonth(),1);return true} function listFor(p){return state.movements.filter(m=>m.pocket===p).sort((a,b)=>new Date(b.ts)-new Date(a.ts))} function balance(p){return listFor(p).reduce((s,m)=>s+amountValue(m),0)} function periodNet(p,per){return listFor(p).filter(m=>inPeriod(m.ts,per)).reduce((s,m)=>s+amountValue(m),0)} function periodTotal(p,per,type){return listFor(p).filter(m=>inPeriod(m.ts,per)&&m.type===type).reduce((s,m)=>s+Number(m.amount||0),0)} function phoneClean(v){let p=String(v||"").replace(/[^0-9+]/g,""); if(p.startsWith("00"))p="+"+p.slice(2); return p} function waPhone(v){let p=phoneClean(v).replace(/^\+/,""); return p}
   function syncModalLock(){document.body.classList.toggle("modal-open",!!document.querySelector(".modal-bg.open"))} function openModal(id){$(id).classList.add("open");syncModalLock()} function closeModal(id){$(id).classList.remove("open");syncModalLock()} document.addEventListener("click",e=>{const c=e.target.closest("[data-close]");if(c)closeModal(c.getAttribute("data-close"));if(e.target.classList.contains("modal-bg")){e.target.classList.remove("open");syncModalLock()}});
   function flash(el){if(!el)return;el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash")}
-  function renderHeader(p,eye){p=p||pocket();eye=eye!==undefined?eye:state.settings.eyeOpen;els.tabPro.classList.toggle("active",p==="pro");els.tabPerso.classList.toggle("active",p==="perso");els.walletName.textContent="Solde "+(p==="pro"?"PRO":"PERSO");const nb=eye?fmt(balance(p)):hidden();if(els.balanceNumber.textContent!==nb){els.balanceNumber.textContent=nb;flash(els.balanceNumber)}els.btnEye.textContent=eye?"👁 Ouvert":"🙈 Fermé";els.todayMini.textContent="Aujourd’hui "+(eye?fmt(periodNet(p,"day")):hidden());els.modeMini.textContent="Wave · OM · Cash";els.frontNotice.textContent=p==="pro"?"PRO : choisis le mode, pose le montant, PAY garde la trace.":"PRIVÉ : choisis le mode, pose le montant, PAY garde la trace.";const dayIn=periodTotal(p,"day","income"),dayOut=periodTotal(p,"day","expense"),dayNet=dayIn-dayOut;const sd=eye?"+ "+fmt(dayIn):hidden();if(els.sumDay.textContent!==sd){els.sumDay.textContent=sd;flash(els.sumDay)}const sw=eye?"− "+fmt(dayOut):hidden();if(els.sumWeek.textContent!==sw){els.sumWeek.textContent=sw;flash(els.sumWeek)}const sm=eye?(dayNet>=0?"+ ":"− ")+fmt(Math.abs(dayNet)):hidden();if(els.sumMonth.textContent!==sm){els.sumMonth.textContent=sm;els.sumMonth.classList.toggle("plus",dayNet>=0);els.sumMonth.classList.toggle("minus",dayNet<0);flash(els.sumMonth)}renderModeSummary();}
+  function renderHeader(p,eye){p=p||pocket();eye=eye!==undefined?eye:state.settings.eyeOpen;els.tabPro.classList.toggle("active",p==="pro");els.tabPerso.classList.toggle("active",p==="perso");els.walletName.textContent="Solde "+(p==="pro"?"PRO":"PERSO");const nb=eye?fmt(balance(p)):hidden();if(els.balanceNumber.textContent!==nb){els.balanceNumber.textContent=nb;flash(els.balanceNumber)}els.btnEye.textContent=eye?"👁 Ouvert":"🙈 Fermé";els.todayMini.textContent="Aujourd’hui "+(eye?fmt(periodNet(p,"day")):hidden());els.modeMini.textContent="Wave · OM · Cash";els.frontNotice.textContent=p==="pro"?"PRO : choisis le mode, pose le montant, PRO CARNET garde la trace.":"PRIVÉ : choisis le mode, pose le montant, PRO CARNET garde la trace.";const dayIn=periodTotal(p,"day","income"),dayOut=periodTotal(p,"day","expense"),dayNet=dayIn-dayOut;const sd=eye?"+ "+fmt(dayIn):hidden();if(els.sumDay.textContent!==sd){els.sumDay.textContent=sd;flash(els.sumDay)}const sw=eye?"− "+fmt(dayOut):hidden();if(els.sumWeek.textContent!==sw){els.sumWeek.textContent=sw;flash(els.sumWeek)}const sm=eye?(dayNet>=0?"+ ":"− ")+fmt(Math.abs(dayNet)):hidden();if(els.sumMonth.textContent!==sm){els.sumMonth.textContent=sm;els.sumMonth.classList.toggle("plus",dayNet>=0);els.sumMonth.classList.toggle("minus",dayNet<0);flash(els.sumMonth)}renderModeSummary();}
   function setPocket(p){state.settings.pocket=p;state.settings.visibleCount=10;save();render()}
   function render(){state=normalize(state);const p=pocket(),eye=state.settings.eyeOpen;renderHeader(p,eye);renderDatalists();renderQuickLabels();renderHomeShortcuts();renderModules();renderMovements();renderAdmin();renderContacts();save()}
   setInterval(()=>{renderHeader();renderModules();renderMovements();},60000);
@@ -266,15 +266,15 @@
   function presetButton(pr){return `<button class="label-chip ${chipClass(pr)}" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(pr.label)}</b><small>${pr.type==="income"?"Entrée":"Sortie"} · ${esc(cleanMode(pr.pocket==="both"?pocket():pr.pocket,pr.mode))}</small></button>`}
   function openPresetPage(kind){
     const p=pocket();
-    const title=kind==="income"?"Entrées · sources d’argent":"Sorties · libellés rapides";
+    const title=kind==="income"?"Entrées · sources d’activité":"Sorties · libellés rapides";
     const body=document.getElementById("choiceBody"),titleEl=document.getElementById("choiceTitle");
     if(!body||!titleEl)return openMovement(kind);
     titleEl.textContent=title;
     let html="";
 
     if(kind==="income"){
-      html+=`<div class="notice choice-note">Choisis la source : module DIGIY, retraite, virement reçu ou retrait. Ensuite tu poses le chiffre.</div>`;
-      const acts=state.activities.filter(a=>a.pocket==="pro" && !["PAY PRO"].includes(a.name));
+      html+=`<div class="notice choice-note">Choisis la source d’activité ou la provenance de l’entrée. Ensuite tu poses le chiffre.</div>`;
+      const acts=state.activities.filter(a=>a.pocket==="pro" && !["PRO CARNET","PAY PRO"].includes(a.name));
       if(acts.length){
         html+=`<div class="quick-label-group"><div class="quick-label-title">Modules qui font rentrer</div><div class="quick-label-grid">`+
           acts.map(a=>`<button class="label-chip income" type="button" data-add-module="${esc(a.name)}" data-type="income" data-pocket="pro"><b>${esc(a.name)}</b><small>Entrée · Wave</small></button>`).join("")+
@@ -330,9 +330,9 @@
     if(action==="history"){state.settings.movementFilter="all";save();renderMovements();document.getElementById("movementTitle")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>els.searchInput.focus(),280);return}
   }
   function renderContacts(){const q=String(els.contactSearch.value||"").trim().toLowerCase();let arr=state.contacts.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name)));if(q)arr=arr.filter(c=>[c.name,c.phone,c.module,c.note].join(" ").toLowerCase().includes(q));if(!arr.length){els.contactsList.innerHTML='<div class="admin-item" style="display:block">Aucun contact. Ajoute un abonné avec son téléphone.</div>';return}els.contactsList.innerHTML=arr.map(c=>{const p=phoneClean(c.phone),wa=waPhone(c.phone);return `<article class="contact-row"><div><div class="contact-name">${esc(c.name)}</div><div class="meta">${esc(c.phone)} · ${esc(c.module||"Sans module")}${c.note?" · "+esc(c.note):""}</div></div><div class="contact-actions"><a class="small-btn plus" href="tel:${esc(p)}">Appel</a><a class="small-btn" href="sms:${esc(p)}">SMS</a><a class="small-btn" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a><button class="small-btn" data-edit-contact="${esc(c.id)}">Modifier</button><button class="small-btn danger" data-del-contact="${esc(c.id)}">Supprimer</button></div></article>`}).join("")} function openContact(c){els.contactForm.reset();els.editContactId.value=c?c.id:"";els.contactName.value=c?c.name:"";els.contactPhone.value=c?c.phone:"";els.contactModule.value=c?c.module:"";els.contactNote.value=c?c.note:"";els.contactSaveBtn.textContent=c?"Modifier le contact":"Garder le contact";openModal("contactsModal");setTimeout(()=>els.contactName.focus(),120)}
-  function exportPayload(){return {app:"DIGIY_PAY_BAPTISTE",version:4,storage_key:STORAGE_KEY,exported_at:new Date().toISOString(),data:state}} function backupFileName(){return "digiy-pay-baptiste-"+new Date().toISOString().slice(0,10)+".json"} function downloadJson(){const blob=new Blob([JSON.stringify(exportPayload(),null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=backupFileName();document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)} function setStatus(t,err){els.backupStatus.className="status "+(err?"err":"ok");els.backupStatus.textContent=t||"";els.backupStatus.style.display=t?"block":"none"} function normalizeImport(payload){const inc=payload&&payload.data?payload.data:payload;if(!inc||typeof inc!=="object")throw new Error("Sauvegarde vide ou illisible.");if(!Array.isArray(inc.movements))throw new Error("Sauvegarde sans mouvements PAY.");return normalize(inc)} async function copyText(text){try{await navigator.clipboard.writeText(text);return true}catch(e){return false}} function restorePayload(payload){const imported=normalizeImport(payload);if(!confirm("Restaurer cette sauvegarde ? Les données actuelles seront remplacées."))return;try{localStorage.setItem("digiy_pay_baptiste_before_restore",JSON.stringify(exportPayload()))}catch(e){}state=imported;save();render();setStatus("Sauvegarde restaurée.",false)} function readFile(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||""));r.onerror=()=>rej(new Error("Lecture fichier impossible."));r.readAsText(file)})}
+  function exportPayload(){return {app:"DIGIY_PAY_BAPTISTE",version:4,storage_key:STORAGE_KEY,exported_at:new Date().toISOString(),data:state}} function backupFileName(){return "pro-carnet-"+new Date().toISOString().slice(0,10)+".json"} function downloadJson(){const blob=new Blob([JSON.stringify(exportPayload(),null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=backupFileName();document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)} function setStatus(t,err){els.backupStatus.className="status "+(err?"err":"ok");els.backupStatus.textContent=t||"";els.backupStatus.style.display=t?"block":"none"} function normalizeImport(payload){const inc=payload&&payload.data?payload.data:payload;if(!inc||typeof inc!=="object")throw new Error("Sauvegarde vide ou illisible.");if(!Array.isArray(inc.movements))throw new Error("Sauvegarde sans mouvements CARNET.");return normalize(inc)} async function copyText(text){try{await navigator.clipboard.writeText(text);return true}catch(e){return false}} function restorePayload(payload){const imported=normalizeImport(payload);if(!confirm("Restaurer cette sauvegarde ? Les données actuelles seront remplacées."))return;try{localStorage.setItem("digiy_pay_baptiste_before_restore",JSON.stringify(exportPayload()))}catch(e){}state=imported;save();render();setStatus("Sauvegarde restaurée.",false)} function readFile(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||""));r.onerror=()=>rej(new Error("Lecture fichier impossible."));r.readAsText(file)})}
 
-  /* DIGIY PATCH — Voix PAY entrées/sorties avec provenance ABOS PRO/PRIVÉ */
+  /* DIGIY PATCH — Voix PRO CARNET entrées/sorties avec provenance ABOS PRO/PRIVÉ */
   const PAY_MICRO_MODES=["Wave","OM","Cash","Chèque","CB","Virement"];
   const PAY_MICRO_PROVENANCES=["PRO","PRIVÉ"];
   const PAY_MICRO_INCOME_BASE=["ABOS","Abonnement","Facture payée","Client","Acompte","Vente","Remboursement","Autre entrée"];
@@ -386,6 +386,1144 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
