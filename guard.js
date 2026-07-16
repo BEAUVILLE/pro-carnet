@@ -1,5 +1,5 @@
 // guard.js — PRO CARNET / rail technique PAY
-// Garde stricte : seule une session créée après validation réelle du PIN est acceptée.
+// Autorité unique : session créée après PIN réel + accès actif, durée maximale 8 h.
 (function(){
   "use strict";
 
@@ -10,13 +10,29 @@
   const PIN_PATH=window.DIGIY_LOGIN_URL||"./pin.html";
   const SUPABASE_URL=window.DIGIY_SUPABASE_URL||"https://wesqmwjjtsefyjnluosj.supabase.co";
   const SUPABASE_KEY=window.DIGIY_SUPABASE_ANON_KEY||window.DIGIY_SUPABASE_ANON||"sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+
   const SESSION_KEYS=[
-    "DIGIY_PAY_SESSION","DIGIY_PAY_PIN_SESSION","DIGIY_SESSION_PAY",
-    "digiy_pay_session","digiy_pay_guard_session","digiy_guard_pay_session",
-    "digiy_guard_session"
+    "DIGIY_PAY_SESSION",
+    "DIGIY_PAY_PIN_SESSION",
+    "DIGIY_SESSION_PAY",
+    "digiy_pay_session",
+    "digiy_pay_guard_session",
+    "digiy_guard_pay_session"
   ];
-  const IDENTITY_KEYS=["digiy_pay_slug","digiy_pay_phone","digiy_pay_last_slug","digiy_pay_last_phone","DIGIY_PAY_HUB_PHONE"];
-  const SENSITIVE_PARAMS=["phone","tel","owner_phone","owner_id","pay_phone","pin","code","token","session","access","auth","ok","unlocked","pin_ok"];
+
+  const LEGACY_KEYS=[
+    "digiy_guard_session","DIGIY_PIN_SESSION","DIGIY_ACCESS","DIGIY_SESSION","digiy_session",
+    "DIGIY_PAY_PRO_SESSION","digiy_session_pay","digiy_guard_session:PAY",
+    "digiy_pay_slug","digiy_pay_phone","digiy_pay_last_slug","digiy_pay_last_phone",
+    "DIGIY_PAY_HUB_PHONE","DIGIY_PAY_SLUG","DIGIY_PAY_COMPTE","DIGIY_PAY_PHONE",
+    "digiy_last_slug","DIGIY_SLUG","pay_slug","compte","digiy_phone","DIGIY_PHONE","pay_phone","phone"
+  ];
+
+  const SENSITIVE_PARAMS=[
+    "phone","tel","p_phone","owner_phone","owner_id","subscription_phone","checkout_phone","pay_phone",
+    "pin","pin4","code","token","session","session_token","access","auth","ok","unlocked","pin_ok",
+    "slug","compte","module","return","redirect","redirect_url","url","from","v"
+  ];
 
   let current=null;
   let bootPromise=null;
@@ -29,7 +45,7 @@
     if(!digits)return "";
     if(digits.startsWith("221")&&digits.length===12)return digits;
     if(digits.length===9)return "221"+digits;
-    return digits;
+    return digits.slice(0,15);
   };
   const normalizeSlug=value=>String(value||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-").replace(/[^a-z0-9-_]/g,"").replace(/-+/g,"-").replace(/^[-_]+|[-_]+$/g,"");
   const parseTime=value=>{
@@ -46,9 +62,7 @@
       const url=new URL(location.href);
       let changed=false;
       SENSITIVE_PARAMS.forEach(key=>{if(url.searchParams.has(key)){url.searchParams.delete(key);changed=true}});
-      const slug=normalizeSlug(url.searchParams.get("slug")||"");
-      if(slug&&/\d{7,}/.test(slug)){url.searchParams.delete("slug");changed=true}
-      if(changed)history.replaceState({},"",url.pathname+url.search+url.hash);
+      if(changed)history.replaceState({},document.title,url.pathname+url.search+url.hash);
     }catch(_){}
   }
 
@@ -57,11 +71,11 @@
     const moduleCode=String(session.module||session.module_code||"").trim().toUpperCase();
     const phone=normalizePhone(session.phone||"");
     const access=session.access===true||session.access_ok===true||session.pin_session_ok===true;
-    const validated=parseTime(session.validated_at||session.verified_at||session.ts||0);
+    const validated=parseTime(session.validated_at||session.verified_at||0);
     const expires=parseTime(session.expires_at||session.expiresAt||0);
     const t=now();
     if(moduleCode!==MODULE)return false;
-    if(!phone||phone.length<9||!access||!validated||!expires)return false;
+    if(phone.length<9||!access||!validated||!expires)return false;
     if(validated>t+SKEW)return false;
     if(t-validated>=TTL)return false;
     if(expires<=t)return false;
@@ -70,11 +84,11 @@
   }
 
   function canonical(session){
-    const validated=parseTime(session.validated_at||session.verified_at||session.ts||0);
+    const validated=parseTime(session.validated_at||session.verified_at||0);
     return {
       module:MODULE,
       public_name:"PRO CARNET",
-      slug:normalizeSlug(session.slug||session.reference||session.référence||""),
+      slug:normalizeSlug(session.slug||session.reference||session.identifiant||""),
       phone:normalizePhone(session.phone||""),
       access:true,
       access_ok:true,
@@ -111,12 +125,12 @@
     }catch(_){}
     current=clean;
     window.DIGIY_PAY_HUB_PHONE=clean.phone;
-    window.DIGIY_ACCESS=Object.assign({},window.DIGIY_ACCESS||{},clean);
+    window.DIGIY_ACCESS=Object.assign({},clean);
     return clean;
   }
 
   function clearSessions(){
-    SESSION_KEYS.concat(IDENTITY_KEYS).forEach(key=>{
+    [...new Set([...SESSION_KEYS,...LEGACY_KEYS])].forEach(key=>{
       try{sessionStorage.removeItem(key);localStorage.removeItem(key)}catch(_){}
     });
     current=null;
@@ -126,7 +140,6 @@
   function hide(){try{document.documentElement.style.visibility="hidden"}catch(_){}}
   function show(){try{document.documentElement.style.visibility=""}catch(_){}}
   function isPinPage(){return /(?:^|\/)pin\.html$/i.test(location.pathname||"")}
-
   function buildPinUrl(){
     try{
       const url=new URL(PIN_PATH,location.href);
@@ -147,6 +160,7 @@
     const res=await fetch(SUPABASE_URL+"/rest/v1/rpc/"+name,{method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body||{})});
     return {ok:res.ok,data:await res.json().catch(()=>null)};
   }
+
   function boolResult(data){
     const raw=Array.isArray(data)?data[0]:data;
     if(raw===true||raw===1)return true;
@@ -154,38 +168,40 @@
     if(raw&&typeof raw==="object")return ["ok","access","access_ok","has_access","allowed","active","is_active","subscribed","valid","success"].some(k=>raw[k]===true);
     return false;
   }
+
   async function checkAccess(phone){
-    const p=normalizePhone(phone);if(!p)return false;
+    const p=normalizePhone(phone);
+    if(!p)return false;
     for(const [name,bodies] of [
       ["digiy_has_module_access_from_abos",[{p_phone:p,p_module:MODULE},{p_phone:p,p_module:MODULE_LOWER}]],
       ["digiy_has_access",[{p_phone:p,p_module:MODULE},{p_phone:p,p_module:MODULE_LOWER}]]
     ]){
-      for(const body of bodies){try{const r=await rpc(name,body);if(r.ok&&boolResult(r.data))return true}catch(_){}}
+      for(const body of bodies){
+        try{const r=await rpc(name,body);if(r.ok&&boolResult(r.data))return true}catch(_){}
+      }
     }
     return false;
   }
+
   async function verifyPin(phone,pin){
-    const p=normalizePhone(phone),code=String(pin||"").trim().replace(/\s+/g,"");
-    if(!p||!code)return {ok:false,error:"Téléphone ou code manquant."};
+    const p=normalizePhone(phone);
+    const code=String(pin||"").replace(/\D/g,"");
+    if(p.length<9||code.length!==4)return {ok:false,error:"Vérifie le téléphone et les 4 chiffres du code."};
     for(const moduleCode of [MODULE,MODULE_LOWER]){
       try{
         const r=await rpc("digiy_verify_pin",{p_phone:p,p_module:moduleCode,p_pin:code});
-        if(!r.ok)continue;
-        const row=Array.isArray(r.data)?r.data[0]:r.data;
-        if(!boolResult(row))continue;
+        if(!r.ok||!boolResult(r.data))continue;
         if(!(await checkAccess(p)))return {ok:false,error:"Accès PRO CARNET non actif."};
+        const row=Array.isArray(r.data)?r.data[0]:r.data;
         const t=now();
-        const saved=persist({module:MODULE,phone:p,slug:row?.slug||row?.identifiant||("pay-"+p),access:true,validated_at:t,expires_at:t+TTL});
-        return saved?{ok:true,session:saved,phone:saved.phone,slug:saved.slug}:{ok:false,error:"Session refusée."};
+        const saved=persist({module:MODULE,phone:p,slug:row&&typeof row==="object"?(row.slug||row.identifiant||""):"",access:true,validated_at:t,expires_at:t+TTL});
+        return saved?{ok:true,session:saved}:{ok:false,error:"Session refusée."};
       }catch(_){}
     }
-    return {ok:false,error:"Code incorrect."};
+    return {ok:false,error:"Code incorrect ou accès indisponible."};
   }
-  async function loginWithPin(identifier,pin,explicitPhone){
-    const phone=normalizePhone(explicitPhone||identifier||"");
-    if(!phone)return {ok:false,error:"Téléphone introuvable."};
-    return verifyPin(phone,pin);
-  }
+
+  async function loginWithPin(identifier,pin,explicitPhone){return verifyPin(explicitPhone||identifier||"",pin)}
 
   async function boot(options={}){
     cleanUrl();
@@ -196,16 +212,19 @@
     else show();
     return {ok:false,session:null,reason:"pin_required"};
   }
+
   function ready(options={}){
     if(!bootPromise)bootPromise=boot(options).finally(()=>{bootPromise=null});
     return bootPromise;
   }
+
   async function requireSession(options={}){
     const result=await ready({redirect:options.redirect!==false});
     if(result.ok&&result.session)return result.session;
     if(options.redirect!==false&&!isPinPage())location.replace(options.to||buildPinUrl());
     return null;
   }
+
   function getSession(){return current&&isValid(current)?{...current}:readStored()}
   function logout(redirect=true){clearSessions();cleanUrl();if(redirect!==false)goPin()}
   function buildUrl(target,params={}){
@@ -218,14 +237,14 @@
   }
 
   window.DIGIY_GUARD={
-    VERSION:"carnet-guard-strict-pin-v3-20260716",
-    module:MODULE,
-    MODULE_CODE:MODULE,
+    VERSION:"carnet-guard-strict-pin-v4-20260716",
+    module:MODULE,MODULE_CODE:MODULE,
     ready,boot,requireSession,getSession,
     getSlug:()=>normalizeSlug(getSession()?.slug||""),
     getPhone:()=>normalizePhone(getSession()?.phone||""),
     getModule:()=>MODULE,
     isAuthenticated:()=>!!getSession(),
+    normalizePhone,normalizeSlug,
     verifyPin,loginWithPin,checkAccess,
     logout,clearSession:clearSessions,clearAll:clearSessions,
     buildPinUrl,goPin,buildUrl,
