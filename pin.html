@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Accès • DIGIY</title>
+  <title>Accès PRO CARNET • DIGIY</title>
   <meta name="theme-color" content="#020617"/>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
 
-  <!-- CONFIG — changer ces 5 lignes par module -->
   <script>
     window.DIGIY_SUPABASE_URL      = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON     = window.DIGIY_SUPABASE_ANON_KEY;
-   window.DIGIY_MODULE       = "PAY";
-window.DIGIY_MODULE_LABEL = "Mon argent";
-window.DIGIY_MODULE_ICON  = "💰";
-window.DIGIY_INDEX_URL    = "./index.html";
-window.DIGIY_SLUG_PREFIX  = "pay";
+    window.DIGIY_MODULE       = "PAY";
+    window.DIGIY_MODULE_LABEL = "PRO CARNET";
+    window.DIGIY_MODULE_ICON  = "📒";
+    window.DIGIY_INDEX_URL    = "./accueil.html";
+    window.DIGIY_SLUG_PREFIX  = "pay";
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -81,9 +81,9 @@ window.DIGIY_SLUG_PREFIX  = "pay";
 <div class="card">
 
   <div class="header">
-    <span class="ico" id="moduleIcon">🏠</span>
+    <span class="ico" id="moduleIcon">📒</span>
     <div class="badge">🔑 Accès DIGIY</div>
-    <div class="title" id="moduleLabel">Je loue</div>
+    <div class="title" id="moduleLabel">PRO CARNET</div>
   </div>
 
   <div class="steps">
@@ -98,7 +98,6 @@ window.DIGIY_SLUG_PREFIX  = "pay";
     </div>
   </div>
 
-  <!-- ETAPE 1 -->
   <div class="panel active" id="step1">
     <label class="label" for="phoneInput">📱 Ton numéro de téléphone</label>
     <div class="phone-wrap">
@@ -110,7 +109,6 @@ window.DIGIY_SLUG_PREFIX  = "pay";
     <button class="btn" id="btnContinue" type="button" style="margin-top:16px" disabled>Continuer →</button>
   </div>
 
-  <!-- ETAPE 2 -->
   <div class="panel" id="step2">
     <div class="phone-recap">
       <span class="phone-recap-num" id="phoneDisplay"></span>
@@ -136,7 +134,7 @@ window.DIGIY_SLUG_PREFIX  = "pay";
       <button class="key zero" data-v="0" type="button">0</button>
       <button class="key del" data-v="DEL" type="button">⌫</button>
     </div>
-    <button class="btn" id="btnEnter" type="button" disabled>Entrer →</button>
+    <button class="btn" id="btnEnter" type="button" disabled>Ouvrir PRO CARNET →</button>
     <div class="status" id="status2"></div>
   </div>
 
@@ -149,7 +147,7 @@ window.DIGIY_SLUG_PREFIX  = "pay";
 const MODULE=((window.DIGIY_MODULE)||"LOC").toUpperCase();
 const MODULE_LABEL=window.DIGIY_MODULE_LABEL||MODULE;
 const MODULE_ICON=window.DIGIY_MODULE_ICON||"∞";
-const INDEX_URL=window.DIGIY_INDEX_URL||"./index.html";
+const INDEX_URL=window.DIGIY_INDEX_URL||"./accueil.html";
 const SLUG_PREFIX=(window.DIGIY_SLUG_PREFIX||MODULE.toLowerCase()).replace(/_/g,"-");
 const MAX_AGE=8*60*60*1000;
 const mod=MODULE.toLowerCase();
@@ -174,8 +172,6 @@ function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k)||"";sessi
 function showSt(id,msg,cls){const e=$(id);e.className="status show "+cls;e.textContent=msg}
 function clearSt(id){const e=$(id);e.className="status";e.textContent=""}
 function shake(el){el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");setTimeout(()=>el.classList.remove("shake"),400)}
-
-// prefill : géré par le module au déploiement via ?phone= dans l'URL
 
 function getSb(){
   if(window._dsb)return window._dsb;
@@ -204,7 +200,6 @@ function redirect(sl){
   catch(_){location.replace(INDEX_URL)}
 }
 
-// ETAPE 1
 const phoneEl=$("phoneInput");
 const btnContinue=$("btnContinue");
 function updateContinueBtn(){btnContinue.disabled=norm(phoneEl.value).length<9}
@@ -226,7 +221,6 @@ async function goStep2(){
 }
 btnContinue.addEventListener("click",goStep2);
 
-// ETAPE 2
 function showStep2(){
   $("step1").classList.remove("active");$("step2").classList.add("active");
   $("dot1").className="step-dot done";$("dot1").textContent="✓";$("lbl1").className="step-lbl";
@@ -274,7 +268,6 @@ async function doLogin(){
     const sb=getSb();
     const{data,error}=await sb.rpc("digiy_verify_pin",{p_phone:confirmedPhone,p_module:MODULE,p_pin:pin});
     if(error)throw new Error(error.message||"Erreur serveur");
-    /* Le RPC retourne un tableau → on prend la première ligne */
     const row=Array.isArray(data)?data[0]:data;
     const ok=row===true||row?.ok===true||row?.access===true||row?.status==="ok";
     if(!ok){
@@ -287,7 +280,7 @@ async function doLogin(){
     const rpcSlug=row?.slug||row?.identifiant||"";
     const finalSlug=rpcSlug||slug(confirmedPhone);
     writeSession(confirmedPhone,finalSlug,row?.session_token||"");
-    showSt("status2","✅ Accès ouvert. Redirection…","ok");
+    showSt("status2","✅ PRO CARNET ouvert. Redirection…","ok");
     setTimeout(()=>redirect(finalSlug),700);
   }catch(err){
     pin="";updateDots();updateEnterBtn();
@@ -299,4 +292,3 @@ async function doLogin(){
 </script>
 </body>
 </html>
-
