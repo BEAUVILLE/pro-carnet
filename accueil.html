@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr" style="visibility:hidden">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="theme-color" content="#06140f">
+<meta name="description" content="Accueil privé PRO CARNET avec carte de visite, partage et accès au carnet professionnel.">
+<meta name="digiy-build" content="pro-carnet-accueil-carte-visite-20260716">
+<title>PRO CARNET — Accueil</title>
+<script>window.DIGIY_LOGIN_URL="./pin.html";</script>
+<script src="./guard.js?v=pro-carnet-accueil-20260716" onerror="location.replace('./pin.html')"></script>
+<style>
+:root{--bg:#06140f;--bg2:#0a2419;--gold:#d6a85f;--gold2:#f4d27a;--green:#22c55e;--ink:#fff8e8;--muted:rgba(255,248,232,.72);--line:rgba(255,255,255,.13)}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:18px 14px calc(28px + env(safe-area-inset-bottom,0px));display:grid;place-items:center;background:radial-gradient(760px 430px at 8% -8%,rgba(244,210,122,.17),transparent 60%),radial-gradient(680px 380px at 100% 0%,rgba(34,197,94,.15),transparent 58%),linear-gradient(180deg,var(--bg2),var(--bg));color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:850}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}.wrap{width:min(760px,100%)}.brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;color:var(--gold2);font-size:13px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase}.logo{width:48px;height:48px;border-radius:17px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--green));color:#06140f;font-size:25px}.shell{padding:20px;border:1px solid rgba(244,210,122,.28);border-radius:32px;background:rgba(255,255,255,.065);box-shadow:0 24px 65px rgba(0,0,0,.34);backdrop-filter:blur(12px)}h1{margin:0;text-align:center;font-size:clamp(38px,8vw,62px);line-height:.96;letter-spacing:-.055em}.lead{margin:9px auto 17px;max-width:52ch;text-align:center;color:var(--muted);line-height:1.5}.cardBox{padding:9px;border:1px solid rgba(244,210,122,.30);border-radius:25px;background:rgba(0,0,0,.18)}.cardLink{display:block;overflow:hidden;border-radius:18px;background:#fff;line-height:0;box-shadow:0 16px 38px rgba(0,0,0,.30);-webkit-tap-highlight-color:transparent}.cardLink:active{transform:scale(.988)}.cardLink:focus-visible{outline:4px solid rgba(244,210,122,.72);outline-offset:4px}.cardLink img{display:block;width:100%;height:auto}.cardActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.cardActions a,.cardActions button,.openCarnet{min-height:55px;border-radius:17px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 13px;font-weight:1000}.cardActions a{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#112016;border:0}.cardActions button{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.34);color:#bbf7d0}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}.feature{min-height:86px;padding:10px 7px;border:1px solid var(--line);border-radius:19px;background:rgba(255,255,255,.055);display:grid;place-items:center;align-content:center;text-align:center}.feature strong{font-size:22px}.feature span{margin-top:5px;font-size:12px;color:#fff4c8}.openCarnet{margin-top:15px;min-height:66px;background:linear-gradient(135deg,var(--green),var(--gold2));color:#07150f;border:0;font-size:18px}.status{margin:12px 0 0;padding:11px 13px;border:1px solid rgba(244,210,122,.27);border-radius:15px;background:rgba(0,0,0,.18);color:#fde68a;text-align:center;font-size:14px}.status[hidden]{display:none}.foot{margin:14px 0 0;text-align:center;color:var(--muted);font-size:12px;line-height:1.45}@media(max-width:560px){body{padding:0}.wrap{width:100%}.shell{min-height:100dvh;border-radius:0;padding:15px 12px 24px}.brand{margin-top:8px}.cardActions{grid-template-columns:1fr}.features{grid-template-columns:1fr 1fr}h1{font-size:43px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="brand"><div class="logo">📒</div><span>PRO CARNET</span></div>
+  <section class="shell">
+    <h1>Mon activité claire.</h1>
+    <p class="lead">Présente PRO CARNET sans exposer tes soldes, tes mouvements ni tes preuves privées.</p>
+
+    <div class="cardBox">
+      <a class="cardLink" href="https://digiy-carnet-pro.digiylyfe.com/" target="_blank" rel="noopener noreferrer" aria-label="Voir la présentation publique PRO CARNET">
+        <img src="./carte-visite.png?v=20260716" alt="Carte de visite PRO CARNET" loading="eager" decoding="async">
+      </a>
+      <div class="cardActions">
+        <a href="https://digiy-carnet-pro.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Voir la présentation</a>
+        <button id="shareCard" type="button">Partager la carte</button>
+      </div>
+    </div>
+
+    <div class="features" aria-label="Fonctions PRO CARNET">
+      <div class="feature"><strong>↑</strong><span>Encaissements</span></div>
+      <div class="feature"><strong>↓</strong><span>Dépenses</span></div>
+      <div class="feature"><strong>◎</strong><span>Réserve</span></div>
+      <div class="feature"><strong>▤</strong><span>Preuves</span></div>
+    </div>
+
+    <a class="openCarnet" href="./index.html">Ouvrir mon carnet →</a>
+    <p class="status" id="status" role="status" aria-live="polite" hidden></p>
+  </section>
+  <p class="foot">Accès privé par PIN · session 8 h · aucune donnée financière dans la carte partagée.</p>
+</main>
+<script>
+(()=>{
+  "use strict";
+  const PUBLIC_URL="https://digiy-carnet-pro.digiylyfe.com/";
+  const CARD_PATH="./carte-visite.png";
+  const status=document.getElementById("status");
+  const setStatus=message=>{status.textContent=message||"";status.hidden=!message};
+  document.getElementById("shareCard").addEventListener("click",async()=>{
+    const title="Carte de visite PRO CARNET";
+    const text="PRO CARNET organise les encaissements, les dépenses, la réserve et les preuves du professionnel.";
+    setStatus("Préparation du partage…");
+    try{
+      if(navigator.share){
+        try{
+          const response=await fetch(CARD_PATH,{cache:"no-store"});
+          if(response.ok){
+            const blob=await response.blob();
+            const file=new File([blob],"carte-visite-pro-carnet.png",{type:blob.type||"image/png"});
+            if(navigator.canShare&&navigator.canShare({files:[file]})){
+              await navigator.share({title,text:text+"\n"+PUBLIC_URL,files:[file]});
+              setStatus("Carte partagée.");
+              return;
+            }
+          }
+        }catch(error){if(error&&error.name==="AbortError"){setStatus("");return}}
+        await navigator.share({title,text,url:PUBLIC_URL});
+        setStatus("Lien partagé.");
+        return;
+      }
+    }catch(error){if(error&&error.name==="AbortError"){setStatus("");return}}
+    const cardUrl=new URL(CARD_PATH,location.href).href;
+    const message="Carte de visite PRO CARNET : "+cardUrl+"\nPrésentation publique : "+PUBLIC_URL;
+    setStatus("Ouverture de WhatsApp…");
+    location.href="https://wa.me/?text="+encodeURIComponent(message);
+  });
+})();
+</script>
+</body>
+</html>
