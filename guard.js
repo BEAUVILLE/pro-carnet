@@ -5,6 +5,12 @@
 
   const MODULE="PAY";
   const MODULE_LOWER="pay";
+  const MODULE_ALIASES=[
+    "PAY","pay",
+    "CARNET","carnet",
+    "PRO_CARNET","pro_carnet",
+    "DIGIY_CARNET","digiy_carnet"
+  ];
   const TTL=8*60*60*1000;
   const SKEW=60*1000;
   const PIN_PATH=window.DIGIY_LOGIN_URL||"./pin.html";
@@ -169,14 +175,15 @@
     return false;
   }
 
+  function accessBodies(phone){
+    return MODULE_ALIASES.map(moduleCode=>({p_phone:phone,p_module:moduleCode}));
+  }
+
   async function checkAccess(phone){
     const p=normalizePhone(phone);
     if(!p)return false;
-    for(const [name,bodies] of [
-      ["digiy_has_module_access_from_abos",[{p_phone:p,p_module:MODULE},{p_phone:p,p_module:MODULE_LOWER}]],
-      ["digiy_has_access",[{p_phone:p,p_module:MODULE},{p_phone:p,p_module:MODULE_LOWER}]]
-    ]){
-      for(const body of bodies){
+    for(const name of ["digiy_has_module_access_from_abos","digiy_has_access"]){
+      for(const body of accessBodies(p)){
         try{const r=await rpc(name,body);if(r.ok&&boolResult(r.data))return true}catch(_){}
       }
     }
@@ -187,7 +194,7 @@
     const p=normalizePhone(phone);
     const code=String(pin||"").replace(/\D/g,"");
     if(p.length<9||code.length!==4)return {ok:false,error:"Vérifie le téléphone et les 4 chiffres du code."};
-    for(const moduleCode of [MODULE,MODULE_LOWER]){
+    for(const moduleCode of MODULE_ALIASES){
       try{
         const r=await rpc("digiy_verify_pin",{p_phone:p,p_module:moduleCode,p_pin:code});
         if(!r.ok||!boolResult(r.data))continue;
@@ -237,7 +244,7 @@
   }
 
   window.DIGIY_GUARD={
-    VERSION:"carnet-guard-strict-pin-v4-20260716",
+    VERSION:"carnet-guard-pin-alias-v5-20260721",
     module:MODULE,MODULE_CODE:MODULE,
     ready,boot,requireSession,getSession,
     getSlug:()=>normalizeSlug(getSession()?.slug||""),
