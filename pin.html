@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#020617">
-  <meta name="digiy-build" content="pro-carnet-pin-authority-v6-20260721">
+  <meta name="digiy-build" content="pro-carnet-pin-direct-tool-20260722">
   <title>Accès PRO CARNET · DIGIY</title>
   <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
   <script src="./guard.js?v=carnet-guard-pin-authority-v6-20260721"></script>
@@ -38,7 +38,7 @@
   const setStatus=(text,kind)=>{const box=$("status");box.textContent=text;box.className="status show "+kind};
 
   window.DIGIY_GUARD.cleanUrl();
-  if(window.DIGIY_GUARD.getSession()){location.replace("./accueil.html");return}
+  if(window.DIGIY_GUARD.getSession()){location.replace("./index.html");return}
 
   $("loginForm").addEventListener("submit",async event=>{
     event.preventDefault();
@@ -51,7 +51,7 @@
       const result=await window.DIGIY_GUARD.loginWithPin(phone,pin);
       if(!result?.ok){setStatus(result?.error||"Code incorrect ou accès indisponible.","err");$("pin").value="";$("submitBtn").disabled=false;return}
       setStatus("PRO CARNET ouvert. Redirection…","ok");
-      location.replace("./accueil.html");
+      location.replace("./index.html");
     }catch(_){setStatus("Vérification impossible. Réessaie.","err");$("submitBtn").disabled=false}
   });
 })();
