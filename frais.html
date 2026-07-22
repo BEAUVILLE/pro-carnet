@@ -5,33 +5,174 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#06140f">
+  <meta name="digiy-build" content="carnet-quick-entry-local-v11-20260722">
   <title>PRO CARNET — Saisie rapide</title>
-  <script>window.DIGIY_LOGIN_URL="./pin.html";</script>
-  <script src="./guard.js?v=carnet-strict-20260716"></script>
+  <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
+  <script src="./guard.js?v=carnet-minimal-fixes-v11-20260722"></script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:14px 14px 110px;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 35%),linear-gradient(180deg,#06140f,#020806);color:#fff8e8;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:850}.wrap{width:min(560px,100%);margin:0 auto}.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}.back{width:46px;height:46px;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(255,255,255,.07);color:#fff;font-size:22px}.title{flex:1;text-align:center}.title small{display:block;color:rgba(255,255,255,.58);font-size:11px;letter-spacing:.12em}.title b{display:block;color:#f4d27a;font-size:20px}.spacer{width:46px}.card{padding:15px;border:1px solid rgba(255,255,255,.09);border-radius:25px;background:rgba(255,255,255,.06);box-shadow:0 16px 42px rgba(0,0,0,.22)}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.tab{min-height:50px;border:1px solid rgba(255,255,255,.10);border-radius:17px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.72);font:inherit;font-weight:1000}.tab.active{background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#172016}.type.active.income{background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215}.type.active.expense{background:linear-gradient(135deg,#fb923c,#ffedd5);color:#5f220b}.section{margin:14px 0 7px;color:#f4d27a;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chip{min-height:58px;border:1px solid rgba(255,255,255,.10);border-radius:17px;background:#fff7df;color:#172016;font:inherit;font-size:12px;font-weight:1000;padding:8px}.chip.active{outline:3px solid rgba(244,210,122,.52);background:#dcfce7}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mode{min-height:48px;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(255,255,255,.07);color:#fff;font:inherit;font-weight:1000}.mode.active{background:#f4d27a;color:#172016}.field{margin-top:12px}.field label{display:block;margin-bottom:6px;color:rgba(255,255,255,.70);font-size:12px}.field input{width:100%;min-height:54px;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:rgba(0,0,0,.22);color:#fff;padding:12px;font:inherit;font-weight:1000;outline:none}.amount input{min-height:72px;text-align:center;font-size:32px}.save{width:100%;min-height:58px;margin-top:16px;border:0;border-radius:18px;background:linear-gradient(135deg,#22c55e,#f4d27a);color:#102014;font:inherit;font-size:16px;font-weight:1100}.save:disabled{opacity:.45}.note{margin-top:13px;padding:12px;border-radius:16px;background:rgba(244,210,122,.10);border:1px solid rgba(244,210,122,.22);color:#fff4c8;font-size:12px;line-height:1.45}.status{display:none;margin-top:12px;padding:11px;border-radius:15px;font-weight:1000}.status.show{display:block}.status.ok{background:rgba(34,197,94,.13);color:#86efac}.status.err{background:rgba(239,68,68,.13);color:#fca5a5}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.soft{min-height:50px;border:0;border-radius:16px;background:#fff7df;color:#172016;font:inherit;font-weight:1000}
+    @media(max-width:390px){.chips{grid-template-columns:1fr 1fr}.modes{grid-template-columns:1fr 1fr 1fr}}
+  </style>
 </head>
 <body>
-  <main id="secureStatus" style="min-height:100vh;display:grid;place-items:center;padding:24px;background:#06140f;color:#fff8e8;font-family:system-ui;text-align:center;font-weight:800">
-    <div>Ouverture sécurisée de la saisie rapide…</div>
+  <main class="wrap">
+    <header class="top"><button class="back" id="back" type="button">‹</button><div class="title"><small>PRO CARNET</small><b>Saisie rapide locale</b></div><div class="spacer"></div></header>
+    <section class="card">
+      <div class="tabs" aria-label="Choisir la poche">
+        <button class="tab pocket active" data-pocket="pro" type="button">💼 PRO</button>
+        <button class="tab pocket" data-pocket="perso" type="button">🏠 PERSO</button>
+      </div>
+      <div class="tabs" aria-label="Choisir la nature">
+        <button class="tab type income active" data-type="income" type="button">＋ Entrée</button>
+        <button class="tab type expense" data-type="expense" type="button">− Sortie</button>
+      </div>
+
+      <div class="section">Motif</div>
+      <div class="chips" id="labels"></div>
+
+      <div class="field"><label for="customLabel">Autre motif</label><input id="customLabel" type="text" placeholder="Ex : client, fournisseur, réparation…"></div>
+
+      <div class="section">Mode de paiement</div>
+      <div class="modes" id="modes"></div>
+
+      <div class="field amount"><label for="amount">Montant FCFA</label><input id="amount" type="number" inputmode="numeric" min="1" step="1" placeholder="0"></div>
+
+      <button class="save" id="save" type="button">Confirmer la trace</button>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="soft" id="backup" type="button">💾 Sauvegarde</button>
+        <button class="soft" id="openCarnet" type="button">Voir le carnet</button>
+      </div>
+      <div class="note"><strong>Données locales :</strong> aucune copie cloud automatique. Cette page fonctionne sans télécharger son moteur depuis GitHub.</div>
+    </section>
   </main>
-  <script>
-  (async()=>{
-    "use strict";
-    const session=await window.DIGIY_GUARD.requireSession({redirect:true,to:"./pin.html"});
-    if(!session)return;
-    const source="https://raw.githubusercontent.com/BEAUVILLE/pro-carnet/a8922e40ba35592f14f8acb92c24675efebdd3f5/frais.html";
-    const response=await fetch(source,{cache:"no-store"});
-    if(!response.ok)throw new Error("source indisponible");
-    let html=await response.text();
-    html=html
-      .replaceAll("DIGIY PAY — Saisie rapide","PRO CARNET — Saisie rapide")
-      .replaceAll("<small>DIGIY PAY</small>","<small>PRO CARNET</small>");
-    document.open();
-    document.write(html);
-    document.close();
-  })().catch(()=>{
-    document.documentElement.style.visibility="";
-    document.getElementById("secureStatus").innerHTML='<div><strong>Saisie rapide momentanément indisponible.</strong><br><br><a href="./index.html" style="color:#f4d27a">Retour à PRO CARNET</a></div>';
+<script>
+(async()=>{
+  "use strict";
+  const session=await window.DIGIY_GUARD.requireSession({redirect:true,to:"./pin.html"});
+  if(!session)return;
+  document.documentElement.style.visibility="";
+
+  const KEY="digiy_pay_baptiste_reel_v2";
+  const MODES=["Wave","OM","Cash","Chèque","CB","Virement"];
+  const LABELS={
+    pro:{
+      income:["Client","Vente","Course","Location","Réservation","Acompte","Caisse","Autre entrée"],
+      expense:["Gasoil","Internet","Matériel","Transport","Loyer","Senelec","SEN’EAU","Réparation","Fournisseur","Autre sortie"]
+    },
+    perso:{
+      income:["Retraite","Aide reçue","Remboursement","Virement reçu","Autre entrée"],
+      expense:["Maison","Nourriture","École","Senelec","SEN’EAU","Transport","Santé","Autre sortie"]
+    }
+  };
+
+  let pocket="pro";
+  let type="income";
+  let label="";
+  let mode="Wave";
+
+  const $=id=>document.getElementById(id);
+  const setStatus=(text,kind)=>{const el=$("status");el.textContent=text;el.className="status show "+kind};
+  const uid=()=> "m"+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-5);
+
+  function readState(){
+    const raw=localStorage.getItem(KEY);
+    const state=raw?JSON.parse(raw):{};
+    if(!state||typeof state!=="object")throw new Error("Carnet illisible.");
+    if(!Array.isArray(state.movements))state.movements=[];
+    if(!state.settings||typeof state.settings!=="object")state.settings={};
+    return state;
+  }
+
+  function render(){
+    document.querySelectorAll("[data-pocket]").forEach(btn=>btn.classList.toggle("active",btn.dataset.pocket===pocket));
+    document.querySelectorAll("[data-type]").forEach(btn=>btn.classList.toggle("active",btn.dataset.type===type));
+    $("labels").innerHTML=LABELS[pocket][type].map(item=>`<button class="chip ${item===label?"active":""}" data-label="${item.replace(/"/g,"&quot;")}" type="button">${item}</button>`).join("");
+    $("modes").innerHTML=MODES.map(item=>`<button class="mode ${item===mode?"active":""}" data-mode="${item}" type="button">${item}</button>`).join("");
+    $("save").textContent=type==="income"?"Confirmer l’entrée":"Confirmer la sortie";
+  }
+
+  document.addEventListener("click",event=>{
+    const p=event.target.closest("[data-pocket]");
+    if(p){pocket=p.dataset.pocket==="perso"?"perso":"pro";label="";render();return}
+    const t=event.target.closest("[data-type]");
+    if(t){type=t.dataset.type==="expense"?"expense":"income";label="";render();return}
+    const l=event.target.closest("[data-label]");
+    if(l){label=l.dataset.label||"";$("customLabel").value="";render();return}
+    const m=event.target.closest("[data-mode]");
+    if(m){mode=MODES.includes(m.dataset.mode)?m.dataset.mode:"Wave";render()}
   });
-  </script>
+
+  $("customLabel").addEventListener("input",()=>{if($("customLabel").value.trim()){label="";render()}});
+  $("back").onclick=()=>location.href="./index.html";
+  $("openCarnet").onclick=()=>location.href="./index.html";
+
+  $("save").onclick=()=>{
+    const amount=Math.round(Number($("amount").value||0));
+    const chosen=String($("customLabel").value||"").trim()||label;
+    if(amount<=0){setStatus("Pose un montant supérieur à zéro.","err");$("amount").focus();return}
+    if(!chosen){setStatus("Choisis ou écris un motif.","err");return}
+    if(!MODES.includes(mode)){setStatus("Choisis un mode de paiement.","err");return}
+
+    const id=uid();
+    try{
+      const state=readState();
+      const movement={
+        id,
+        pocket,
+        type,
+        mode,
+        amount,
+        label:chosen,
+        activity:pocket==="pro"?"PRO CARNET":(type==="income"?"Maison":"Charges"),
+        person:"",
+        note:"Saisie rapide locale",
+        ts:new Date().toISOString()
+      };
+      state.movements.push(movement);
+      state.settings.pocket=pocket;
+      state.settings.visibleCount=10;
+      state._rev=Number(state._rev||0)+1;
+      localStorage.setItem(KEY,JSON.stringify(state));
+
+      const verified=readState();
+      if(!verified.movements.some(item=>item&&item.id===id))throw new Error("Écriture non confirmée.");
+      setStatus("✅ Trace enregistrée dans "+(pocket==="pro"?"PRO":"PERSO")+" · "+mode+".","ok");
+      $("amount").value="";
+      $("customLabel").value="";
+      label="";
+      render();
+    }catch(error){
+      setStatus("❌ Enregistrement impossible : "+(error.message||"stockage indisponible"),"err");
+    }
+  };
+
+  $("backup").onclick=()=>{
+    try{
+      const state=readState();
+      const payload={app:"DIGIY_PRO_CARNET",version:5,exported_at:new Date().toISOString(),account_scope:"verified-local-device",data:state};
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;
+      a.download="pro-carnet-"+new Date().toISOString().slice(0,10)+".json";
+      document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+      setStatus("✅ Sauvegarde téléchargée.","ok");
+    }catch(error){
+      setStatus("❌ "+(error.message||"Sauvegarde impossible."),"err");
+    }
+  };
+
+  try{
+    const current=readState();
+    pocket=current.settings?.pocket==="perso"?"perso":"pro";
+  }catch(_){}
+  render();
+})().catch(error=>{
+  document.documentElement.style.visibility="";
+  document.body.innerHTML="<main class='wrap'><section class='card'><strong>Ouverture impossible.</strong><p>"+String(error.message||error)+"</p><a href='./pin.html' style='color:#f4d27a'>Revenir au PIN</a></section></main>";
+});
+</script>
 </body>
 </html>
