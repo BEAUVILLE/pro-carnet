@@ -1,6 +1,6 @@
 // guard.js — PRO CARNET / rail technique PAY
-// Autorité unique : session créée uniquement après validation réelle du PIN par Supabase.
-// Les données locales du carnet sont isolées par identité PRO CARNET vérifiée.
+// Build: carnet-minimal-fixes-v11-20260722
+// PIN stable inchangé : digiy_verify_pin reste l’unique autorité d’ouverture.
 (function(){
   "use strict";
 
@@ -16,7 +16,16 @@
   const PIN_PATH=window.DIGIY_LOGIN_URL||"./pin.html";
   const SUPABASE_URL=window.DIGIY_SUPABASE_URL||"https://wesqmwjjtsefyjnluosj.supabase.co";
   const SUPABASE_KEY=window.DIGIY_SUPABASE_ANON_KEY||window.DIGIY_SUPABASE_ANON||"sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-  const CARNET_LEGACY_STORAGE_KEY="digiy_pay_baptiste_reel_v2";
+
+  const CARNET_STORAGE_KEY="digiy_pay_baptiste_reel_v2";
+  const SCOPED_BUSINESS_KEYS=[
+    CARNET_STORAGE_KEY,
+    "digiy_pay_baptiste_before_restore",
+    "digiy_pay_frais_v1",
+    "DIGIY_PAY_ACTIONS",
+    "DIGIY_PAY_PENDING_ACTION",
+    "digiy_pay_fiche"
+  ];
 
   const SESSION_KEYS=[
     "DIGIY_PAY_SESSION",
@@ -27,7 +36,7 @@
     "digiy_guard_pay_session"
   ];
 
-  const LEGACY_KEYS=[
+  const LEGACY_SESSION_KEYS=[
     "digiy_guard_session","DIGIY_PIN_SESSION","DIGIY_ACCESS","DIGIY_SESSION","digiy_session",
     "DIGIY_PAY_PRO_SESSION","digiy_session_pay","digiy_guard_session:PAY",
     "digiy_pay_slug","digiy_pay_phone","digiy_pay_last_slug","digiy_pay_last_phone",
@@ -44,6 +53,7 @@
   let current=null;
   let bootPromise=null;
   let sb=null;
+  let expiryTimer=null;
 
   const now=()=>Date.now();
   const parseJSON=raw=>{try{return JSON.parse(raw)}catch(_){return null}};
@@ -54,7 +64,10 @@
     if(digits.length===9)return "221"+digits;
     return digits.slice(0,15);
   };
-  const normalizeSlug=value=>String(value||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-").replace(/[^a-z0-9-_]/g,"").replace(/-+/g,"-").replace(/^[-_]+|[-_]+$/g,"");
+  const normalizeSlug=value=>String(value||"").trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g,"-").replace(/[^a-z0-9-_]/g,"")
+    .replace(/-+/g,"-").replace(/^[-_]+|[-_]+$/g,"");
   const parseTime=value=>{
     if(value===null||value===undefined||value==="")return 0;
     if(typeof value==="number"&&Number.isFinite(value))return value<100000000000?value*1000:value;
@@ -73,10 +86,7 @@
       const url=new URL(location.href);
       let changed=false;
       SENSITIVE_PARAMS.forEach(key=>{
-        if(url.searchParams.has(key)){
-          url.searchParams.delete(key);
-          changed=true;
-        }
+        if(url.searchParams.has(key)){url.searchParams.delete(key);changed=true}
       });
       if(changed)history.replaceState({},document.title,url.pathname+url.search+url.hash);
     }catch(_){}
@@ -129,9 +139,8 @@
 
   function scopeHash(value){
     let hash=2166136261;
-    const text=String(value||"");
-    for(let i=0;i<text.length;i++){
-      hash^=text.charCodeAt(i);
+    for(const ch of String(value||"")){
+      hash^=ch.charCodeAt(0);
       hash=Math.imul(hash,16777619);
     }
     return (hash>>>0).toString(36);
@@ -147,68 +156,232 @@
       const proto=window.Storage&&window.Storage.prototype;
       if(!local||!proto)return false;
 
-      const scopedKey=CARNET_LEGACY_STORAGE_KEY+"::"+scopeHash(MODULE+"|"+phone);
+      const suffix="::"+scopeHash(MODULE+"|"+phone);
+      const scopedMap=new Map(SCOPED_BUSINESS_KEYS.map(key=>[key,key+suffix]));
       const nativeGet=proto.getItem;
       const nativeSet=proto.setItem;
       const nativeRemove=proto.removeItem;
       const nativeClear=proto.clear;
 
-      const scopedRaw=nativeGet.call(local,scopedKey);
-      const legacyRaw=nativeGet.call(local,CARNET_LEGACY_STORAGE_KEY);
-      if(scopedRaw===null&&legacyRaw!==null){
-        nativeSet.call(local,scopedKey,legacyRaw);
-      }
-      if(legacyRaw!==null){
-        nativeRemove.call(local,CARNET_LEGACY_STORAGE_KEY);
-      }
+      scopedMap.forEach((scopedKey,legacyKey)=>{
+        const scopedRaw=nativeGet.call(local,scopedKey);
+        const legacyRaw=nativeGet.call(local,legacyKey);
+        if(scopedRaw===null&&legacyRaw!==null)nativeSet.call(local,scopedKey,legacyRaw);
+        if(legacyRaw!==null)nativeRemove.call(local,legacyKey);
+      });
 
       proto.getItem=function(key){
-        if(this===local&&String(key)===CARNET_LEGACY_STORAGE_KEY){
-          return nativeGet.call(this,scopedKey);
-        }
-        return nativeGet.call(this,key);
+        const raw=String(key);
+        return this===local&&scopedMap.has(raw)
+          ? nativeGet.call(this,scopedMap.get(raw))
+          : nativeGet.call(this,key);
       };
       proto.setItem=function(key,value){
-        if(this===local&&String(key)===CARNET_LEGACY_STORAGE_KEY){
-          return nativeSet.call(this,scopedKey,value);
-        }
-        return nativeSet.call(this,key,value);
+        const raw=String(key);
+        return this===local&&scopedMap.has(raw)
+          ? nativeSet.call(this,scopedMap.get(raw),value)
+          : nativeSet.call(this,key,value);
       };
       proto.removeItem=function(key){
-        if(this===local&&String(key)===CARNET_LEGACY_STORAGE_KEY){
-          return nativeRemove.call(this,scopedKey);
-        }
-        return nativeRemove.call(this,key);
+        const raw=String(key);
+        return this===local&&scopedMap.has(raw)
+          ? nativeRemove.call(this,scopedMap.get(raw))
+          : nativeRemove.call(this,key);
       };
       proto.clear=function(){
         if(this===local){
-          return nativeRemove.call(this,scopedKey);
+          scopedMap.forEach(scopedKey=>nativeRemove.call(this,scopedKey));
+          return;
         }
         return nativeClear.call(this);
       };
 
       window.__DIGIY_CARNET_STORAGE_SCOPE_INSTALLED=true;
-      window.DIGIY_CARNET_STORAGE_SCOPE={version:"carnet-storage-scope-v1-20260722",key:scopedKey};
+      window.DIGIY_CARNET_STORAGE_SCOPE={
+        version:"carnet-storage-scope-v3-20260722",
+        phone_hash:scopeHash(phone),
+        keys:Object.fromEntries(scopedMap)
+      };
+
+      addEventListener("storage",event=>{
+        const scopedKeys=[...scopedMap.values()];
+        if(event.storageArea===local&&scopedKeys.includes(event.key)){
+          if(event.key===scopedMap.get(CARNET_STORAGE_KEY)){
+            const banner=document.getElementById("digiyCrossTabNotice");
+            if(banner)banner.hidden=false;
+            setTimeout(()=>location.reload(),350);
+          }
+        }
+        if(SESSION_KEYS.includes(String(event.key||""))&&!readStored())goPin();
+      });
+
       return true;
-    }catch(_){
+    }catch(error){
+      console.error("[PRO CARNET STORAGE]",error);
       return false;
     }
   }
 
+  function readCarnetState(){
+    try{
+      const state=parseJSON(localStorage.getItem(CARNET_STORAGE_KEY)||"");
+      return state&&typeof state==="object"?state:null;
+    }catch(_){return null}
+  }
+
+  function money(value){
+    return Math.round(Math.abs(Number(value||0))).toLocaleString("fr-FR").replace(/\u202f/g," ")+" F";
+  }
+  function signedMoney(value,positiveSign=false){
+    const n=Number(value||0);
+    if(n<0)return "− "+money(n);
+    if(n>0&&positiveSign)return "+ "+money(n);
+    return money(n);
+  }
+  function movementValue(m){
+    return m&&m.type==="expense"?-Number(m.amount||0):Number(m?.amount||0);
+  }
+  function isToday(ts){
+    const d=new Date(ts),n=new Date();
+    return Number.isFinite(d.getTime())&&d.toDateString()===n.toDateString();
+  }
+
+  function installFinancialDisplayFixes(){
+    if(window.__DIGIY_CARNET_FINANCIAL_FIXES)return;
+    window.__DIGIY_CARNET_FINANCIAL_FIXES=true;
+
+    const apply=()=>{
+      if(!/(?:^|\/)(?:index\.html)?$/i.test(location.pathname||""))return;
+      const state=readCarnetState();
+      if(!state||!Array.isArray(state.movements))return;
+      const pocket=state.settings?.pocket==="perso"?"perso":"pro";
+      const eyeOpen=state.settings?.eyeOpen!==false;
+      const list=state.movements.filter(m=>(m.pocket==="perso"?"perso":"pro")===pocket);
+      const balance=list.reduce((sum,m)=>sum+movementValue(m),0);
+      const day=list.filter(m=>isToday(m.ts));
+      const dayIn=day.filter(m=>m.type==="income").reduce((sum,m)=>sum+Number(m.amount||0),0);
+      const dayOut=day.filter(m=>m.type==="expense").reduce((sum,m)=>sum+Number(m.amount||0),0);
+      const dayNet=dayIn-dayOut;
+      const allIn=list.filter(m=>m.type==="income").reduce((sum,m)=>sum+Number(m.amount||0),0);
+      const allOut=list.filter(m=>m.type==="expense").reduce((sum,m)=>sum+Number(m.amount||0),0);
+      const reserve=list.reduce((sum,m)=>{
+        const label=String(m.label||"").trim().toLowerCase();
+        if(m.type==="expense"&&label==="mise en réserve")return sum+Number(m.amount||0);
+        if(m.type==="income"&&label==="reprise réserve")return sum-Number(m.amount||0);
+        return sum;
+      },0);
+
+      const set=(id,text)=>{
+        const el=document.getElementById(id);
+        if(el&&el.textContent!==text)el.textContent=text;
+      };
+
+      if(eyeOpen){
+        set("balanceNumber",signedMoney(balance));
+        set("todayMini","Aujourd’hui "+signedMoney(dayNet,true));
+        set("sumDay","+ "+money(dayIn));
+        set("sumWeek","− "+money(dayOut));
+        set("sumMonth",signedMoney(dayNet,true));
+        set("journalMini","Entrées "+money(allIn)+" · Sorties "+money(allOut)+" · Net "+signedMoney(allIn-allOut,true));
+
+        if(pocket==="pro"){
+          const waveIn=day.filter(m=>m.mode==="Wave"&&m.type==="income").reduce((s,m)=>s+Number(m.amount||0),0);
+          const waveOut=day.filter(m=>m.mode==="Wave"&&m.type==="expense").reduce((s,m)=>s+Number(m.amount||0),0);
+          set("modeOneValue",money(waveIn));
+          set("modeTwoValue",money(waveOut));
+        }else{
+          const cashNet=day.filter(m=>m.mode==="Cash").reduce((s,m)=>s+movementValue(m),0);
+          const waveNet=day.filter(m=>m.mode==="Wave").reduce((s,m)=>s+movementValue(m),0);
+          set("modeOneValue",signedMoney(cashNet,true));
+          set("modeTwoValue",signedMoney(waveNet,true));
+        }
+      }
+
+      let reserveEl=document.getElementById("digiyReserveRead");
+      const host=document.querySelector(".balance .mini");
+      if(!reserveEl&&host){
+        reserveEl=document.createElement("span");
+        reserveEl.id="digiyReserveRead";
+        reserveEl.className="pill";
+        host.appendChild(reserveEl);
+      }
+      if(reserveEl){
+        reserveEl.textContent=eyeOpen?"Réserve "+signedMoney(reserve):"Réserve ••• F";
+      }
+
+      document.querySelectorAll(".module-row").forEach(row=>{
+        const title=row.querySelector(".module-title")?.textContent?.trim();
+        const meta=row.querySelector(".meta");
+        if(!title||!meta||!/^Total\s*:/i.test(meta.textContent||""))return;
+        const total=list.filter(m=>String(m.activity||"")===title).reduce((s,m)=>s+movementValue(m),0);
+        const suffix=(meta.textContent||"").includes("·")?" · "+(meta.textContent||"").split("·").slice(1).join("·").trim():"";
+        meta.textContent="Total : "+(eyeOpen?signedMoney(total):"••• F")+suffix;
+      });
+    };
+
+    const start=()=>{
+      apply();
+      setInterval(apply,900);
+      document.addEventListener("click",()=>setTimeout(apply,120));
+      addEventListener("storage",()=>setTimeout(apply,80));
+    };
+    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
+    else start();
+  }
+
   function installSimpleUi(){
     const apply=()=>{
-      if(!/(?:^|\/)index\.html$/i.test(location.pathname||""))return;
-      if(document.getElementById("digiy-carnet-simple-ui-v1"))return;
-      const style=document.createElement("style");
-      style.id="digiy-carnet-simple-ui-v1";
-      style.textContent=`
-        #btnMenu,#btnPayVoiceFloat,#fabWrap{display:none!important}
-        .topline{justify-content:flex-start!important}
-        .topline .title{flex:1!important}
-        .topline::after{content:"";display:block;width:54px;min-width:54px;height:44px}
-      `;
-      document.head.appendChild(style);
+      if(!/(?:^|\/)(?:index\.html)?$/i.test(location.pathname||""))return;
+      if(!document.getElementById("digiy-carnet-simple-ui-v2")){
+        const style=document.createElement("style");
+        style.id="digiy-carnet-simple-ui-v2";
+        style.textContent=`
+          #btnMenu,#btnPayVoiceFloat,#fabWrap{display:none!important}
+          .topline{justify-content:flex-start!important}
+          .topline .title{flex:1!important}
+          .topline::after{content:"";display:block;width:54px;min-width:54px;height:44px}
+          #digiyBackupAccess{position:fixed;right:14px;bottom:94px;z-index:48;min-height:48px;border:0;border-radius:999px;padding:0 16px;background:linear-gradient(135deg,#f4d27a,#22c55e);color:#102014;font-weight:1000;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+          #digiyCrossTabNotice{position:fixed;left:12px;right:12px;top:12px;z-index:99;padding:12px;border-radius:16px;background:#fff7df;color:#172016;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(0,0,0,.30)}
+        `;
+        document.head.appendChild(style);
+      }
+
+      if(!document.getElementById("digiyCrossTabNotice")){
+        const notice=document.createElement("div");
+        notice.id="digiyCrossTabNotice";
+        notice.hidden=true;
+        notice.textContent="Le carnet a changé dans un autre onglet. Actualisation sécurisée…";
+        document.body.appendChild(notice);
+      }
+
+      if(!document.getElementById("digiyBackupAccess")){
+        const button=document.createElement("button");
+        button.id="digiyBackupAccess";
+        button.type="button";
+        button.textContent="💾 Sauvegarde";
+        button.addEventListener("click",()=>{
+          const modal=document.getElementById("backupModal");
+          if(modal){
+            modal.classList.add("open");
+            document.body.classList.add("modal-open");
+          }else{
+            location.href="./session.html";
+          }
+        });
+        document.body.appendChild(button);
+      }
+
+      const backupModal=document.getElementById("backupModal");
+      const modalBody=backupModal?.querySelector(".modal-body");
+      if(modalBody&&!document.getElementById("digiyLocalOnlyWarning")){
+        const warning=document.createElement("div");
+        warning.id="digiyLocalOnlyWarning";
+        warning.className="notice";
+        warning.textContent="Tes chiffres sont enregistrés dans ce téléphone. Aucune copie cloud automatique. Télécharge une sauvegarde JSON chaque semaine.";
+        modalBody.prepend(warning);
+      }
     };
+
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});
     else apply();
   }
@@ -239,21 +412,32 @@
     window.DIGIY_PAY_HUB_PHONE=clean.phone;
     window.DIGIY_ACCESS=Object.assign({},clean);
     if(!isPinPage())installCarnetStorageScope(clean);
+    scheduleExpiry(clean);
     return clean;
   }
 
   function clearSessions(){
-    [...new Set([...SESSION_KEYS,...LEGACY_KEYS])].forEach(key=>{
+    [...new Set([...SESSION_KEYS,...LEGACY_SESSION_KEYS])].forEach(key=>{
       try{
         sessionStorage.removeItem(key);
         localStorage.removeItem(key);
       }catch(_){}
     });
     current=null;
+    if(expiryTimer){clearTimeout(expiryTimer);expiryTimer=null}
     try{
       delete window.DIGIY_PAY_HUB_PHONE;
       delete window.DIGIY_ACCESS;
     }catch(_){}
+  }
+
+  function scheduleExpiry(session){
+    if(expiryTimer)clearTimeout(expiryTimer);
+    const delay=Math.max(0,parseTime(session?.expires_at)-now());
+    expiryTimer=setTimeout(()=>{
+      clearSessions();
+      goPin();
+    },Math.min(delay+250,2147483000));
   }
 
   function hide(){try{document.documentElement.style.visibility="hidden"}catch(_){}}
@@ -264,9 +448,7 @@
       const url=new URL(PIN_PATH,location.href);
       SENSITIVE_PARAMS.forEach(key=>url.searchParams.delete(key));
       return url.origin===location.origin?url.pathname+url.search+url.hash:url.toString();
-    }catch(_){
-      return "./pin.html";
-    }
+    }catch(_){return "./pin.html"}
   }
   function goPin(){location.replace(buildPinUrl())}
 
@@ -280,7 +462,7 @@
   }
 
   async function rpc(name,body){
-    const res=await fetch(SUPABASE_URL+"/rest/v1/rpc/"+name,{
+    const res=await fetch(SUPABASE_URL+"/rest/v1/rpc/"+encodeURIComponent(name),{
       method:"POST",
       headers:{
         apikey:SUPABASE_KEY,
@@ -288,7 +470,8 @@
         "Content-Type":"application/json",
         Accept:"application/json"
       },
-      body:JSON.stringify(body||{})
+      body:JSON.stringify(body||{}),
+      cache:"no-store"
     });
     return {ok:res.ok,data:await res.json().catch(()=>null)};
   }
@@ -300,13 +483,14 @@
       const txt=raw.trim().toLowerCase();
       if(["true","t","1","yes","ok"].includes(txt))return true;
       if(txt.startsWith("(")){
-        const first=txt.replace(/^\(/,"").split(",")[0].replace(/^\"|\"$/g,"").trim();
+        const first=txt.replace(/^\(/,"").split(",")[0].replace(/^"|"$/g,"").trim();
         return ["true","t","1"].includes(first);
       }
       return false;
     }
     if(raw&&typeof raw==="object"){
-      return ["ok","access","access_ok","has_access","allowed","active","is_active","subscribed","valid","success"].some(key=>raw[key]===true);
+      return ["ok","access","access_ok","has_access","allowed","active","is_active","subscribed","valid","success"]
+        .some(key=>raw[key]===true);
     }
     return false;
   }
@@ -413,13 +597,11 @@
         else url.searchParams.delete(key);
       });
       return url.origin===location.origin?url.pathname+url.search+url.hash:url.toString();
-    }catch(_){
-      return String(target||"./");
-    }
+    }catch(_){return String(target||"./")}
   }
 
   window.DIGIY_GUARD={
-    VERSION:"carnet-guard-storage-scope-simple-ui-v8-20260722",
+    VERSION:"carnet-minimal-fixes-v11-20260722",
     module:MODULE,
     MODULE_CODE:MODULE,
     ready,boot,requireSession,getSession,
@@ -433,7 +615,7 @@
     buildPinUrl,goPin,buildUrl,
     go:(target,mode)=>mode==="replace"?location.replace(buildUrl(target)):location.assign(buildUrl(target)),
     cleanUrl,getSb,
-    installCarnetStorageScope,installSimpleUi
+    installCarnetStorageScope,installSimpleUi,installFinancialDisplayFixes
   };
 
   cleanUrl();
@@ -445,6 +627,7 @@
   installSimpleUi();
   const earlySession=readStored();
   if(earlySession)installCarnetStorageScope(earlySession);
+  installFinancialDisplayFixes();
   hide();
   ready({redirect:true}).catch(goPin);
 })();
