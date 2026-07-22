@@ -4,42 +4,82 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-  <meta name="theme-color" content="#f4ead2">
+  <meta name="theme-color" content="#07150f">
+  <meta name="digiy-build" content="carnet-session-safe-v11-20260722">
   <title>PRO CARNET — Ma session</title>
-  <script>window.DIGIY_LOGIN_URL="./pin.html";</script>
-  <script src="./guard.js?v=carnet-strict-20260716"></script>
+  <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
+  <script src="./guard.js?v=carnet-minimal-fixes-v11-20260722"></script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:18px;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 35%),linear-gradient(180deg,#07150f,#020806);color:#fff8e8;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:850}.wrap{width:min(520px,100%);margin:0 auto}.card{margin-top:22px;padding:22px;border:1px solid rgba(255,255,255,.10);border-radius:28px;background:rgba(255,255,255,.06);box-shadow:0 20px 55px rgba(0,0,0,.28)}h1{margin:0 0 8px;color:#f4d27a}.muted{color:rgba(255,255,255,.68);line-height:1.5}.info{display:grid;gap:10px;margin:18px 0}.row{padding:13px;border-radius:17px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}.row small{display:block;color:rgba(255,255,255,.58);margin-bottom:4px}.actions{display:grid;gap:10px}.btn{min-height:54px;border:0;border-radius:17px;padding:0 16px;font:inherit;font-weight:1000;cursor:pointer}.primary{background:linear-gradient(135deg,#f4d27a,#22c55e);color:#102014}.soft{background:#fff7df;color:#172016}.danger{background:#7f1d1d;color:#fff}.note{margin-top:16px;padding:13px;border-radius:17px;background:rgba(244,210,122,.12);border:1px solid rgba(244,210,122,.25);color:#fff4c8;line-height:1.45}.status{margin-top:12px;min-height:24px;color:#86efac}.back{display:inline-flex;margin-top:16px;color:#f4d27a;text-decoration:none;font-weight:1000}
+  </style>
 </head>
 <body>
-  <main id="secureStatus" style="min-height:100vh;display:grid;place-items:center;padding:24px;background:#f4ead2;color:#241a0d;font-family:system-ui;text-align:center;font-weight:800">
-    <div>Ouverture sécurisée de la session PRO CARNET…</div>
+  <main class="wrap">
+    <section class="card">
+      <h1>📒 Ma session PRO CARNET</h1>
+      <div class="muted">Cette page ne supprime jamais les mouvements, les sauvegardes ou les données métier.</div>
+      <div class="info">
+        <div class="row"><small>Compte vérifié</small><strong id="phone">—</strong></div>
+        <div class="row"><small>Expiration de la session</small><strong id="expires">—</strong></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="backup" type="button">💾 Télécharger ma sauvegarde JSON</button>
+        <button class="btn soft" id="return" type="button">Retour au carnet</button>
+        <button class="btn danger" id="logout" type="button">Fermer uniquement la session</button>
+      </div>
+      <div class="note"><strong>Données locales :</strong> tes chiffres sont dans ce téléphone. Aucune copie cloud automatique. Télécharge une sauvegarde chaque semaine.</div>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </section>
   </main>
-  <script>
-  (async()=>{
-    "use strict";
-    const session=await window.DIGIY_GUARD.requireSession({redirect:true,to:"./pin.html"});
-    if(!session)return;
-    const source="https://raw.githubusercontent.com/BEAUVILLE/pro-carnet/a8922e40ba35592f14f8acb92c24675efebdd3f5/session.html";
-    const response=await fetch(source,{cache:"no-store"});
-    if(!response.ok)throw new Error("source indisponible");
-    let html=await response.text();
-    html=html
-      .replaceAll("Mon argent — Ma session PAY","PRO CARNET — Ma session")
-      .replaceAll("SESSION PAY","SESSION CARNET")
-      .replaceAll("Session PAY ouverte","Session PRO CARNET ouverte")
-      .replaceAll("Aucune session PAY claire","Aucune session PRO CARNET claire")
-      .replaceAll("Aucune clé PAY détectée","Aucune clé PRO CARNET détectée")
-      .replaceAll("DIGIY GO PAY","DIGIY GO CARNET")
-      .replaceAll("Oreille PAY","Oreille CARNET")
-      .replaceAll("Ma fiche PAY","Ma fiche CARNET")
-      .replaceAll('href="./hub.html"','href="./accueil.html"')
-      .replaceAll('href="./cockpit.html"','href="./index.html"');
-    document.open();
-    document.write(html);
-    document.close();
-  })().catch(()=>{
-    document.documentElement.style.visibility="";
-    document.getElementById("secureStatus").innerHTML='<div><strong>Session momentanément indisponible.</strong><br><br><a href="./accueil.html" style="color:#167a46">Retour à PRO CARNET</a></div>';
-  });
-  </script>
+<script>
+(async()=>{
+  "use strict";
+  const session=await window.DIGIY_GUARD.requireSession({redirect:true,to:"./pin.html"});
+  if(!session)return;
+  document.documentElement.style.visibility="";
+  const KEY="digiy_pay_baptiste_reel_v2";
+  const mask=phone=>{
+    const p=String(phone||"");
+    return p.length>6?p.slice(0,5)+" ••• "+p.slice(-2):"Compte vérifié";
+  };
+  document.getElementById("phone").textContent=mask(session.phone);
+  document.getElementById("expires").textContent=new Date(session.expires_at).toLocaleString("fr-FR",{dateStyle:"medium",timeStyle:"short"});
+  document.getElementById("return").onclick=()=>location.href="./index.html";
+  document.getElementById("logout").onclick=()=>{
+    if(confirm("Fermer la session ? Tes mouvements resteront dans ce téléphone.")){
+      window.DIGIY_GUARD.logout(true);
+    }
+  };
+  document.getElementById("backup").onclick=()=>{
+    const status=document.getElementById("status");
+    try{
+      const state=JSON.parse(localStorage.getItem(KEY)||"{}");
+      if(!state||!Array.isArray(state.movements))throw new Error("Carnet illisible ou vide.");
+      const payload={
+        app:"DIGIY_PRO_CARNET",
+        version:5,
+        exported_at:new Date().toISOString(),
+        account_scope:"verified-local-device",
+        data:state
+      };
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;
+      a.download="pro-carnet-"+new Date().toISOString().slice(0,10)+".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      status.textContent="✅ Sauvegarde téléchargée.";
+    }catch(error){
+      status.textContent="❌ "+(error.message||"Sauvegarde impossible.");
+    }
+  };
+})().catch(error=>{
+  document.documentElement.style.visibility="";
+  document.body.innerHTML="<main class='wrap'><section class='card'><h1>Session indisponible</h1><p>"+String(error.message||error)+"</p><a class='back' href='./pin.html'>Revenir au PIN</a></section></main>";
+});
+</script>
 </body>
 </html>
