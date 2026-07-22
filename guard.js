@@ -317,6 +317,17 @@
         const suffix=(meta.textContent||"").includes("·")?" · "+(meta.textContent||"").split("·").slice(1).join("·").trim():"";
         meta.textContent="Total : "+(eyeOpen?signedMoney(total):"••• F")+suffix;
       });
+
+      const presets=Array.isArray(state.labelPresets)?state.labelPresets:[];
+      document.querySelectorAll("[data-label-preset]").forEach(button=>{
+        const preset=presets.find(item=>String(item?.id||"")===String(button.getAttribute("data-label-preset")||""));
+        if(!preset)return;
+        const label=String(preset.label||"").trim();
+        const wrongPocket=preset.pocket&&preset.pocket!=="both"&&preset.pocket!==pocket;
+        const internalTransfer=/^retrait\b/i.test(label);
+        button.hidden=wrongPocket||internalTransfer;
+        if(internalTransfer)button.title="Transfert interne masqué : il ne doit pas gonfler les entrées.";
+      });
     };
 
     const start=()=>{
@@ -336,7 +347,8 @@
         const style=document.createElement("style");
         style.id="digiy-carnet-simple-ui-v2";
         style.textContent=`
-          #btnMenu,#btnPayVoiceFloat,#fabWrap{display:none!important}
+          #btnMenu,#btnPayVoiceFloat,#fabWrap,[data-pay-voice]{display:none!important}
+          .magic-actions{grid-template-columns:repeat(4,1fr)!important}
           .topline{justify-content:flex-start!important}
           .topline .title{flex:1!important}
           .topline::after{content:"";display:block;width:54px;min-width:54px;height:44px}
