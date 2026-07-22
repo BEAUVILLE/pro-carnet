@@ -195,6 +195,24 @@
     }
   }
 
+  function installSimpleUi(){
+    const apply=()=>{
+      if(!/(?:^|\/)index\.html$/i.test(location.pathname||""))return;
+      if(document.getElementById("digiy-carnet-simple-ui-v1"))return;
+      const style=document.createElement("style");
+      style.id="digiy-carnet-simple-ui-v1";
+      style.textContent=`
+        #btnMenu,#btnPayVoiceFloat,#fabWrap{display:none!important}
+        .topline{justify-content:flex-start!important}
+        .topline .title{flex:1!important}
+        .topline::after{content:"";display:block;width:54px;min-width:54px;height:44px}
+      `;
+      document.head.appendChild(style);
+    };
+    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});
+    else apply();
+  }
+
   function persist(session){
     const clean=canonical(session);
     if(!isValid(clean))return null;
@@ -401,7 +419,7 @@
   }
 
   window.DIGIY_GUARD={
-    VERSION:"carnet-guard-storage-scope-v7-20260722",
+    VERSION:"carnet-guard-storage-scope-simple-ui-v8-20260722",
     module:MODULE,
     MODULE_CODE:MODULE,
     ready,boot,requireSession,getSession,
@@ -415,7 +433,7 @@
     buildPinUrl,goPin,buildUrl,
     go:(target,mode)=>mode==="replace"?location.replace(buildUrl(target)):location.assign(buildUrl(target)),
     cleanUrl,getSb,
-    installCarnetStorageScope
+    installCarnetStorageScope,installSimpleUi
   };
 
   cleanUrl();
@@ -424,6 +442,7 @@
     return;
   }
 
+  installSimpleUi();
   const earlySession=readStored();
   if(earlySession)installCarnetStorageScope(earlySession);
   hide();
