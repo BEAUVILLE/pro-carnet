@@ -1,5 +1,6 @@
 // guard.js — PRO CARNET / rail technique PAY
 // Autorité unique : session créée uniquement après validation réelle du PIN par Supabase.
+// Les données locales du carnet sont isolées par identité PRO CARNET vérifiée.
 (function(){
   "use strict";
 
@@ -15,6 +16,7 @@
   const PIN_PATH=window.DIGIY_LOGIN_URL||"./pin.html";
   const SUPABASE_URL=window.DIGIY_SUPABASE_URL||"https://wesqmwjjtsefyjnluosj.supabase.co";
   const SUPABASE_KEY=window.DIGIY_SUPABASE_ANON_KEY||window.DIGIY_SUPABASE_ANON||"sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+  const CARNET_LEGACY_STORAGE_KEY="digiy_pay_baptiste_reel_v2";
 
   const SESSION_KEYS=[
     "DIGIY_PAY_SESSION",
@@ -125,6 +127,74 @@
     return null;
   }
 
+  function scopeHash(value){
+    let hash=2166136261;
+    const text=String(value||"");
+    for(let i=0;i<text.length;i++){
+      hash^=text.charCodeAt(i);
+      hash=Math.imul(hash,16777619);
+    }
+    return (hash>>>0).toString(36);
+  }
+
+  function installCarnetStorageScope(session){
+    if(window.__DIGIY_CARNET_STORAGE_SCOPE_INSTALLED)return true;
+    const phone=normalizePhone(session?.phone||"");
+    if(phone.length<9)return false;
+
+    try{
+      const local=window.localStorage;
+      const proto=window.Storage&&window.Storage.prototype;
+      if(!local||!proto)return false;
+
+      const scopedKey=CARNET_LEGACY_STORAGE_KEY+"::"+scopeHash(MODULE+"|"+phone);
+      const nativeGet=proto.getItem;
+      const nativeSet=proto.setItem;
+      const nativeRemove=proto.removeItem;
+      const nativeClear=proto.clear;
+
+      const scopedRaw=nativeGet.call(local,scopedKey);
+      const legacyRaw=nativeGet.call(local,CARNET_LEGACY_STORAGE_KEY);
+      if(scopedRaw===null&&legacyRaw!==null){
+        nativeSet.call(local,scopedKey,legacyRaw);
+      }
+      if(legacyRaw!==null){
+        nativeRemove.call(local,CARNET_LEGACY_STORAGE_KEY);
+      }
+
+      proto.getItem=function(key){
+        if(this===local&&String(key)===CARNET_LEGACY_STORAGE_KEY){
+          return nativeGet.call(this,scopedKey);
+        }
+        return nativeGet.call(this,key);
+      };
+      proto.setItem=function(key,value){
+        if(this===local&&String(key)===CARNET_LEGACY_STORAGE_KEY){
+          return nativeSet.call(this,scopedKey,value);
+        }
+        return nativeSet.call(this,key,value);
+      };
+      proto.removeItem=function(key){
+        if(this===local&&String(key)===CARNET_LEGACY_STORAGE_KEY){
+          return nativeRemove.call(this,scopedKey);
+        }
+        return nativeRemove.call(this,key);
+      };
+      proto.clear=function(){
+        if(this===local){
+          return nativeRemove.call(this,scopedKey);
+        }
+        return nativeClear.call(this);
+      };
+
+      window.__DIGIY_CARNET_STORAGE_SCOPE_INSTALLED=true;
+      window.DIGIY_CARNET_STORAGE_SCOPE={version:"carnet-storage-scope-v1-20260722",key:scopedKey};
+      return true;
+    }catch(_){
+      return false;
+    }
+  }
+
   function persist(session){
     const clean=canonical(session);
     if(!isValid(clean))return null;
@@ -150,6 +220,7 @@
     current=clean;
     window.DIGIY_PAY_HUB_PHONE=clean.phone;
     window.DIGIY_ACCESS=Object.assign({},clean);
+    installCarnetStorageScope(clean);
     return clean;
   }
 
@@ -330,7 +401,7 @@
   }
 
   window.DIGIY_GUARD={
-    VERSION:"carnet-guard-pin-authority-v6-20260721",
+    VERSION:"carnet-guard-storage-scope-v7-20260722",
     module:MODULE,
     MODULE_CODE:MODULE,
     ready,boot,requireSession,getSession,
@@ -343,7 +414,8 @@
     logout,clearSession:clearSessions,clearAll:clearSessions,
     buildPinUrl,goPin,buildUrl,
     go:(target,mode)=>mode==="replace"?location.replace(buildUrl(target)):location.assign(buildUrl(target)),
-    cleanUrl,getSb
+    cleanUrl,getSb,
+    installCarnetStorageScope
   };
 
   cleanUrl();
@@ -351,6 +423,9 @@
     show();
     return;
   }
+
+  const earlySession=readStored();
+  if(earlySession)installCarnetStorageScope(earlySession);
   hide();
   ready({redirect:true}).catch(goPin);
 })();
