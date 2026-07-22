@@ -220,7 +220,7 @@
     current=clean;
     window.DIGIY_PAY_HUB_PHONE=clean.phone;
     window.DIGIY_ACCESS=Object.assign({},clean);
-    installCarnetStorageScope(clean);
+    if(!isPinPage())installCarnetStorageScope(clean);
     return clean;
   }
 
