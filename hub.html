@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#06140f">
-  <title>PRO CARNET — Redirection</title>
+  <meta name="digiy-build" content="pro-carnet-hub-direct-tool-20260722">
+  <title>PRO CARNET — Ouverture</title>
   <script>window.DIGIY_LOGIN_URL="./pin.html";</script>
-  <script src="./guard.js?v=carnet-strict-20260716"></script>
+  <script src="./guard.js?v=carnet-guard-pin-authority-v6-20260721"></script>
 </head>
 <body>
   <main style="min-height:100vh;display:grid;place-items:center;background:#06140f;color:#fff8e8;font-family:system-ui;font-weight:850;text-align:center;padding:24px">Ouverture de PRO CARNET…</main>
   <script>
   (async()=>{
     const session=await window.DIGIY_GUARD.requireSession({redirect:true,to:"./pin.html"});
-    if(session)location.replace("./accueil.html");
+    if(session)location.replace("./index.html");
   })();
   </script>
 </body>
