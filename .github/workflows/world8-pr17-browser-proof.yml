@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - uses: actions/setup-node@v4
         with:
@@ -39,7 +41,7 @@ jobs:
 
       - name: Real Chromium proof — PIN ticket, app, Oreille, Receiver
         run: |
-          cat > /tmp/world8-browser-proof.mjs <<'NODE'
+          cat > .world8-browser-proof.mjs <<'NODE'
           import { chromium } from "playwright";
 
           const base = "http://127.0.0.1:4173";
@@ -162,7 +164,7 @@ jobs:
           console.log("WORLD8 PR17 browser proof: PASS");
           await browser.close();
           NODE
-          node /tmp/world8-browser-proof.mjs
+          node .world8-browser-proof.mjs
 
       - name: Confirm tested source SHA
         run: |
