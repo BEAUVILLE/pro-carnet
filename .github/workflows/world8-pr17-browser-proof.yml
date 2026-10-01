@@ -1,0 +1,173 @@
+name: WORLD8 PR17 browser proof
+
+on:
+  push:
+    branches:
+      - test/world8-pr17-browser-proof
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve repository locally
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/pro-carnet-http.log 2>&1 &
+          echo $! > /tmp/pro-carnet-http.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/pin.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/pro-carnet-http.log
+          exit 1
+
+      - name: Real Chromium proof — PIN ticket, app, Oreille, Receiver
+        run: |
+          cat > /tmp/world8-browser-proof.mjs <<'NODE'
+          import { chromium } from "playwright";
+
+          const base = "http://127.0.0.1:4173";
+          const browser = await chromium.launch({headless:true});
+          const context = await browser.newContext({ viewport: { width: 1080, height: 1920 } });
+
+          await context.addInitScript(() => {
+            Object.defineProperty(navigator, "clipboard", {
+              configurable: true,
+              value: { writeText: async () => true }
+            });
+            class FakeRecognition {
+              constructor(){ this.lang="fr-FR"; this.interimResults=true; this.continuous=false; }
+              start(){ this.onstart?.(); this.onresult?.({resultIndex:0,results:[Object.assign([{transcript:"vente 5000 wave"}],{isFinal:true})]}); this.onend?.(); }
+              stop(){ this.onend?.(); }
+              abort(){ this.onend?.(); }
+            }
+            window.SpeechRecognition = FakeRecognition;
+            window.webkitSpeechRecognition = FakeRecognition;
+            window.speechSynthesis = {
+              cancel(){},
+              speak(u){ setTimeout(()=>{ try{u.onstart?.();u.onend?.();}catch(_){} },0); },
+              getVoices(){ return [{lang:"fr-FR",name:"Test FR"}]; },
+              onvoiceschanged:null
+            };
+          });
+
+          await context.route("**/guard.js*", async route => {
+            const url = new URL(route.request().url());
+            if (url.pathname.endsWith("/app/guard.js")) return route.continue();
+            return route.fulfill({
+              status: 200,
+              contentType: "application/javascript",
+              body: `
+                (function(){
+                  "use strict";
+                  const session={phone:"221770000000",module:"PAY",test:true};
+                  window.DIGIY_GUARD={
+                    cleanUrl(){},
+                    clearSession(){},
+                    normalizePhone(v){return String(v||"").replace(/\\D/g,"");},
+                    loginWithPin:async()=>({ok:true,session}),
+                    getSession:()=>session,
+                    buildPinUrl:()=>"/pin.html",
+                    requireSession:()=>session,
+                    logout(){},
+                    normalizeSlug:v=>String(v||"")
+                  };
+                })();
+              `
+            });
+          });
+
+          const page = await context.newPage();
+          const errors = [];
+          page.on("pageerror", e => errors.push("pageerror: "+e.message));
+          page.on("console", m => { if(m.type()==="error") errors.push("console: "+m.text()); });
+
+          // 1) Real page navigation through PIN form and one-time ticket consumption.
+          await page.goto(base + "/pin.html", {waitUntil:"domcontentloaded"});
+          await page.fill("#phone","221770000000");
+          await page.fill("#pin","1234");
+          await Promise.all([
+            page.waitForURL(/\/app\/index\.html/),
+            page.click("#submitBtn")
+          ]);
+          await page.waitForLoadState("domcontentloaded");
+          if(!page.url().includes("/app/index.html")) throw new Error("PIN did not reach app/index.html");
+          const consumed = await page.evaluate(() => sessionStorage.getItem("DIGIY_CARNET_ENTRY_OK_V13"));
+          if(consumed !== null) throw new Error("Entry ticket was not consumed by app/guard.js");
+
+          // 2) Application buttons — actual Chromium event dispatch.
+          const clickIfVisible = async sel => {
+            const loc = page.locator(sel).first();
+            if(await loc.count()===0) throw new Error("Missing selector "+sel);
+            await loc.scrollIntoViewIfNeeded();
+            await loc.click({force:true});
+          };
+          await clickIfVisible("#btnMenu");
+          await clickIfVisible("#btnMagicAdd");
+          await clickIfVisible("#tabPerso");
+          await clickIfVisible("#tabPro");
+          await clickIfVisible("#btnEye");
+          await clickIfVisible("#btnEye");
+          await clickIfVisible("[data-fab='modules']");
+          await page.keyboard.press("Escape").catch(()=>{});
+          await clickIfVisible("[data-go-frais], [data-fab='frais']");
+          await page.keyboard.press("Escape").catch(()=>{});
+          await clickIfVisible("[data-pay-action='history'], [data-fab='history']");
+          await page.keyboard.press("Escape").catch(()=>{});
+          await clickIfVisible("[data-fab='admin'], #menuAdmin");
+
+          // 3) Oreille in Chromium with browser API doubles only for audio/mic.
+          await page.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
+          await page.waitForSelector("#digiy-oreille-pay [data-action='listen']");
+          for (const action of ["listen","formulate","copy","save","guide","stop"]) {
+            await page.locator("#digiy-oreille-pay [data-action='"+action+"']").click({force:true});
+          }
+          const noteCount = await page.locator("#digiy-oreille-pay .digiy-oreille-note").count();
+          if(noteCount < 1) throw new Error("Oreille Ranger did not create a note");
+
+          // 4) Receiver presentation/actions in Chromium.
+          const action = encodeURIComponent(JSON.stringify({
+            module:"PAY", primaryModule:"PAY", action:"income",
+            commandText:"vente 5000 Wave", amount:5000, channel:"Wave"
+          }));
+          await page.goto(base + "/oreille.html?action=" + action, {waitUntil:"domcontentloaded"});
+          await page.waitForSelector("#digiyActionReceiverPanel");
+          for (const sel of ["[data-copy]","[data-save]","[data-fill]","[data-validate]"]) {
+            await page.locator("#digiyActionReceiverPanel "+sel).click({force:true});
+          }
+          const validated = await page.evaluate(() => {
+            const keys = Object.keys(localStorage);
+            return keys.some(k => /VALIDATED/i.test(k) && localStorage.getItem(k));
+          });
+          if(!validated) throw new Error("Receiver validation did not persist");
+          await page.locator("#digiyActionReceiverPanel [data-delete]").click({force:true});
+
+          if(errors.length) throw new Error(errors.join("\n"));
+          console.log("WORLD8 PR17 browser proof: PASS");
+          await browser.close();
+          NODE
+          node /tmp/world8-browser-proof.mjs
+
+      - name: Confirm tested source SHA
+        run: |
+          echo "Test branch source parent:"
+          git rev-parse HEAD^
+          echo "Expected PR17 corrected SHA:"
+          echo "8d1fbebdb3950ae57c29188a3f610ca94582befe"
+          test "$(git rev-parse HEAD^)" = "8d1fbebdb3950ae57c29188a3f610ca94582befe"
