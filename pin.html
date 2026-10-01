@@ -54,7 +54,7 @@
       if(!result?.ok){setStatus(result?.error||"Code incorrect ou accès indisponible.","err");$("pin").value="";$("submitBtn").disabled=false;return}
       try{sessionStorage.setItem(ENTRY_KEY,String(Date.now()))}catch(_){}
       setStatus("PRO CARNET ouvert. Redirection…","ok");
-      location.replace("./app/index.html?v=20261001-world8-v4");
+      location.replace("./app/index.html?v=20261001-world8-v5");
     }catch(_){setStatus("Vérification impossible. Réessaie.","err");$("submitBtn").disabled=false}
   });
 })();
