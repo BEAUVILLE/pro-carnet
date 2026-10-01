@@ -4,7 +4,7 @@
 */
 (function(){
   "use strict";
-  function wt(key,fallback){try{const out=window.DIGIY_WORLD8?.t?.(key);return typeof out==="string"&&!/^\\[world8:/.test(out)?out:fallback}catch(_){return fallback}}
+  function wt(key,fallback){try{const out=window.DIGIY_WORLD8?.t?.(key);return typeof out==="string"&&out.indexOf("[world8:") !== 0?out:fallback}catch(_){return fallback}}
   const VERSION="action-digiy-receiver-v5-compact-module-url-20260530";
   const HOST=String(location.hostname||"").toLowerCase();
   const RAW_MODULE=String(window.DIGIY_MODULE||window.DIGIY_ABOS_MODULE||"").toUpperCase().trim();
