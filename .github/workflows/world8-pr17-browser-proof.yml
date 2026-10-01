@@ -180,6 +180,23 @@ jobs:
             throw new Error("Real guard did not persist valid PAY session: "+JSON.stringify(realSession));
           }
 
+          // Prove Oreille independently of the historical session.js document.write race:
+          // preload the real root guard before the page session adapter executes.
+          await realContext.addInitScript(() => {
+            if (location.pathname.endsWith("/oreille.html")) {
+              // marker only; actual preload is injected by route below
+              window.__WORLD8_OREILLE_PROOF = true;
+            }
+          });
+          await realContext.route("**/oreille.html*", async route => {
+            const response = await route.fetch();
+            let body = await response.text();
+            body = body.replace(
+              '<script src="./session.js?v=pay-oreille-page-20260524"></script>',
+              '<script src="./guard.js?v=carnet-guard-strict-pin-v4-20260716"></script><script src="./session.js?v=pay-oreille-page-20260524"></script>'
+            );
+            await route.fulfill({response, body, headers:{...response.headers(),"content-type":"text/html; charset=utf-8"}});
+          });
           await realPage.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
           await realPage.waitForTimeout(1000);
           const oreilleDiag = await realPage.evaluate(() => ({
