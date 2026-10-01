@@ -1,0 +1,69 @@
+name: Public WORLD8 deployment proof
+
+on:
+  push:
+    branches:
+      - test/public-world8-deployment-proof
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Fetch public HTML
+        run: |
+          set -euxo pipefail
+          curl -fsSL -D /tmp/headers.txt https://pro-carnet.digiylyfe.com/app/index.html -o /tmp/public.html
+          echo "=== RESPONSE HEADERS ==="
+          cat /tmp/headers.txt
+          echo "=== WORLD8 SELECTOR IN RAW HTML ==="
+          grep -n 'id="world8Lang"' /tmp/public.html || true
+          echo "=== WORLD8 SCRIPT IN RAW HTML ==="
+          grep -n 'world8.js' /tmp/public.html || true
+          echo "=== APP TITLE MARKER ==="
+          grep -n 'id="appTitle"' /tmp/public.html || true
+
+      - name: Chromium proof against public domain
+        run: |
+          cat > .public-world8-proof.mjs <<'NODE'
+          import { chromium } from "playwright";
+          const browser = await chromium.launch({headless:true});
+          const page = await browser.newPage({ viewport:{width:1080,height:1920} });
+          const errors=[];
+          page.on("pageerror",e=>errors.push("pageerror: "+e.message));
+          page.on("console",m=>{if(m.type()==="error") errors.push("console: "+m.text())});
+          const response=await page.goto("https://pro-carnet.digiylyfe.com/app/index.html",{waitUntil:"domcontentloaded",timeout:60000});
+          console.log("HTTP",response?.status());
+          console.log("URL",page.url());
+          console.log("TITLE",await page.title());
+          console.log("HTML_LANG",await page.locator("html").getAttribute("lang"));
+          console.log("WORLD8_COUNT",await page.locator("#world8Lang").count());
+          console.log("APP_TITLE_COUNT",await page.locator("#appTitle").count());
+          console.log("BODY_HAS_FR_EN",await page.locator("body").innerText().then(t=>t.includes("FR")&&t.includes("EN")));
+          console.log("BODY_START",(await page.locator("body").innerText()).slice(0,1200));
+          console.log("ERRORS",JSON.stringify(errors));
+          await page.screenshot({path:"public-world8.png",fullPage:false});
+          await browser.close();
+          NODE
+          node .public-world8-proof.mjs
+
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-world8-proof
+          path: public-world8.png
