@@ -92,6 +92,17 @@
     "Crédit téléphone":"رصيد هاتف","École":"مدرسة","Frais voiture":"مصاريف السيارة","Ravitaillement":"تموين","Vêtements":"ملابس"
   });
 
+  const EXTRA={
+    en:{"Aujourd’hui":"Today","Réserve":"Reserve","Retraits / banques":"Withdrawals / banks","Sorties rapides":"Quick expenses","Entrées / modules":"Income / modules","lecture":"view","Net":"Net"},
+    es:{"Aujourd’hui":"Hoy","Réserve":"Reserva","Retraits / banques":"Retiros / bancos","Sorties rapides":"Gastos rápidos","Entrées / modules":"Ingresos / módulos","lecture":"vista","Net":"Neto"},
+    pt:{"Aujourd’hui":"Hoje","Réserve":"Reserva","Retraits / banques":"Levantamentos / bancos","Sorties rapides":"Despesas rápidas","Entrées / modules":"Entradas / módulos","lecture":"vista","Net":"Líquido"},
+    de:{"Aujourd’hui":"Heute","Réserve":"Reserve","Retraits / banques":"Abhebungen / Banken","Sorties rapides":"Schnelle Ausgaben","Entrées / modules":"Einnahmen / Module","lecture":"Ansicht","Net":"Netto"},
+    it:{"Aujourd’hui":"Oggi","Réserve":"Riserva","Retraits / banques":"Prelievi / banche","Sorties rapides":"Uscite rapide","Entrées / modules":"Entrate / moduli","lecture":"vista","Net":"Netto"},
+    nl:{"Aujourd’hui":"Vandaag","Réserve":"Reserve","Retraits / banques":"Opnames / banken","Sorties rapides":"Snelle uitgaven","Entrées / modules":"Inkomsten / modules","lecture":"overzicht","Net":"Netto"},
+    ar:{"Aujourd’hui":"اليوم","Réserve":"احتياطي","Retraits / banques":"سحب / بنوك","Sorties rapides":"مصاريف سريعة","Entrées / modules":"مداخيل / وحدات","lecture":"عرض","Net":"الصافي"}
+  };
+  Object.keys(EXTRA).forEach(l=>Object.assign(D[l]||{},EXTRA[l]));
+
   let currentLang=lang;
 
   function canonicalFor(text){
@@ -171,5 +182,22 @@
   }
   function run(){translateText(document.body,currentLang);switcher();bindStatic();setLang(currentLang);}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true}); else run();
-  new MutationObserver(m=>{for(const x of m){for(const n of x.addedNodes){if(n.nodeType===1)translateText(n)}}}).observe(document.documentElement,{childList:true,subtree:true});
+  let world8Busy=false, world8Queued=false;
+  function refreshDynamic(){
+    if(world8Busy||world8Queued)return;
+    world8Queued=true;
+    queueMicrotask(()=>{
+      world8Queued=false;
+      if(world8Busy)return;
+      world8Busy=true;
+      try{translateText(document.body,currentLang)}finally{world8Busy=false}
+    });
+  }
+  new MutationObserver(m=>{
+    if(world8Busy)return;
+    for(const x of m){
+      if(x.type==="characterData"){refreshDynamic();break}
+      if(x.type==="childList" && x.addedNodes.length){refreshDynamic();break}
+    }
+  }).observe(document.documentElement,{childList:true,characterData:true,subtree:true});
 })();
