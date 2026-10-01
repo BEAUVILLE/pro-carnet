@@ -136,7 +136,27 @@ jobs:
           await page.locator("#historyModal [data-close='historyModal']").click({force:true}).catch(()=>{});
           await clickIfVisible("#navAdmin");
 
-          // 3) Oreille in Chromium with browser API doubles only for audio/mic.
+          // 3) Oreille in Chromium with the REAL root guard/session adapter.
+          // Stop mocking root guard, then seed a valid local PIN session in the exact historical format.
+          await context.unroute("**/guard.js*");
+          await page.goto(base + "/pin.html", {waitUntil:"domcontentloaded"});
+          await page.evaluate(() => {
+            const now = Date.now();
+            const session = {
+              module:"PAY",
+              public_name:"PRO CARNET",
+              slug:"test-browser-proof",
+              phone:"221770000000",
+              access:true,
+              access_ok:true,
+              pin_session_ok:true,
+              validated_at:now,
+              verified_at:now,
+              expires_at:now + 8*60*60*1000
+            };
+            localStorage.setItem("DIGIY_PAY_SESSION", JSON.stringify(session));
+            sessionStorage.setItem("DIGIY_PAY_SESSION", JSON.stringify(session));
+          });
           await page.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
           await page.waitForTimeout(3500);
           const oreilleDiag = await page.evaluate(() => ({
