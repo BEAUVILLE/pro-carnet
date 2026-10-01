@@ -1,0 +1,177 @@
+name: WORLD8 PR18 language proof
+
+on:
+  push:
+    branches:
+      - test/world8-pr18-language-proof
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve repository locally
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/pro-carnet-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/pin.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/pro-carnet-http.log
+          exit 1
+
+      - name: Chromium proof — language change without reload or business writes
+        run: |
+          cat > .world8-pr18-proof.mjs <<'NODE'
+          import { chromium } from "playwright";
+
+          const base = "http://127.0.0.1:4173";
+          const browser = await chromium.launch({headless:true});
+          const context = await browser.newContext({ viewport: { width:1080, height:1920 } });
+
+          await context.route("**/guard.js*", async route => {
+            const url = new URL(route.request().url());
+            if (url.pathname.endsWith("/app/guard.js")) return route.continue();
+            return route.fulfill({
+              status:200,
+              contentType:"application/javascript",
+              body:`
+                (function(){
+                  "use strict";
+                  const session={phone:"221770000000",module:"PAY",test:true};
+                  window.DIGIY_GUARD={
+                    cleanUrl(){}, clearSession(){},
+                    normalizePhone(v){return String(v||"").replace(/\\D/g,"");},
+                    loginWithPin:async()=>({ok:true,session}),
+                    getSession:()=>session,
+                    buildPinUrl:()=>"/pin.html",
+                    requireSession:()=>session,
+                    logout(){},
+                    normalizeSlug:v=>String(v||"")
+                  };
+                })();
+              `
+            });
+          });
+
+          const page = await context.newPage();
+          const errors = [];
+          let appNavigations = 0;
+          page.on("pageerror", e => errors.push("pageerror: "+e.message));
+          page.on("console", m => { if(m.type()==="error") errors.push("console: "+m.text()); });
+          page.on("framenavigated", frame => {
+            if(frame === page.mainFrame() && frame.url().includes("/app/index.html")) appNavigations++;
+          });
+
+          await page.goto(base+"/pin.html",{waitUntil:"domcontentloaded"});
+          await page.fill("#phone","221770000000");
+          await page.fill("#pin","1234");
+          await Promise.all([
+            page.waitForURL(/\/app\/index\.html/),
+            page.click("#submitBtn")
+          ]);
+          await page.waitForLoadState("domcontentloaded");
+          await page.waitForSelector("#world8Lang",{state:"visible"});
+
+          const initialUrl = page.url();
+          const baseline = await page.evaluate(() => {
+            const values={};
+            for(let i=0;i<localStorage.length;i++){
+              const k=localStorage.key(i);
+              values[k]=localStorage.getItem(k);
+            }
+            return {
+              values,
+              ticket:sessionStorage.getItem("DIGIY_CARNET_ENTRY_OK_V13"),
+              title:document.querySelector("#appTitle")?.textContent,
+              lang:window.DIGIY_WORLD8?.getLang?.()
+            };
+          });
+          if(baseline.ticket!==null) throw new Error("Entry ticket not consumed");
+          if(!window){} // keep module parser explicit
+
+          const selectLang = async (lang, expectedTitle) => {
+            await page.selectOption("#world8Lang",lang);
+            await page.waitForTimeout(80);
+            const snap=await page.evaluate(() => ({
+              url:location.href,
+              title:document.querySelector("#appTitle")?.textContent,
+              active:document.querySelector("#world8Lang")?.value,
+              api:window.DIGIY_WORLD8?.getLang?.(),
+              htmlLang:document.documentElement.lang,
+              ticket:sessionStorage.getItem("DIGIY_CARNET_ENTRY_OK_V13")
+            }));
+            if(snap.url!==initialUrl) throw new Error("Language change navigated: "+JSON.stringify(snap));
+            if(snap.active!==lang||snap.api!==lang||snap.htmlLang!==lang) throw new Error("Language mismatch: "+JSON.stringify(snap));
+            if(snap.title!==expectedTitle) throw new Error("Title translation mismatch for "+lang+": "+JSON.stringify(snap));
+            if(snap.ticket!==null) throw new Error("Language change recreated entry ticket");
+          };
+
+          await selectLang("en","My activity");
+          await selectLang("it","La mia attività");
+          await selectLang("fr","Mon activité");
+          await selectLang("ar","نشاطي");
+          await selectLang("fr","Mon activité");
+
+          // Existing controls stay live after repeated language changes.
+          await page.click("#btnMenu");
+          if(!(await page.locator("#menuModal").evaluate(el=>el.classList.contains("open")))) throw new Error("Menu handler inactive");
+          await page.click("#menuModal [data-close='menuModal']");
+          await page.click("#btnMagicAdd");
+          if(await page.locator("#magicPanel").getAttribute("hidden")!==null) throw new Error("Magic panel handler inactive");
+          await page.click("#btnMagicAdd");
+          await page.click("#navAdmin");
+          if(!(await page.locator("#adminModal").evaluate(el=>el.classList.contains("open")))) throw new Error("Admin handler inactive");
+          await page.click("#adminModal [data-close='adminModal']");
+
+          const after = await page.evaluate(() => {
+            const values={};
+            for(let i=0;i<localStorage.length;i++){
+              const k=localStorage.key(i);
+              values[k]=localStorage.getItem(k);
+            }
+            return values;
+          });
+          const LANG_KEY="digiy_carnet_ui_lang_v1";
+          for(const [key,value] of Object.entries(baseline.values)){
+            if(key===LANG_KEY) continue;
+            if(after[key]!==value) throw new Error("Business/local storage changed for "+key);
+          }
+          for(const key of Object.keys(after)){
+            if(key===LANG_KEY) continue;
+            if(!(key in baseline.values)) throw new Error("Unexpected storage key created: "+key);
+          }
+          if(after[LANG_KEY]!=="fr") throw new Error("Final language preference should be fr");
+
+          if(appNavigations!==1) throw new Error("App navigated/reloaded during language changes: "+appNavigations);
+          if(errors.length) throw new Error(errors.join("\n"));
+
+          console.log("WORLD8 PR18 language proof: PASS");
+          await browser.close();
+          NODE
+          node .world8-pr18-proof.mjs
+
+      - name: Confirm tested source matches PR18 head
+        run: |
+          EXPECTED="e2bcd894ec12302df7bba094842cec99d25b6d39"
+          git cat-file -e "$EXPECTED^{commit}"
+          git diff --exit-code "$EXPECTED" HEAD -- . ':(exclude).github/workflows/world8-pr18-language-proof.yml'
+          echo "PR18 source match: PASS"
