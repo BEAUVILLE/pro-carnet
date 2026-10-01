@@ -15,7 +15,9 @@
    ========================================================================== */
 
 (function () {
-  "use strict";\n\n  function world8Text(key, fallback, params) { try { var out = window.DIGIY_WORLD8 && window.DIGIY_WORLD8.t ? window.DIGIY_WORLD8.t(key, params) : null; return typeof out === "string" && !/^\\[world8:/.test(out) ? out : fallback; } catch (_err) { return fallback; } }
+  "use strict";
+
+  function world8Text(key, fallback, params) { try { var out = window.DIGIY_WORLD8 && window.DIGIY_WORLD8.t ? window.DIGIY_WORLD8.t(key, params) : null; return typeof out === "string" && !/^\\[world8:/.test(out) ? out : fallback; } catch (_err) { return fallback; } }
 
   var VERSION = "oreille-pay-v2-20260524-paves-client-tel-lieu-mode";
 
