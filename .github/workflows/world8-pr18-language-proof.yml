@@ -106,7 +106,6 @@ jobs:
             };
           });
           if(baseline.ticket!==null) throw new Error("Entry ticket not consumed");
-          if(!window){} // keep module parser explicit
 
           const selectLang = async (lang, expectedTitle) => {
             await page.selectOption("#world8Lang",lang);
