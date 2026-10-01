@@ -3,7 +3,8 @@
    Doctrine : ACTION DIGIY prépare, le module reçoit, le pro valide.
 */
 (function(){
-  "use strict";\n  function wt(key,fallback){try{const out=window.DIGIY_WORLD8?.t?.(key);return typeof out==="string"&&!/^\\[world8:/.test(out)?out:fallback}catch(_){return fallback}}
+  "use strict";
+  function wt(key,fallback){try{const out=window.DIGIY_WORLD8?.t?.(key);return typeof out==="string"&&!/^\\[world8:/.test(out)?out:fallback}catch(_){return fallback}}
   const VERSION="action-digiy-receiver-v5-compact-module-url-20260530";
   const HOST=String(location.hostname||"").toLowerCase();
   const RAW_MODULE=String(window.DIGIY_MODULE||window.DIGIY_ABOS_MODULE||"").toUpperCase().trim();
