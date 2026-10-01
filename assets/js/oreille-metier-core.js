@@ -13,7 +13,8 @@
 (function () {
   "use strict";
 
-  var VERSION = "oreille-metier-core-pay-paves-tel-20260524";\n  function t(key, fallback, params) { try { var out = window.DIGIY_WORLD8 && window.DIGIY_WORLD8.t ? window.DIGIY_WORLD8.t(key, params) : null; return typeof out === "string" && !/^\\[world8:/.test(out) ? out : fallback; } catch (_err) { return fallback; } }
+  var VERSION = "oreille-metier-core-pay-paves-tel-20260524";
+  function t(key, fallback, params) { try { var out = window.DIGIY_WORLD8 && window.DIGIY_WORLD8.t ? window.DIGIY_WORLD8.t(key, params) : null; return typeof out === "string" && !/^\\[world8:/.test(out) ? out : fallback; } catch (_err) { return fallback; } }
   var DEFAULT_MODULE = "PAY";
 
   var DEFAULT_CONFIG = {
