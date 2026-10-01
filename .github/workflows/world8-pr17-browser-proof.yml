@@ -136,31 +136,53 @@ jobs:
           await page.locator("#historyModal [data-close='historyModal']").click({force:true}).catch(()=>{});
           await clickIfVisible("#navAdmin");
 
-          // 3) Oreille in Chromium with the REAL root guard/session adapter.
-          // Stop mocking root guard, then seed a valid local PIN session in the exact historical format.
-          await context.unroute("**/guard.js*");
-          await context.addInitScript(() => {
-            try {
-              const now = Date.now();
-              const session = {
-                module:"PAY",
-                public_name:"PRO CARNET",
-                slug:"test-browser-proof",
-                phone:"221770000000",
-                access:true,
-                access_ok:true,
-                pin_session_ok:true,
-                validated_at:now,
-                verified_at:now,
-                expires_at:now + 8*60*60*1000
-              };
-              localStorage.setItem("DIGIY_PAY_SESSION", JSON.stringify(session));
-              sessionStorage.setItem("DIGIY_PAY_SESSION", JSON.stringify(session));
-            } catch (_) {}
+          // 3) Oreille in a fresh Chromium context with REAL guard/session creation.
+          const realContext = await browser.newContext({ viewport: { width: 1080, height: 1920 } });
+          await realContext.addInitScript(() => {
+            Object.defineProperty(navigator, "clipboard", {
+              configurable: true,
+              value: { writeText: async () => true }
+            });
+            class FakeRecognition {
+              constructor(){ this.lang="fr-FR"; this.interimResults=true; this.continuous=false; }
+              start(){ this.onstart?.(); this.onresult?.({resultIndex:0,results:[Object.assign([{transcript:"vente 5000 wave"}],{isFinal:true})]}); this.onend?.(); }
+              stop(){ this.onend?.(); }
+              abort(){ this.onend?.(); }
+            }
+            window.SpeechRecognition = FakeRecognition;
+            window.webkitSpeechRecognition = FakeRecognition;
+            window.speechSynthesis = {
+              cancel(){},
+              speak(u){ setTimeout(()=>{ try{u.onstart?.();u.onend?.();}catch(_){} },0); },
+              getVoices(){ return [{lang:"fr-FR",name:"Test FR"}]; },
+              onvoiceschanged:null
+            };
           });
-          await page.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
-          await page.waitForTimeout(3500);
-          const oreilleDiag = await page.evaluate(() => ({
+          await realContext.route("**/rest/v1/rpc/digiy_verify_pin", async route => {
+            await route.fulfill({status:200,contentType:"application/json",body:"true"});
+          });
+          const realPage = await realContext.newPage();
+          const realErrors = [];
+          realPage.on("pageerror", e => realErrors.push("pageerror: "+e.message));
+          realPage.on("console", m => { if(m.type()==="error") realErrors.push("console: "+m.text()); });
+
+          // Real PIN page -> real guard.loginWithPin() -> real persisted session -> app ticket path.
+          await realPage.goto(base + "/pin.html", {waitUntil:"domcontentloaded"});
+          await realPage.fill("#phone","221770000000");
+          await realPage.fill("#pin","1234");
+          await Promise.all([
+            realPage.waitForURL(/\/app\/index\.html/),
+            realPage.click("#submitBtn")
+          ]);
+          await realPage.waitForLoadState("domcontentloaded");
+          const realSession = await realPage.evaluate(() => window.DIGIY_GUARD?.getSession?.() || null);
+          if(!realSession || realSession.module!=="PAY" || realSession.phone!=="221770000000") {
+            throw new Error("Real guard did not persist valid PAY session: "+JSON.stringify(realSession));
+          }
+
+          await realPage.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
+          await realPage.waitForTimeout(1000);
+          const oreilleDiag = await realPage.evaluate(() => ({
             url: location.href,
             readyState: document.readyState,
             hasTarget: !!document.querySelector("#digiy-oreille-pay"),
@@ -169,34 +191,38 @@ jobs:
             pay: typeof window.DigiyOreillePAY,
             session: typeof window.DIGIY_SESSION,
             guard: typeof window.DIGIY_GUARD,
+            guardSession: window.DIGIY_GUARD?.getSession?.() || null,
             visibility: document.documentElement.style.visibility || ""
           }));
           console.log("OREILLE_DIAG", JSON.stringify(oreilleDiag));
           if(!oreilleDiag.hasTarget) throw new Error("Oreille target missing: "+JSON.stringify(oreilleDiag));
-          if(!oreilleDiag.targetHtml) throw new Error("Oreille not mounted: "+JSON.stringify(oreilleDiag)+" ERRORS="+errors.join(" | "));
-          await page.waitForSelector("#digiy-oreille-pay [data-action='listen']", {state:"visible", timeout:5000});
+          if(!oreilleDiag.targetHtml) throw new Error("Oreille not mounted: "+JSON.stringify(oreilleDiag)+" ERRORS="+realErrors.join(" | "));
+          await realPage.waitForSelector("#digiy-oreille-pay [data-action='listen']", {state:"visible", timeout:5000});
           for (const action of ["listen","formulate","copy","save","guide","stop"]) {
-            await page.locator("#digiy-oreille-pay [data-action='"+action+"']").click({force:true});
+            await realPage.locator("#digiy-oreille-pay [data-action='"+action+"']").click({force:true});
           }
-          const noteCount = await page.locator("#digiy-oreille-pay .digiy-oreille-note").count();
+          const noteCount = await realPage.locator("#digiy-oreille-pay .digiy-oreille-note").count();
           if(noteCount < 1) throw new Error("Oreille Ranger did not create a note");
 
-          // 4) Receiver presentation/actions in Chromium.
+          // 4) Receiver presentation/actions in the same real authenticated context.
           const action = encodeURIComponent(JSON.stringify({
             module:"PAY", primaryModule:"PAY", action:"income",
             commandText:"vente 5000 Wave", amount:5000, channel:"Wave"
           }));
-          await page.goto(base + "/oreille.html?action=" + action, {waitUntil:"domcontentloaded"});
-          await page.waitForSelector("#digiyActionReceiverPanel");
+          await realPage.goto(base + "/oreille.html?action=" + action, {waitUntil:"domcontentloaded"});
+          await realPage.waitForSelector("#digiyActionReceiverPanel");
           for (const sel of ["[data-copy]","[data-save]","[data-fill]","[data-validate]"]) {
-            await page.locator("#digiyActionReceiverPanel "+sel).click({force:true});
+            await realPage.locator("#digiyActionReceiverPanel "+sel).click({force:true});
           }
-          const validated = await page.evaluate(() => {
+          const validated = await realPage.evaluate(() => {
             const keys = Object.keys(localStorage);
             return keys.some(k => /VALIDATED/i.test(k) && localStorage.getItem(k));
           });
           if(!validated) throw new Error("Receiver validation did not persist");
-          await page.locator("#digiyActionReceiverPanel [data-delete]").click({force:true});
+          await realPage.locator("#digiyActionReceiverPanel [data-delete]").click({force:true});
+
+          if(realErrors.length) throw new Error(realErrors.join("\n"));
+          await realContext.close();
 
           if(errors.length) throw new Error(errors.join("\n"));
           console.log("WORLD8 PR17 browser proof: PASS");
