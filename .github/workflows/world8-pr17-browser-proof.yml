@@ -121,18 +121,20 @@ jobs:
             await loc.click({force:true});
           };
           await clickIfVisible("#btnMenu");
+          await page.locator("#menuModal [data-close='menuModal']").click({force:true});
           await clickIfVisible("#btnMagicAdd");
           await clickIfVisible("#tabPerso");
           await clickIfVisible("#tabPro");
           await clickIfVisible("#btnEye");
           await clickIfVisible("#btnEye");
-          await clickIfVisible("[data-fab='modules']");
-          await page.keyboard.press("Escape").catch(()=>{});
-          await clickIfVisible("[data-go-frais], [data-fab='frais']");
-          await page.keyboard.press("Escape").catch(()=>{});
-          await clickIfVisible("[data-pay-action='history'], [data-fab='history']");
-          await page.keyboard.press("Escape").catch(()=>{});
-          await clickIfVisible("[data-fab='admin'], #menuAdmin");
+          await clickIfVisible("#navModules");
+          await page.locator("#activitiesModal [data-close='activitiesModal']").click({force:true});
+          await clickIfVisible("#navFrais");
+          await page.locator("#quickExpenseModal [data-close='quickExpenseModal']").click({force:true}).catch(()=>{});
+          if(!(await page.locator("#magicPanel").isVisible())) await clickIfVisible("#btnMagicAdd");
+          await clickIfVisible("[data-pay-action='history']");
+          await page.locator("#historyModal [data-close='historyModal']").click({force:true}).catch(()=>{});
+          await clickIfVisible("#navAdmin");
 
           // 3) Oreille in Chromium with browser API doubles only for audio/mic.
           await page.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
