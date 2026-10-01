@@ -47,12 +47,27 @@
     LANGS.forEach(l=>{
       const b=document.createElement("button"); b.type="button"; b.textContent=l.toUpperCase();
       b.style.cssText="border:0;border-radius:999px;padding:5px 7px;font:800 10px system-ui;cursor:pointer;background:"+(l===lang?"#f4d27a":"transparent")+";color:"+(l===lang?"#142016":"#fff")+";";
-      b.onclick=()=>{try{localStorage.setItem("digiy-lang",l)}catch(_){} const u=new URL(location.href);u.searchParams.set("lang",l);location.href=u.toString();};
+      b.onclick=()=>setLang(l);
       box.appendChild(b);
     });
     document.body.appendChild(box);
   }
-  function run(){translateText();switcher();}
+  function setLang(l){
+    if(!LANGS.includes(l))return;
+    try{localStorage.setItem("digiy-lang",l);localStorage.setItem("digiy_lang",l)}catch(_){}
+    document.documentElement.lang=l;
+    document.documentElement.dir=l==="ar"?"rtl":"ltr";
+    const u=new URL(location.href);
+    u.searchParams.set("lang",l);
+    history.replaceState(null,"",u.toString());
+    location.reload();
+  }
+  function bindStatic(){
+    document.querySelectorAll("[data-world8-lang]").forEach(b=>{
+      b.onclick=()=>setLang(b.dataset.world8Lang);
+    });
+  }
+  function run(){translateText();switcher();bindStatic();}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true}); else run();
   new MutationObserver(m=>{for(const x of m){for(const n of x.addedNodes){if(n.nodeType===1)translateText(n)}}}).observe(document.documentElement,{childList:true,subtree:true});
 })();
