@@ -188,7 +188,7 @@
     u.searchParams.set("lang",l);
     history.replaceState(null,"",u.toString());
     translateText(document.body,l);
-    document.querySelectorAll("[data-world8-lang]").forEach(b=>{
+    window.dispatchEvent(new CustomEvent("digiy-world8-change",{detail:{lang:l}}));\n    document.querySelectorAll("[data-world8-lang]").forEach(b=>{
       b.style.background=b.dataset.world8Lang===l?"#f4d27a":"transparent";
       b.style.color=b.dataset.world8Lang===l?"#142016":"#fff";
     });
