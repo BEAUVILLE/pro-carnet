@@ -22,6 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./session.js?v=pay-guard-hub-20260531"></script>
   <script src="./pay-tools.js"></script>
+  <script src="./assets/js/world8.js?v=world8-client-due-20261001"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1632,62 +1633,67 @@
           <section class="quick-presets" id="payClientDebts" aria-label="Dettes clients PAY">
             <div class="quick-presets-head">
               <div>
-                <div class="quick-presets-title">📒 Dettes clients</div>
-                <div class="quick-presets-help">
+                <div class="quick-presets-title" data-client-due-key="client_due.title" data-client-due-prefix="📒 ">📒 Dettes clients</div>
+                <div class="quick-presets-help" data-client-due-key="client_due.subtitle">
                   Crédit vendeur · Argent à recevoir
                 </div>
               </div>
+              <label><span data-client-due-key="client_due.language">Langue</span>
+                <select id="clientDueLang" aria-label="Langue">
+                  <option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option><option value="pt">PT</option><option value="de">DE</option><option value="it">IT</option><option value="nl">NL</option><option value="ar">AR</option>
+                </select>
+              </label>
             </div>
 
             <div class="focus-box">
-              <div class="focus-top">Protection PAY</div>
-              <div class="focus-main">Ce montant est à recevoir.</div>
-              <div class="focus-sub">
+              <div class="focus-top" data-client-due-key="client_due.protection">Protection PAY</div>
+              <div class="focus-main" data-client-due-key="client_due.receivable">Ce montant est à recevoir.</div>
+              <div class="focus-sub" data-client-due-key="client_due.cash_warning">
                 Il n’entre dans la caisse que quand le client paie.
               </div>
             </div>
 
             <div class="row2">
               <div class="field">
-                <label class="label" for="clientDebtName">Nom</label>
+                <label class="label" for="clientDebtName" data-client-due-key="client_due.name">Nom</label>
                 <input id="clientDebtName" type="text" placeholder="Fatou" autocomplete="off" />
               </div>
 
               <div class="field">
-                <label class="label" for="clientDebtPhone">Tel</label>
+                <label class="label" for="clientDebtPhone" data-client-due-key="client_due.phone">Tel</label>
                 <input id="clientDebtPhone" type="tel" placeholder="77 123 45 67" autocomplete="off" />
               </div>
             </div>
 
             <div class="row2" style="margin-top:12px;">
               <div class="field">
-                <label class="label" for="clientDebtAmount">Somme due</label>
+                <label class="label" for="clientDebtAmount" data-client-due-key="client_due.amount">Somme due</label>
                 <input id="clientDebtAmount" type="number" min="1" step="1" placeholder="50000" />
               </div>
 
               <div class="field">
-                <label class="label" for="clientDebtDate">Date</label>
+                <label class="label" for="clientDebtDate" data-client-due-key="client_due.date">Date</label>
                 <input id="clientDebtDate" type="date" />
               </div>
             </div>
 
             <div class="actions" style="margin-top:14px;">
-              <button class="btn primary" id="btnSaveClientDebt" type="button">
+              <button class="btn primary" id="btnSaveClientDebt" type="button" data-client-due-key="client_due.add">
                 📒 Ajouter dette client
               </button>
-              <button class="btn secondary" id="btnClearClientDebt" type="button">
+              <button class="btn secondary" id="btnClearClientDebt" type="button" data-client-due-key="client_due.clear">
                 🧹 Vider
               </button>
             </div>
 
-            <div class="helper" style="margin-top:10px;">
+            <div class="helper" style="margin-top:10px;" data-client-due-key="client_due.warning">
               Dette client = argent attendu. Pas encore recette réelle.
             </div>
 
             <div class="quick-preview" id="clientDebtPreview"></div>
 
             <div class="list" id="clientDebtsList" style="margin-top:12px;">
-              <div class="empty">Aucune dette client gardée sur ce téléphone.</div>
+              <div class="empty" data-client-due-key="client_due.empty">Aucune dette client gardée sur ce téléphone.</div>
             </div>
           </section>
 
@@ -3268,24 +3274,24 @@
       }
 
       if(draft.type === "client_debt"){
-        const amountTxt = draft.amount ? money(draft.amount) : "somme due à compléter";
-        const nameTxt = draft.name || "nom à compléter";
-        const phoneTxt = draft.phone || "tel optionnel";
-        const dateTxt = draft.dueDate || "date à préciser";
-        const warn = !draft.amount ? `<div class="warn">⚠️ Somme due non détectée : complète avant d’ajouter.</div>` : "";
-        const nameWarn = !draft.name ? `<div class="warn">⚠️ Nom client non détecté : complète avant d’ajouter.</div>` : "";
+        const amountTxt = draft.amount ? money(draft.amount) : clientDueText("client_due.amount_missing", "somme due à compléter");
+        const nameTxt = draft.name || clientDueText("client_due.name_missing", "nom à compléter");
+        const phoneTxt = draft.phone || clientDueText("client_due.phone_optional", "tel optionnel");
+        const dateTxt = draft.dueDate || clientDueText("client_due.date_missing", "date à préciser");
+        const warn = !draft.amount ? `<div class="warn">${esc(clientDueText("client_due.voice_amount_warning", "⚠️ Somme due non détectée : complète avant d’ajouter."))}</div>` : "";
+        const nameWarn = !draft.name ? `<div class="warn">${esc(clientDueText("client_due.voice_name_warning", "⚠️ Nom client non détecté : complète avant d’ajouter."))}</div>` : "";
 
         box.innerHTML = `
-          <strong>📒 Dette client préparée :</strong>
-          <div>Nom : <span class="ok">${esc(nameTxt)}</span></div>
-          <div>Tel : <span class="ok">${esc(phoneTxt)}</span></div>
-          <div>Somme due : <span class="ok">${esc(amountTxt)}</span></div>
-          <div>Date : <span class="ok">${esc(dateTxt)}</span></div>
-          <div>Module annoncé : <span class="ok">${esc(draft.module || "PAY")}</span></div>
+          <strong>${esc(clientDueText("client_due.voice_title", "📒 Dette client préparée :"))}</strong>
+          <div>${esc(clientDueText("client_due.name", "Nom"))} : <span class="ok">${esc(nameTxt)}</span></div>
+          <div>${esc(clientDueText("client_due.phone", "Tel"))} : <span class="ok">${esc(phoneTxt)}</span></div>
+          <div>${esc(clientDueText("client_due.amount", "Somme due"))} : <span class="ok">${esc(amountTxt)}</span></div>
+          <div>${esc(clientDueText("client_due.date", "Date"))} : <span class="ok">${esc(dateTxt)}</span></div>
+          <div>${esc(clientDueText("client_due.module", "Module annoncé"))} : <span class="ok">${esc(draft.module || "PAY")}</span></div>
           ${warn}
           ${nameWarn}
-          <div>Phrase : ${esc(draft.original)}</div>
-          <div class="warn">Dette client = argent attendu. Pas encore recette réelle.</div>
+          <div>${esc(clientDueText("client_due.phrase", "Phrase"))} : ${esc(draft.original)}</div>
+          <div class="warn">${esc(clientDueText("client_due.warning", "Dette client = argent attendu. Pas encore recette réelle."))}</div>
         `;
         return;
       }
@@ -3319,7 +3325,7 @@
       if(btn) btn.disabled = !draft.ok;
 
       if(draft.ok){
-        toast(draft.type === "client_debt" ? "📒 Dette client préparée par la voix" : "🎙️ Mouvement préparé par la voix");
+        toast(draft.type === "client_debt" ? clientDueText("client_due.voice_prepared", "📒 Dette client préparée par la voix") : "🎙️ Mouvement préparé par la voix");
       }else{
         toast("Parle ou écris d’abord une phrase PAY");
       }
@@ -3341,7 +3347,7 @@
         try{ panel.scrollIntoView({ behavior:"smooth", block:"start" }); }catch(_){}
       }
 
-      toast("📒 Dette client remplie. Vérifie puis clique sur Ajouter dette client.");
+      toast(clientDueText("client_due.voice_filled", "📒 Dette client remplie. Vérifie puis clique sur Ajouter dette client."));
       return true;
     }
 
@@ -3585,6 +3591,36 @@
        Crédit vendeur · Argent à recevoir
        Dette client = mémoire séparée. Pas une recette réelle.
        ========================================================= */
+    function clientDueText(key, fallback, params){
+      try{
+        const out = window.DIGIY_WORLD8?.t?.(key, params);
+        return typeof out === "string" && out.indexOf("[world8:") !== 0 ? out : fallback;
+      }catch(_){ return fallback; }
+    }
+
+    function refreshClientDueLanguage(){
+      const panel = $("payClientDebts");
+      if(!panel) return;
+      const api = window.DIGIY_WORLD8;
+      const lang = api?.getLang?.() || "fr";
+      panel.lang = lang;
+      panel.dir = api?.getDir?.() || "ltr";
+      panel.setAttribute("aria-label", clientDueText("client_due.title", "Dettes clients") + " PAY");
+      panel.querySelectorAll("[data-client-due-key]").forEach(el => {
+        if(el.dataset.clientDueFallback === undefined) el.dataset.clientDueFallback = el.textContent.trim();
+        const prefix = el.dataset.clientDuePrefix || "";
+        const fallback = el.dataset.clientDueFallback.slice(prefix.length);
+        el.textContent = prefix + clientDueText(el.dataset.clientDueKey, fallback);
+      });
+      const select = $("clientDueLang");
+      if(select){
+        select.value = lang;
+        select.setAttribute("aria-label", clientDueText("client_due.language", "Langue"));
+      }
+      renderClientDebts();
+      if(VOICE_LAST_DRAFT?.type === "client_debt") renderVoiceDraft(VOICE_LAST_DRAFT);
+    }
+
     function clientDebtStorageKey(){
       return "DIGIY_PAY_CLIENT_DEBTS:" + String(SLUG || "local").trim().toLowerCase();
     }
@@ -3627,7 +3663,7 @@
       const items = readClientDebts();
 
       if(!items.length){
-        box.innerHTML = `<div class="empty">Aucune dette client gardée sur ce téléphone.</div>`;
+        box.innerHTML = `<div class="empty">${esc(clientDueText("client_due.empty", "Aucune dette client gardée sur ce téléphone."))}</div>`;
         return;
       }
 
@@ -3635,26 +3671,26 @@
         const amount = Number(item.amount_xof || 0);
         const paid = Number(item.paid_xof || 0);
         const remaining = Math.max(0, amount - paid);
-        const status = remaining <= 0 ? "Soldé" : (paid > 0 ? "Payé en partie" : "À recevoir");
+        const status = remaining <= 0 ? clientDueText("client_due.status.settled", "Soldé") : (paid > 0 ? clientDueText("client_due.status.partial", "Payé en partie") : clientDueText("client_due.status.open", "À recevoir"));
 
         return `
           <div class="item">
             <div class="item-ico sav">📒</div>
             <div class="item-body">
-              <div class="item-title">${esc(item.name || "Client")}</div>
+              <div class="item-title">${esc(item.name || clientDueText("client_due.client", "Client"))}</div>
               <div class="item-meta">
-                Tel : ${esc(item.phone || "—")}
-                · Date : ${esc(item.due_date || "—")}
-                · Statut : ${esc(status)}
+                ${esc(clientDueText("client_due.phone", "Tel"))} : ${esc(item.phone || "—")}
+                · ${esc(clientDueText("client_due.date", "Date"))} : ${esc(item.due_date || "—")}
+                · ${esc(clientDueText("client_due.status", "Statut"))} : ${esc(status)}
                 <br>
-                Somme due : ${esc(money(amount))}
-                · Déjà payé : ${esc(money(paid))}
-                · Reste : ${esc(money(remaining))}
+                ${esc(clientDueText("client_due.amount", "Somme due"))} : ${esc(money(amount))}
+                · ${esc(clientDueText("client_due.paid", "Déjà payé"))} : ${esc(money(paid))}
+                · ${esc(clientDueText("client_due.remaining", "Reste"))} : ${esc(money(remaining))}
               </div>
             </div>
             <div class="item-right">
-              <button class="btn-del" type="button" data-client-debt-pay="${esc(item.id)}">Paiement reçu</button>
-              <button class="btn-del" type="button" data-client-debt-delete="${esc(item.id)}">Supprimer</button>
+              <button class="btn-del" type="button" data-client-debt-pay="${esc(item.id)}">${esc(clientDueText("client_due.payment_received", "Paiement reçu"))}</button>
+              <button class="btn-del" type="button" data-client-debt-delete="${esc(item.id)}">${esc(clientDueText("receiver.action.delete", "Supprimer"))}</button>
             </div>
           </div>
         `;
@@ -3676,13 +3712,13 @@
       const dueDate = String($("clientDebtDate")?.value || "").trim();
 
       if(!name){
-        toast("Nom client manquant");
+        toast(clientDueText("client_due.missing_name", "Nom client manquant"));
         $("clientDebtName")?.focus();
         return;
       }
 
       if(!amount || amount <= 0){
-        toast("Somme due invalide");
+        toast(clientDueText("client_due.invalid_amount", "Somme due invalide"));
         $("clientDebtAmount")?.focus();
         return;
       }
@@ -3707,26 +3743,26 @@
       if(preview){
         preview.style.display = "block";
         preview.innerHTML = `
-          <strong>📒 Dette client ajoutée</strong><br>
-          ${esc(name)} · ${esc(phone || "tel non renseigné")} · ${esc(money(amount))} · ${esc(item.due_date)}
-          <br>Ce montant est à recevoir. Il n’entre pas dans la caisse.
+          <strong>${esc(clientDueText("client_due.added", "📒 Dette client ajoutée"))}</strong><br>
+          ${esc(name)} · ${esc(phone || clientDueText("client_due.no_phone", "tel non renseigné"))} · ${esc(money(amount))} · ${esc(item.due_date)}
+          <br>${esc(clientDueText("client_due.preview_warning", "Ce montant est à recevoir. Il n’entre pas dans la caisse."))}
         `;
       }
 
-      toast("📒 Dette client gardée");
+      toast(clientDueText("client_due.saved", "📒 Dette client gardée"));
       clearClientDebtForm();
       renderClientDebts();
     }
 
     function deleteClientDebt(id){
       if(!id) return;
-      const ok = window.confirm("Supprimer cette dette client ?");
+      const ok = window.confirm(clientDueText("client_due.delete_confirm", "Supprimer cette dette client ?"));
       if(!ok) return;
 
       const items = readClientDebts().filter(x => String(x.id) !== String(id));
       writeClientDebts(items);
       renderClientDebts();
-      toast("Dette client supprimée");
+      toast(clientDueText("client_due.deleted", "Dette client supprimée"));
     }
 
     function prepareClientDebtPayment(id){
@@ -3739,16 +3775,16 @@
       const remaining = Math.max(0, total - paid);
 
       if(remaining <= 0){
-        toast("Dette déjà soldée");
+        toast(clientDueText("client_due.already_settled", "Dette déjà soldée"));
         return;
       }
 
-      const raw = window.prompt("Montant reçu sur la dette client ?", String(remaining));
+      const raw = window.prompt(clientDueText("client_due.payment_prompt", "Montant reçu sur la dette client ?"), String(remaining));
       if(raw == null) return;
 
       const received = Math.round(Number(String(raw).replace(/[^\d]/g, "")) || 0);
       if(!received || received <= 0){
-        toast("Montant reçu invalide");
+        toast(clientDueText("client_due.invalid_received", "Montant reçu invalide"));
         return;
       }
 
@@ -3756,7 +3792,7 @@
       const remainingAfter = Math.max(0, remaining - realReceived);
       let mode = remainingAfter <= 0 ? "total" : "partial";
       if(remainingAfter > 0){
-        const askMode = window.confirm("Encaissement total ?\nOK = total / Annuler = partiel");
+        const askMode = window.confirm(clientDueText("client_due.total_confirm", "Encaissement total ?\nOK = total / Annuler = partiel"));
         mode = askMode ? "total" : "partial";
       }
 
@@ -3788,7 +3824,7 @@
       );
       setFieldValue("movementDate", todayStr());
 
-      toast("✅ Paiement préparé. Vérifie puis enregistre.");
+      toast(clientDueText("client_due.payment_prepared", "✅ Paiement préparé. Vérifie puis enregistre."));
       const form = $("payForm");
       if(form){
         try{ form.scrollIntoView({ behavior:"smooth", block:"start" }); }catch(_){}
@@ -3802,10 +3838,15 @@
       if(save) save.addEventListener("click", addClientDebt);
       if(clear) clear.addEventListener("click", () => {
         clearClientDebtForm();
-        toast("Dette client vidée");
+        toast(clientDueText("client_due.cleared", "Dette client vidée"));
       });
 
-      renderClientDebts();
+      const select = $("clientDueLang");
+      if(select) select.addEventListener("change", () => {
+        window.DIGIY_WORLD8?.setLang?.(select.value);
+        refreshClientDueLanguage();
+      });
+      refreshClientDueLanguage();
     }
 
 
