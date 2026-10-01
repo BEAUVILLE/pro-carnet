@@ -250,6 +250,15 @@
     if(window.__DIGIY_CARNET_FINANCIAL_FIXES)return;
     window.__DIGIY_CARNET_FINANCIAL_FIXES=true;
 
+    const gt=(key,fallback,params)=>{
+      try{
+        const api=window.DIGIY_WORLD8;
+        if(!api||typeof api.t!=="function")return fallback;
+        const out=api.t(key,params);
+        return typeof out==="string"&&!/^\[world8:/.test(out)?out:fallback;
+      }catch(_){return fallback}
+    };
+
     const apply=()=>{
       if(!/(?:^|\/)(?:index\.html)?$/i.test(location.pathname||""))return;
       const state=readCarnetState();
@@ -278,11 +287,11 @@
 
       if(eyeOpen){
         set("balanceNumber",signedMoney(balance));
-        set("todayMini","Aujourd’hui "+signedMoney(dayNet,true));
+        set("todayMini",gt("day.today","Aujourd’hui "+signedMoney(dayNet,true),{amount:signedMoney(dayNet,true)}));
         set("sumDay","+ "+money(dayIn));
         set("sumWeek","− "+money(dayOut));
         set("sumMonth",signedMoney(dayNet,true));
-        set("journalMini","Entrées "+money(allIn)+" · Sorties "+money(allOut)+" · Net "+signedMoney(allIn-allOut,true));
+        set("journalMini",gt("journal.summary","Entrées "+money(allIn)+" · Sorties "+money(allOut)+" · Net "+signedMoney(allIn-allOut,true),{income:money(allIn),expenses:money(allOut),net:signedMoney(allIn-allOut,true)}));
 
         if(pocket==="pro"){
           const waveIn=day.filter(m=>m.mode==="Wave"&&m.type==="income").reduce((s,m)=>s+Number(m.amount||0),0);
@@ -306,7 +315,7 @@
         host.appendChild(reserveEl);
       }
       if(reserveEl){
-        reserveEl.textContent=eyeOpen?"Réserve "+signedMoney(reserve):"Réserve ••• F";
+        reserveEl.textContent=gt("wallet.reserve",eyeOpen?"Réserve "+signedMoney(reserve):"Réserve ••• F",{amount:eyeOpen?signedMoney(reserve):"••• F"});
       }
 
       document.querySelectorAll(".module-row").forEach(row=>{
@@ -341,6 +350,14 @@
   }
 
   function installSimpleUi(){
+    const gt=(key,fallback,params)=>{
+      try{
+        const api=window.DIGIY_WORLD8;
+        if(!api||typeof api.t!=="function")return fallback;
+        const out=api.t(key,params);
+        return typeof out==="string"&&!/^\[world8:/.test(out)?out:fallback;
+      }catch(_){return fallback}
+    };
     const apply=()=>{
       if(!/(?:^|\/)(?:index\.html)?$/i.test(location.pathname||""))return;
       if(!document.getElementById("digiy-carnet-simple-ui-v2")){
@@ -362,7 +379,7 @@
         const notice=document.createElement("div");
         notice.id="digiyCrossTabNotice";
         notice.hidden=true;
-        notice.textContent="Le carnet a changé dans un autre onglet. Actualisation sécurisée…";
+        notice.textContent=gt("notice.cross_tab_refresh","Le carnet a changé dans un autre onglet. Actualisation sécurisée…");
         document.body.appendChild(notice);
       }
 
@@ -370,7 +387,7 @@
         const button=document.createElement("button");
         button.id="digiyBackupAccess";
         button.type="button";
-        button.textContent="💾 Sauvegarde";
+        button.textContent="💾 "+gt("action.backup","Sauvegarde");
         button.addEventListener("click",()=>{
           const modal=document.getElementById("backupModal");
           if(modal){
@@ -389,7 +406,7 @@
         const warning=document.createElement("div");
         warning.id="digiyLocalOnlyWarning";
         warning.className="notice";
-        warning.textContent="Tes chiffres sont enregistrés dans ce téléphone. Aucune copie cloud automatique. Télécharge une sauvegarde JSON chaque semaine.";
+        warning.textContent=gt("notice.local_backup","Tes chiffres sont enregistrés dans ce téléphone. Aucune copie cloud automatique. Télécharge une sauvegarde JSON chaque semaine.");
         modalBody.prepend(warning);
       }
     };
