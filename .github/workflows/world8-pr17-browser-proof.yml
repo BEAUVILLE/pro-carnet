@@ -138,7 +138,22 @@ jobs:
 
           // 3) Oreille in Chromium with browser API doubles only for audio/mic.
           await page.goto(base + "/oreille.html", {waitUntil:"domcontentloaded"});
-          await page.waitForSelector("#digiy-oreille-pay [data-action='listen']");
+          await page.waitForTimeout(3500);
+          const oreilleDiag = await page.evaluate(() => ({
+            url: location.href,
+            readyState: document.readyState,
+            hasTarget: !!document.querySelector("#digiy-oreille-pay"),
+            targetHtml: document.querySelector("#digiy-oreille-pay")?.innerHTML?.slice(0,500) || "",
+            core: typeof window.DigiyOreilleMetier,
+            pay: typeof window.DigiyOreillePAY,
+            session: typeof window.DIGIY_SESSION,
+            guard: typeof window.DIGIY_GUARD,
+            visibility: document.documentElement.style.visibility || ""
+          }));
+          console.log("OREILLE_DIAG", JSON.stringify(oreilleDiag));
+          if(!oreilleDiag.hasTarget) throw new Error("Oreille target missing: "+JSON.stringify(oreilleDiag));
+          if(!oreilleDiag.targetHtml) throw new Error("Oreille not mounted: "+JSON.stringify(oreilleDiag)+" ERRORS="+errors.join(" | "));
+          await page.waitForSelector("#digiy-oreille-pay [data-action='listen']", {state:"visible", timeout:5000});
           for (const action of ["listen","formulate","copy","save","guide","stop"]) {
             await page.locator("#digiy-oreille-pay [data-action='"+action+"']").click({force:true});
           }
@@ -170,8 +185,8 @@ jobs:
 
       - name: Confirm tested source SHA
         run: |
-          echo "Test branch source parent:"
-          git rev-parse HEAD^
           echo "Expected PR17 corrected SHA:"
           echo "8d1fbebdb3950ae57c29188a3f610ca94582befe"
-          test "$(git rev-parse HEAD^)" = "8d1fbebdb3950ae57c29188a3f610ca94582befe"
+          git cat-file -e 8d1fbebdb3950ae57c29188a3f610ca94582befe^{commit}
+          git diff --exit-code 8d1fbebdb3950ae57c29188a3f610ca94582befe HEAD -- . ':(exclude).github/workflows/world8-pr17-browser-proof.yml'
+          echo "Application source is identical to PR17 corrected SHA."
