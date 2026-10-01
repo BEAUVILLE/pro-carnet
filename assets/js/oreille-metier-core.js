@@ -14,6 +14,7 @@
   "use strict";
 
   var VERSION = "oreille-metier-core-pay-paves-tel-20260524";
+  function t(key, fallback, params) { try { var out = window.DIGIY_WORLD8 && window.DIGIY_WORLD8.t ? window.DIGIY_WORLD8.t(key, params) : null; return typeof out === "string" && out.indexOf("[world8:") !== 0 ? out : fallback; } catch (_err) { return fallback; } }
   var DEFAULT_MODULE = "PAY";
 
   var DEFAULT_CONFIG = {
@@ -311,7 +312,7 @@
     if (!notes.length) {
       var empty = document.createElement("div");
       empty.className = "digiy-oreille-note";
-      empty.innerHTML = "<b>Aucune note rangée</b><div>Teste une suggestion, puis clique sur Ranger.</div>";
+      empty.innerHTML = "<b>" + escapeHtml(t("oreille.notes.empty_title","Aucune note rangée")) + "</b><div>" + escapeHtml(t("oreille.notes.empty_hint","Teste une suggestion, puis clique sur Ranger.")) + "</div>";
       container.appendChild(empty);
       return;
     }
@@ -333,16 +334,16 @@
       '<section class="digiy-oreille-box" aria-label="' + escapeHtml(config.title) + '">' +
       '<div class="digiy-oreille-head"><strong>🎙️ ' + escapeHtml(config.title) + '</strong><span>' + escapeHtml(config.subtitle) + '</span></div>' +
       '<div class="digiy-oreille-actions">' +
-      '<button type="button" class="primary" data-action="listen">🎙️ Parler</button>' +
-      '<button type="button" class="gold" data-action="formulate">✨ Formuler</button>' +
-      '<button type="button" data-action="copy">📋 Copier</button>' +
-      '<button type="button" data-action="save">🗂️ Ranger</button>' +
-      '<button type="button" data-action="guide">🎧 Guide</button>' +
-      '<button type="button" class="dark" data-action="stop">⏹ Stop</button>' +
+      '<button type="button" class="primary" data-action="listen">🎙️ ' + escapeHtml(t("oreille.action.listen","Parler")) + '</button>' +
+      '<button type="button" class="gold" data-action="formulate">✨ ' + escapeHtml(t("oreille.action.formulate","Formuler")) + '</button>' +
+      '<button type="button" data-action="copy">📋 ' + escapeHtml(t("oreille.action.copy","Copier")) + '</button>' +
+      '<button type="button" data-action="save">🗂️ ' + escapeHtml(t("oreille.action.save","Ranger")) + '</button>' +
+      '<button type="button" data-action="guide">🎧 ' + escapeHtml(t("oreille.action.guide","Guide")) + '</button>' +
+      '<button type="button" class="dark" data-action="stop">⏹ ' + escapeHtml(t("oreille.action.stop","Stop")) + '</button>' +
       '</div>' +
-      '<div class="digiy-oreille-status" data-role="status">Oreille prête. Le pro parle ou clique, DIGIY formule.</div>' +
+      '<div class="digiy-oreille-status" data-role="status">' + escapeHtml(t("oreille.ready","Oreille prête. Le pro parle ou clique, DIGIY formule.")) + '</div>' +
       '<textarea class="digiy-oreille-text" data-role="text" aria-label="Texte Oreille Métier">' + escapeHtml((config.templates && config.templates[0]) || "") + '</textarea>' +
-      '<div class="digiy-oreille-suggestions-title">Suggestions <small>tap rapide</small></div>' +
+      '<div class="digiy-oreille-suggestions-title">' + escapeHtml(t("oreille.suggestions","Suggestions")) + ' <small>tap rapide</small></div>' +
       '<div class="digiy-oreille-templates" data-role="templates"></div>' +
       '<div class="digiy-oreille-notes" data-role="notes"></div>' +
       '</section>';
