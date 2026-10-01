@@ -160,6 +160,24 @@
     });
     document.body.appendChild(box);
   }
+  window.DIGIY_WORLD8_T=function(input){
+    const raw=String(input==null?"":input);
+    const dict=D[currentLang]||{};
+    let out=raw;
+    const keys=Object.keys(D.en||{}).sort((a,b)=>b.length-a.length);
+    for(const fr of keys){
+      const variants=[fr,...Object.values(D).map(x=>x&&x[fr]).filter(Boolean)].sort((a,b)=>String(b).length-String(a).length);
+      for(const v of variants){
+        if(v&&out.includes(v)){
+          const target=currentLang==="fr"?fr:(dict[fr]||fr);
+          out=out.split(v).join(target);
+        }
+      }
+    }
+    return out;
+  };
+  window.DIGIY_WORLD8_LANG=function(){return currentLang};
+
   function setLang(l){
     if(!LANGS.includes(l))return;
     try{localStorage.setItem("digiy-lang",l);localStorage.setItem("digiy_lang",l)}catch(_){}
