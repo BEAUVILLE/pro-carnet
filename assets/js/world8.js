@@ -35,7 +35,26 @@
     "action.history": ["Historique", "History", "Historial", "Histórico", "Verlauf", "Cronologia", "Geschiedenis", "السجل"],
     "action.settings": ["Réglages", "Settings", "Ajustes", "Definições", "Einstellungen", "Impostazioni", "Instellingen", "الإعدادات"],
     "action.reserve": ["Réserve", "Reserve", "Reserva", "Reserva", "Reserve", "Riserva", "Reserve", "احتياطي"],
-    "wallet.reserve": ["Réserve {amount}", "Reserve {amount}", "Reserva {amount}", "Reserva {amount}", "Reserve {amount}", "Riserva {amount}", "Reserve {amount}", "الاحتياطي {amount}"]
+    "wallet.reserve": ["Réserve {amount}", "Reserve {amount}", "Reserva {amount}", "Reserva {amount}", "Reserve {amount}", "Riserva {amount}", "Reserve {amount}", "الاحتياطي {amount}"],
+    "oreille.title": ["Oreille PAY", "PAY Ear", "Oreja PAY", "Ouvido PAY", "PAY-Ohr", "Orecchio PAY", "PAY-oor", "أذن PAY"],
+    "oreille.subtitle": ["Montant · mode · lieu · client/source · téléphone · détail · preuve.", "Amount · method · place · client/source · phone · detail · proof.", "Importe · modo · lugar · cliente/fuente · teléfono · detalle · prueba.", "Valor · modo · local · cliente/fonte · telefone · detalhe · prova.", "Betrag · Modus · Ort · Kunde/Quelle · Telefon · Detail · Nachweis.", "Importo · modalità · luogo · cliente/fonte · telefono · dettaglio · prova.", "Bedrag · methode · plaats · klant/bron · telefoon · detail · bewijs.", "المبلغ · الطريقة · المكان · العميل/المصدر · الهاتف · التفاصيل · الإثبات."],
+    "oreille.action.listen": ["Parler", "Speak", "Hablar", "Falar", "Sprechen", "Parla", "Spreken", "تحدث"],
+    "oreille.action.formulate": ["Formuler", "Formulate", "Formular", "Formular", "Formulieren", "Formula", "Formuleren", "صياغة"],
+    "oreille.action.copy": ["Copier", "Copy", "Copiar", "Copiar", "Kopieren", "Copia", "Kopiëren", "نسخ"],
+    "oreille.action.save": ["Ranger", "Save", "Guardar", "Guardar", "Ablegen", "Archivia", "Opslaan", "حفظ"],
+    "oreille.action.guide": ["Guide", "Guide", "Guía", "Guia", "Leitfaden", "Guida", "Gids", "دليل"],
+    "oreille.action.stop": ["Stop", "Stop", "Detener", "Parar", "Stopp", "Stop", "Stop", "إيقاف"],
+    "oreille.ready": ["Oreille prête. Le pro parle ou clique, DIGIY formule.", "Ear ready. The pro speaks or taps, DIGIY formulates.", "Oreja lista. El profesional habla o toca, DIGIY formula.", "Ouvido pronto. O profissional fala ou toca, DIGIY formula.", "Ohr bereit. Der Profi spricht oder tippt, DIGIY formuliert.", "Orecchio pronto. Il professionista parla o tocca, DIGIY formula.", "Oor klaar. De professional spreekt of tikt, DIGIY formuleert.", "الأذن جاهزة. يتحدث المهني أو يضغط، وDIGIY يصوغ."],
+    "oreille.suggestions": ["Suggestions", "Suggestions", "Sugerencias", "Sugestões", "Vorschläge", "Suggerimenti", "Suggesties", "اقتراحات"],
+    "oreille.notes.empty_title": ["Aucune note rangée", "No saved note", "Ninguna nota guardada", "Nenhuma nota guardada", "Keine gespeicherte Notiz", "Nessuna nota salvata", "Geen opgeslagen notitie", "لا توجد ملاحظة محفوظة"],
+    "oreille.notes.empty_hint": ["Teste une suggestion, puis clique sur Ranger.", "Try a suggestion, then tap Save.", "Prueba una sugerencia y pulsa Guardar.", "Teste uma sugestão e toque em Guardar.", "Teste einen Vorschlag und tippe auf Ablegen.", "Prova un suggerimento, poi tocca Archivia.", "Probeer een suggestie en tik op Opslaan.", "جرّب اقتراحًا ثم اضغط حفظ."],
+    "receiver.received": ["Reçu depuis ACTION DIGIY", "Received from ACTION DIGIY", "Recibido desde ACTION DIGIY", "Recebido de ACTION DIGIY", "Von ACTION DIGIY empfangen", "Ricevuto da ACTION DIGIY", "Ontvangen van ACTION DIGIY", "تم الاستلام من ACTION DIGIY"],
+    "receiver.draft_title": ["DIGIY a préparé un brouillon.", "DIGIY prepared a draft.", "DIGIY preparó un borrador.", "DIGIY preparou um rascunho.", "DIGIY hat einen Entwurf vorbereitet.", "DIGIY ha preparato una bozza.", "DIGIY heeft een concept voorbereid.", "أعد DIGIY مسودة."],
+    "receiver.action.validate": ["Valider", "Validate", "Validar", "Validar", "Bestätigen", "Conferma", "Bevestigen", "تأكيد"],
+    "receiver.action.prefill": ["Pré-remplir", "Prefill", "Prellenar", "Pré-preencher", "Vorbefüllen", "Precompila", "Voorinvullen", "تعبئة مسبقة"],
+    "receiver.action.copy": ["Copier", "Copy", "Copiar", "Copiar", "Kopieren", "Copia", "Kopiëren", "نسخ"],
+    "receiver.action.keep": ["Garder", "Keep", "Guardar", "Guardar", "Behalten", "Conserva", "Bewaren", "احتفاظ"],
+    "receiver.action.delete": ["Effacer", "Delete", "Borrar", "Apagar", "Löschen", "Elimina", "Verwijderen", "حذف"]
   };
   Object.keys(catalogue).forEach(function (key) {
     LANGS.forEach(function (lang, index) { dictionaries[lang][key] = catalogue[key][index]; });
