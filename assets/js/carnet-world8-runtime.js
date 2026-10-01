@@ -21,21 +21,47 @@
     nl:{"Mon activité":"Mijn activiteit","Aujourd’hui":"Vandaag","Situation du jour en haut. Ajouter déroule les encaissements, les dépenses et la réserve. Le journal garde les traces de l’activité.":"De situatie van vandaag staat bovenaan. Toevoegen opent inkomsten, uitgaven en reserve. Het dagboek bewaart de registraties.","Entrées jour":"Inkomsten vandaag","Sorties jour":"Uitgaven vandaag","Net jour":"Netto vandaag","Voix CARNET":"CARNET Stem","Parler maintenant":"Nu spreken","Parle, corrige, puis valide. La base complète reste accessible.":"Spreek, corrigeer en bevestig. Het volledige formulier blijft beschikbaar.","Quelques exemples à lire":"Enkele voorbeelden","Client dû":"Openstaand klantbedrag","Clients dus":"Openstaande klantbedragen","Montant dû":"Openstaand bedrag","Remboursement client dû":"Klantbetaling","Ajouter":"Toevoegen","Menu":"Menu","Mes clients":"Mijn klanten","Historique":"Geschiedenis","Saisie":"Invoer"},
     ar:{"Mon activité":"نشاطي","Aujourd’hui":"اليوم","Situation du jour en haut. Ajouter déroule les encaissements, les dépenses et la réserve. Le journal garde les traces de l’activité.":"وضع اليوم في الأعلى. زر الإضافة يفتح المداخيل والمصاريف والاحتياطي، والسجل يحتفظ بكل العمليات.","Entrées jour":"مداخيل اليوم","Sorties jour":"مصاريف اليوم","Net jour":"صافي اليوم","Voix CARNET":"صوت CARNET","Parler maintenant":"تحدث الآن","Parle, corrige, puis valide. La base complète reste accessible.":"تحدث وصحح ثم أكد. يبقى النموذج الكامل متاحًا.","Quelques exemples à lire":"بعض الأمثلة","Client dû":"مبلغ مستحق على العميل","Clients dus":"مبالغ مستحقة على العملاء","Montant dû":"المبلغ المستحق","Remboursement client dû":"سداد العميل","Ajouter":"إضافة","Menu":"القائمة","Mes clients":"عملائي","Historique":"السجل","Saisie":"إدخال"}
   };
-  const dict=D[lang]||{};
+  let currentLang=lang;
 
-  function translateText(root=document.body){
+  function canonicalFor(text){
+    if(!text)return null;
+    for(const fr of Object.keys(D.en||{})){
+      if(text===fr)return fr;
+      for(const l of Object.keys(D)){
+        if(D[l]&&D[l][fr]===text)return fr;
+      }
+    }
+    return null;
+  }
+
+  function translateText(root=document.body,target=currentLang){
+    const dict=D[target]||{};
     const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
     const nodes=[]; while(w.nextNode()) nodes.push(w.currentNode);
     nodes.forEach(n=>{
       const raw=n.nodeValue, trimmed=raw.trim();
       if(!trimmed)return;
-      if(dict[trimmed]) n.nodeValue=raw.replace(trimmed,dict[trimmed]);
-      else{
-        Object.keys(dict).forEach(k=>{if(n.nodeValue.includes(k)) n.nodeValue=n.nodeValue.split(k).join(dict[k])});
+      let fr=canonicalFor(trimmed);
+      if(fr){
+        const out=target==="fr"?fr:(dict[fr]||fr);
+        n.nodeValue=raw.replace(trimmed,out);
+        return;
+      }
+      for(const key of Object.keys(D.en||{})){
+        const variants=[key,...Object.values(D).map(x=>x&&x[key]).filter(Boolean)];
+        for(const v of variants){
+          if(v&&n.nodeValue.includes(v)){
+            const out=target==="fr"?key:(dict[key]||key);
+            n.nodeValue=n.nodeValue.split(v).join(out);
+            break;
+          }
+        }
       }
     });
     root.querySelectorAll?.("[placeholder]").forEach(el=>{
-      const v=el.getAttribute("placeholder"); if(dict[v]) el.setAttribute("placeholder",dict[v]);
+      const v=el.getAttribute("placeholder");
+      const fr=canonicalFor(v);
+      if(fr)el.setAttribute("placeholder",target==="fr"?fr:(dict[fr]||fr));
     });
   }
 
@@ -47,12 +73,32 @@
     LANGS.forEach(l=>{
       const b=document.createElement("button"); b.type="button"; b.textContent=l.toUpperCase();
       b.style.cssText="border:0;border-radius:999px;padding:5px 7px;font:800 10px system-ui;cursor:pointer;background:"+(l===lang?"#f4d27a":"transparent")+";color:"+(l===lang?"#142016":"#fff")+";";
-      b.onclick=()=>{try{localStorage.setItem("digiy-lang",l)}catch(_){} const u=new URL(location.href);u.searchParams.set("lang",l);location.href=u.toString();};
+      b.onclick=()=>setLang(l);
       box.appendChild(b);
     });
     document.body.appendChild(box);
   }
-  function run(){translateText();switcher();}
+  function setLang(l){
+    if(!LANGS.includes(l))return;
+    try{localStorage.setItem("digiy-lang",l);localStorage.setItem("digiy_lang",l)}catch(_){}
+    currentLang=l;
+    document.documentElement.lang=l;
+    document.documentElement.dir=l==="ar"?"rtl":"ltr";
+    const u=new URL(location.href);
+    u.searchParams.set("lang",l);
+    history.replaceState(null,"",u.toString());
+    translateText(document.body,l);
+    document.querySelectorAll("[data-world8-lang]").forEach(b=>{
+      b.style.background=b.dataset.world8Lang===l?"#f4d27a":"transparent";
+      b.style.color=b.dataset.world8Lang===l?"#142016":"#fff";
+    });
+  }
+  function bindStatic(){
+    document.querySelectorAll("[data-world8-lang]").forEach(b=>{
+      b.onclick=()=>setLang(b.dataset.world8Lang);
+    });
+  }
+  function run(){translateText(document.body,currentLang);switcher();bindStatic();setLang(currentLang);}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true}); else run();
   new MutationObserver(m=>{for(const x of m){for(const n of x.addedNodes){if(n.nodeType===1)translateText(n)}}}).observe(document.documentElement,{childList:true,subtree:true});
 })();
