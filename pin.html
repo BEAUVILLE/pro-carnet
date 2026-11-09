@@ -15,7 +15,8 @@
     .card{width:min(420px,100%);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:28px;padding:28px 24px;box-shadow:0 28px 70px rgba(0,0,0,.55)}
     .head{text-align:center;margin-bottom:22px}.ico{font-size:38px}.badge{display:inline-flex;margin-top:10px;padding:5px 12px;border-radius:999px;border:1px solid rgba(250,204,21,.30);background:rgba(250,204,21,.08);color:#fde68a;font-size:11px;font-weight:900;letter-spacing:.06em}.title{margin-top:9px;font-size:1.3rem;font-weight:1000}
     label{display:block;margin:14px 0 6px;color:var(--muted);font-size:.78rem;font-weight:900;text-transform:uppercase}.input{width:100%;min-height:54px;padding:13px 15px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.22);color:var(--ink);font-size:1.08rem;font-weight:900;outline:none}.input:focus{border-color:rgba(250,204,21,.55);box-shadow:0 0 0 3px rgba(250,204,21,.10)}
-    .pin{letter-spacing:.55em;text-align:center;padding-left:calc(15px + .55em)}.btn{width:100%;min-height:54px;margin-top:18px;border:0;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--green));color:#07150f;font-size:1rem;font-weight:1000;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.status{display:none;margin-top:13px;padding:11px 13px;border-radius:12px;font-size:.85rem;font-weight:900;line-height:1.45}.status.show{display:block}.status.err{background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.30);color:#fca5a5}.status.ok{background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.30);color:#86efac}.status.wait{background:rgba(148,163,184,.08);border:1px solid var(--line);color:var(--muted)}.note{margin-top:18px;text-align:center;color:rgba(148,163,184,.65);font-size:.75rem;font-weight:800;line-height:1.5}
+    .pin{letter-spacing:.55em;text-align:center;padding-left:calc(15px + .55em)}.btn{width:100%;min-height:54px;margin-top:18px;border:0;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--green));color:#07150f;font-size:1rem;font-weight:1000;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.status{display:none;margin-top:13px;padding:11px 13px;border-radius:12px;font-size:.85rem;font-weight:900;line-height:1.45}.status.show{display:block}.status.err{background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.30);color:#fca5a5}.status.ok{background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.30);color:#86efac}.status.wait{background:rgba(148,163,184,.08);border:1px solid var(--line);color:var(--muted)}.recovery-entry{text-align:center;margin-top:15px}.recovery-entry a{color:#facc15;font-size:14px;font-weight:950;text-decoration:underline;text-underline-offset:4px;display:inline-block;padding:10px;min-height:44px}
+    .note{margin-top:18px;text-align:center;color:rgba(148,163,184,.65);font-size:.75rem;font-weight:800;line-height:1.5}
   </style>
 </head>
 <body>
@@ -29,6 +30,7 @@
       <button class="btn" id="submitBtn" type="submit">Ouvrir PRO CARNET →</button>
       <div class="status" id="status" role="status" aria-live="polite"></div>
     </form>
+    <div class="recovery-entry"><a href="https://digiy-carnet-pro.digiylyfe.com/acces-proprietaire.html?recuperation=1">🔐 Code oublié ?</a></div>
     <div class="note">PIN demandé à chaque entrée · aucune donnée financière dans l’URL.<br>DIGIY · 0% commission · 100% indépendance ∞</div>
   </main>
 <script>
