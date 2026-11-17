@@ -1,0 +1,30 @@
+name: PRO CARNET · WORLD10 admin et réglages
+on:
+  pull_request:
+    paths:
+      - 'admin.html'
+      - 'brain-admin.html'
+      - 'assets/js/pro-carnet-secondary-world10.js'
+      - 'tests/pro-carnet-admin-world10.cjs'
+      - '.github/workflows/pro-carnet-admin-world10.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'admin.html'
+      - 'brain-admin.html'
+      - 'assets/js/pro-carnet-secondary-world10.js'
+      - 'tests/pro-carnet-admin-world10.cjs'
+      - '.github/workflows/pro-carnet-admin-world10.yml'
+permissions:
+  contents: read
+jobs:
+  admin-world10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tester les dix langues et la synchronisation des dettes clients
+        run: |
+          node tests/pro-carnet-secondary-world10.cjs
+          node tests/pro-carnet-action-world10.cjs
+          node tests/pro-carnet-admin-world10.cjs
