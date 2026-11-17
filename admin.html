@@ -1575,6 +1575,7 @@
                 <div class="voice-pay-help">
                   Parle comme au terrain. DIGIY prépare le mouvement, tu corriges si besoin, puis tu valides avec le doigt. PAY n’enregistre jamais seul.
                 </div>
+                <div class="voice-pay-help" data-pro10="f.voiceLimit" role="note" style="border-left:3px solid #f6c453;padding:6px 9px;margin-top:8px">La dictée vocale et l’interprétation des phrases fonctionnent uniquement en français pour le moment.</div>
                 <div class="voice-flow">
                   <div class="voice-flow-step"><span class="num">1</span> Tu parles ou tu écris</div>
                   <div class="voice-flow-arrow">&rarr;</div>
@@ -1596,11 +1597,11 @@
                 ></textarea>
 
                 <div class="voice-pay-actions" style="margin-top:10px;">
-                  <button class="voice-btn primary" id="btnVoiceStart" type="button">🎙️ Parler</button>
-                  <button class="voice-btn" id="btnVoiceStop" type="button">⏹ Stop</button>
-                  <button class="voice-btn primary" id="btnVoicePrepare" type="button">⚡ Préparer</button>
-                  <button class="voice-btn confirm" id="btnVoiceFill" type="button" disabled>✅ Remplir la saisie</button>
-                  <button class="voice-btn danger" id="btnVoiceClear" type="button">Effacer</button>
+                  <button class="voice-btn primary" id="btnVoiceStart" type="button" data-pro10="f.voiceStart">🎙️ Parler</button>
+                  <button class="voice-btn" id="btnVoiceStop" type="button" data-pro10="f.voiceStop">⏹ Stop</button>
+                  <button class="voice-btn primary" id="btnVoicePrepare" type="button" data-pro10="f.voicePrepare">⚡ Préparer</button>
+                  <button class="voice-btn confirm" id="btnVoiceFill" type="button" disabled data-pro10="f.voiceFill">✅ Remplir la saisie</button>
+                  <button class="voice-btn danger" id="btnVoiceClear" type="button" data-pro10="f.voiceClear">Effacer</button>
                 </div>
               </div>
 
@@ -1611,7 +1612,7 @@
             </div>
 
             <div class="voice-examples" aria-label="Exemples voix PAY">
-              <div class="voice-examples-label">⚡ Touches rapides — clique pour charger l'exemple</div>
+              <div class="voice-examples-label" data-pro10="f.voiceExamples">⚡ Touches rapides — clique pour charger l'exemple</div>
               <button class="voice-example" type="button" data-voice-example="J’ai encaissé 15000 Wave pour POS">🧾 POS 15000 Wave</button>
               <button class="voice-example" type="button" data-voice-example="Location villa 3 nuits 60000 Wave">🏠 Location villa</button>
               <button class="voice-example" type="button" data-voice-example="Vente market boutique 12000 cash">🛒 Vente boutique</button>
@@ -1846,67 +1847,67 @@
           <form class="form" id="payForm">
             <div class="row3">
               <div class="field">
-                <label class="label" for="direction">Direction</label>
+                <label class="label" for="direction" data-pro10="f.direction">Direction</label>
                 <select id="direction" required>
-                  <option value="in">Entrée</option>
-                  <option value="out">Sortie</option>
+                  <option value="in" data-pro10="f.in">Entrée</option>
+                  <option value="out" data-pro10="f.out">Sortie</option>
                 </select>
               </div>
 
               <div class="field">
-                <label class="label" for="scope">Nature</label>
+                <label class="label" for="scope" data-pro10="f.scope">Nature</label>
                 <select id="scope" required>
-                  <option value="pro">ACTIVITÉ</option>
-                  <option value="perso">PERSO</option>
-                  <option value="savings">ÉPARGNE</option>
+                  <option value="pro" data-pro10="f.scopePro">ACTIVITÉ</option>
+                  <option value="perso" data-pro10="f.scopePerso">PERSO</option>
+                  <option value="savings" data-pro10="f.scopeSavings">ÉPARGNE</option>
                 </select>
               </div>
 
               <div class="field">
-                <label class="label" for="amount">Montant</label>
+                <label class="label" for="amount" data-pro10="f.amount">Montant</label>
                 <input id="amount" type="number" min="1" step="1" placeholder="15000" required />
               </div>
             </div>
 
             <div class="row2">
               <div class="field">
-                <label class="label" for="kind">Nature</label>
+                <label class="label" for="kind" data-pro10="f.kind">Nature</label>
                 <select id="kind" required>
-                  <option value="sale">Vente / recette</option>
-                  <option value="expense">Dépense</option>
-                  <option value="saving">Épargne</option>
-                  <option value="transfer">Transfert</option>
-                  <option value="other">Autre</option>
+                  <option value="sale" data-pro10="f.sale">Vente / recette</option>
+                  <option value="expense" data-pro10="f.expense">Dépense</option>
+                  <option value="saving" data-pro10="f.saving">Épargne</option>
+                  <option value="transfer" data-pro10="f.transfer">Transfert</option>
+                  <option value="other" data-pro10="f.other">Autre</option>
                 </select>
               </div>
 
               <div class="field">
-                <label class="label" for="channel">Canal</label>
+                <label class="label" for="channel" data-pro10="f.channel">Canal</label>
                 <select id="channel" required>
                   <option value="wave">Wave</option>
                   <option value="cash">Cash</option>
                   <option value="orange_money">Orange Money</option>
-                  <option value="bank">Banque</option>
-                  <option value="other">Autre</option>
+                  <option value="bank" data-pro10="f.bank">Banque</option>
+                  <option value="other" data-pro10="f.other">Autre</option>
                 </select>
               </div>
             </div>
 
             <div class="row2">
               <div class="field">
-                <label class="label" for="category">Catégorie</label>
+                <label class="label" for="category" data-pro10="f.category">Catégorie</label>
                 <input id="category" type="text" maxlength="60" placeholder="ride_income, stock, famille, carburant..." />
               </div>
 
               <div class="field">
-                <label class="label" for="movementDate">Date du mouvement</label>
+                <label class="label" for="movementDate" data-pro10="f.date">Date du mouvement</label>
                 <input id="movementDate" type="date" required />
               </div>
             </div>
 
             <div class="row2">
               <div class="field">
-                <label class="label" for="sourceModule">Activité source</label>
+                <label class="label" for="sourceModule" data-pro10="f.source">Activité source</label>
                 <select id="sourceModule">
                   <option value="PAY">PAY</option>
                   <option value="RESEAU_DIGIY">RÉSEAU DIGIY</option>
@@ -1920,57 +1921,55 @@
                   <option value="EXPLORE">EXPLORE</option>
                   <option value="JOBS">JOBS</option>
                   <option value="QR_PRO">QR PRO</option>
-                  <option value="OTHER">AUTRE</option>
+                  <option value="OTHER" data-pro10="f.other">AUTRE</option>
                 </select>
               </div>
 
               <div class="field">
-                <label class="label" for="sourceId">ID source</label>
-                <input id="sourceId" type="text" maxlength="120" placeholder="optionnel" />
+                <label class="label" for="sourceId" data-pro10="f.sourceId">ID source</label>
+                <input id="sourceId" type="text" maxlength="120" placeholder="optionnel" data-pro10-placeholder="f.sourceIdHint" />
               </div>
             </div>
 
             <div class="field">
-              <label class="label" for="labelText">Libellé</label>
-              <input id="labelText" type="text" maxlength="100" placeholder="Ex : Recette chauffeur, Carburant, Épargne sécurité..." required />
+              <label class="label" for="labelText" data-pro10="f.label">Libellé</label>
+              <input id="labelText" type="text" maxlength="100" placeholder="Ex : Recette chauffeur, Carburant, Épargne sécurité..." data-pro10-placeholder="f.labelHint" required />
             </div>
 
             <div class="field">
-              <label class="label" for="noteText">Note</label>
-              <textarea id="noteText" maxlength="300" placeholder="Petite précision utile..."></textarea>
+              <label class="label" for="noteText" data-pro10="f.note">Note</label>
+              <textarea id="noteText" maxlength="300" placeholder="Petite précision utile..." data-pro10-placeholder="f.noteHint"></textarea>
             </div>
 
             <div class="actions">
-              <button class="btn primary" id="btnSave" type="submit">💾 Enregistrer</button>
-              <button class="btn secondary" id="btnReset" type="button">🧹 Vider</button>
+              <button class="btn primary" id="btnSave" type="submit" data-pro10="f.save">💾 Enregistrer</button>
+              <button class="btn secondary" id="btnReset" type="button" data-pro10="f.reset">🧹 Vider</button>
             </div>
 
-            <div class="helper">
-              Cette page sert à la saisie manuelle PAY. La session reste active et l’espace garde la lecture globale.
-            </div>
+            <div class="helper" data-pro10="f.helper">Cette page sert à la saisie manuelle PAY. La session reste active et l’espace garde la lecture globale.</div>
           </form>
         </div>
       </article>
 
       <article class="card">
         <div class="card-head">
-          <div class="card-title">🧾 Mouvements récents</div>
+          <div class="card-title" data-pro10="f.recent">🧾 Mouvements récents</div>
         </div>
 
         <div class="card-body">
           <div class="stats">
             <div class="stat">
-              <div class="stat-k">Entrées</div>
+              <div class="stat-k" data-pro10="f.in">Entrées</div>
               <div class="stat-v green" id="statIn">—</div>
             </div>
 
             <div class="stat">
-              <div class="stat-k">Sorties</div>
+              <div class="stat-k" data-pro10="f.out">Sorties</div>
               <div class="stat-v danger" id="statOut">—</div>
             </div>
 
             <div class="stat">
-              <div class="stat-k">Épargne</div>
+              <div class="stat-k" data-pro10="f.saving">Épargne</div>
               <div class="stat-v gold" id="statSavings">—</div>
             </div>
           </div>
@@ -1987,11 +1986,11 @@
 
   <nav class="bottomNav" aria-label="Navigation Mon argent">
     <div class="bottomNavInner">
-      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
-      <a id="bottomMovements" href="#historyList"><span class="ico">📜</span><span>Mouvements</span></a>
-      <a class="active" id="bottomAdd" href="#payForm"><span class="ico">➕</span><span>Ajouter</span></a>
-      <a id="bottomDrafts" href="#draftPrefillBox"><span class="ico">🧾</span><span>Brouillons</span></a>
-      <a id="bottomMore" href="./brain-admin.html"><span class="ico">⚙️</span><span>Plus</span></a>
+      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span data-pro10="f.navHome">Accueil</span></a>
+      <a id="bottomMovements" href="#historyList"><span class="ico">📜</span><span data-pro10="f.navMoves">Mouvements</span></a>
+      <a class="active" id="bottomAdd" href="#payForm"><span class="ico">➕</span><span data-pro10="f.navAdd">Ajouter</span></a>
+      <a id="bottomDrafts" href="#draftPrefillBox"><span class="ico">🧾</span><span data-pro10="f.navDraft">Brouillons</span></a>
+      <a id="bottomMore" href="./brain-admin.html"><span class="ico">⚙️</span><span data-pro10="f.navMore">Plus</span></a>
     </div>
   </nav>
 
@@ -2382,7 +2381,7 @@
       const btn = $("btnSave");
       if(!btn) return;
       btn.disabled = !!on;
-      btn.textContent = on ? "⏳ Enregistrement..." : "💾 Enregistrer";
+      btn.textContent = on ? ("⏳ " + (window.DIGIY_PRO10?.t("f.savingNow") || "Enregistrement…")) : (window.DIGIY_PRO10?.t("f.save") || "💾 Enregistrer");
     }
 
     function resetForm(){
