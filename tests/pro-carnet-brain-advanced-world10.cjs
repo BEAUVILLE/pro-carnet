@@ -8,10 +8,10 @@ new vm.Script(code,{filename:"brain-world10.js"});
 assert.match(brain,/pro-carnet-brain-advanced-world10\.js\?v=20261117-admin-advanced-v1/);
 assert.match(brain,/id="brainAudioLanguageNotice"/);
 assert.match(code,/DIGIY_PRO10\?\.onChange\?\.\(apply\)/);
-const match=code.match(/const TABLE=(\[[^;]*\]);\nconst NORM/);
+const match=code.match(/const TABLE=(\[[\s\S]*?\]);\nconst NORM/);
 assert.ok(match,"dictionnaire statique présent");
 const rows=JSON.parse(match[1]);
-assert.ok(rows.length>=115,"au moins 115 textes ou libellés admin");
+assert.ok(rows.length>=140,"au moins 140 textes ou libellés admin");
 for(const row of rows){
  assert.equal(row.length,10,"les 10 langues pour "+row[0]);
  assert.ok(row.every(v=>typeof v==="string" && v.trim().length>0),"traduction vide");
