@@ -270,6 +270,12 @@
         const previous=els.moveLabel.dataset.quickDisplay||pr.label;
         if(els.moveLabel.value===previous)els.moveLabel.value=current;
         els.moveLabel.dataset.quickDisplay=current;
+        const previousNote=els.moveNote.dataset.quickDisplayNote;
+        if(previousNote!==undefined){
+          const localizedNote=window.DIGIY_MOVE10?.presetNote(pr.id,els.moveNote.dataset.quickCanonicalNote)||pr.note||"";
+          if(els.moveNote.value===previousNote)els.moveNote.value=localizedNote;
+          els.moveNote.dataset.quickDisplayNote=localizedNote;
+        }
         headline.textContent=m10("preset_prefix",{name:current});
         headline.hidden=false;
       }else{
@@ -427,6 +433,8 @@
     delete els.moveLabel.dataset.quickPresetId;
     delete els.moveLabel.dataset.quickCanonical;
     delete els.moveLabel.dataset.quickDisplay;
+    delete els.moveNote.dataset.quickCanonicalNote;
+    delete els.moveNote.dataset.quickDisplayNote;
     els.editMovementId.value=editId||"";
     els.movePocket.value=(preset&&preset.pocket)||pocket();
     els.moveType.value=(preset&&preset.type)||type||"income";
@@ -443,6 +451,8 @@
         els.moveLabel.dataset.quickPresetId=preset.quickPresetId;
         els.moveLabel.dataset.quickCanonical=preset.quickCanonical||preset.label||"";
         els.moveLabel.dataset.quickDisplay=preset.label||"";
+        els.moveNote.dataset.quickCanonicalNote=preset.note||"";
+        els.moveNote.dataset.quickDisplayNote=preset.note||"";
       }
     }
     refreshMovementLanguage();
@@ -503,7 +513,7 @@
   function handleModuleClick(e){const b=e.target.closest("[data-add-module]");if(!b)return;const name=b.getAttribute("data-add-module");const type=b.getAttribute("data-type");const pp=b.getAttribute("data-pocket")||pocket();closeModal("activitiesModal");closeModal("choiceModal");openMovement(type,{pocket:pp,type,mode:cleanMode(pp,"Wave"),amount:"",label:type==="income"?name:"",activity:name,person:"",note:""})}
   els.moduleList.onclick=handleModuleClick;els.activitiesBody.onclick=handleModuleClick;const choiceBodyEl=document.getElementById("choiceBody");if(choiceBodyEl)choiceBodyEl.onclick=handleModuleClick;
   els.movementList.onclick=e=>{const edit=e.target.closest("[data-edit-move]"),dup=e.target.closest("[data-dup-move]"),del=e.target.closest("[data-del-move]");if(edit){const m=state.movements.find(x=>x.id===edit.getAttribute("data-edit-move"));if(m)openMovement(m.type,m,m.id)}if(dup){const m=state.movements.find(x=>x.id===dup.getAttribute("data-dup-move"));if(m)openMovement(m.type,Object.assign({},m,{amount:""}),"")}if(del){const id=del.getAttribute("data-del-move");if(confirm("Supprimer ce mouvement ?")){state.movements=state.movements.filter(x=>x.id!==id);save();render()}}};
-  els.movementForm.onsubmit=e=>{e.preventDefault();const amount=Math.round(Number(els.moveAmount.value||0));if(amount<=0)return alert(m10("amount_invalid"));const p=els.movePocket.value,id=els.editMovementId.value||uid("m"),rawLabel=String(els.moveLabel.value||"").trim(),label=(els.moveLabel.dataset.quickCanonical&&rawLabel===els.moveLabel.dataset.quickDisplay)?els.moveLabel.dataset.quickCanonical:rawLabel,person=String(els.movePerson.value||"").trim();if(label&&!state.labels.includes(label))state.labels.push(label);if(person&&!state.people.includes(person))state.people.push(person);const m={id,pocket:p,type:els.moveType.value,mode:cleanMode(p,els.moveMode.value),amount,label,activity:els.moveActivity.value,person,note:els.moveNote.value.trim(),ts:els.editMovementId.value?(state.movements.find(x=>x.id===id)?.ts||new Date().toISOString()):new Date().toISOString(),updatedAt:els.editMovementId.value?new Date().toISOString():""};const i=state.movements.findIndex(x=>x.id===id);if(i>=0)state.movements[i]=m;else state.movements.push(m);state.settings.pocket=p;state.settings.visibleCount=10;save();closeModal("movementModal");render()};
+  els.movementForm.onsubmit=e=>{e.preventDefault();const amount=Math.round(Number(els.moveAmount.value||0));if(amount<=0)return alert(m10("amount_invalid"));const p=els.movePocket.value,id=els.editMovementId.value||uid("m"),rawLabel=String(els.moveLabel.value||"").trim(),label=(els.moveLabel.dataset.quickCanonical&&rawLabel===els.moveLabel.dataset.quickDisplay)?els.moveLabel.dataset.quickCanonical:rawLabel,person=String(els.movePerson.value||"").trim();if(label&&!state.labels.includes(label))state.labels.push(label);if(person&&!state.people.includes(person))state.people.push(person);const rawNote=els.moveNote.value.trim(),note=(els.moveNote.dataset.quickCanonicalNote&&rawNote===els.moveNote.dataset.quickDisplayNote)?els.moveNote.dataset.quickCanonicalNote:rawNote;const m={id,pocket:p,type:els.moveType.value,mode:cleanMode(p,els.moveMode.value),amount,label,activity:els.moveActivity.value,person,note,ts:els.editMovementId.value?(state.movements.find(x=>x.id===id)?.ts||new Date().toISOString()):new Date().toISOString(),updatedAt:els.editMovementId.value?new Date().toISOString():""};const i=state.movements.findIndex(x=>x.id===id);if(i>=0)state.movements[i]=m;else state.movements.push(m);state.settings.pocket=p;state.settings.visibleCount=10;save();closeModal("movementModal");render()};
   $("btnAddActivity").onclick=()=>{const name=String(els.adminActivityName.value||"").trim();if(!name)return;state.activities.push({id:uid("act"),pocket:els.adminActivityPocket.value,name});els.adminActivityName.value="";save();render()};
   function showLabelStatus(txt,err){if(!els.labelAdminStatus)return;els.labelAdminStatus.className="status "+(err?"err":"ok");els.labelAdminStatus.textContent=txt;els.labelAdminStatus.style.display="block";}
   function addQuickLabelFromAdmin(){const editEl=$("editLabelPresetId"),editId=editEl?String(editEl.value||"").trim():"";const n=String(els.adminLabelName.value||"").trim();if(!n){showLabelStatus("Écris le nom du libellé avant de valider.",true);els.adminLabelName.focus();return}const pp=els.adminLabelPocket?els.adminLabelPocket.value:"both";const type=els.adminLabelType?els.adminLabelType.value:"expense";const mode=els.adminLabelMode?els.adminLabelMode.value:"Wave";let cat=els.adminLabelCategory?els.adminLabelCategory.value:"Mes libellés";if(type==="income"&&cat==="Sorties rapides")cat="Entrées / modules";if(type==="expense"&&cat==="Entrées / modules")cat="Sorties rapides";if(!state.labels.includes(n))state.labels.push(n);const exists=state.labelPresets.some(x=>x.id!==editId&&String(x.label).toLowerCase()===n.toLowerCase()&&x.pocket===pp&&x.type===type&&x.category===cat);if(exists){showLabelStatus("Ce libellé existe déjà dans cette famille.",true);return}const item={id:editId||uid("lp"),pocket:pp,type,label:n,mode,activity:pp==="pro"?"PAY PRO":"Maison",category:cat,note:editId?"Libellé modifié dans Réglages.":"Libellé ajouté dans Réglages."};const idx=state.labelPresets.findIndex(x=>x.id===item.id);if(idx>=0)state.labelPresets[idx]=Object.assign({},state.labelPresets[idx],item);else state.labelPresets.push(item);els.adminLabelName.value="";if(editEl)editEl.value="";const btn=$("btnAddLabel");if(btn)btn.textContent="✅ Valider le libellé rapide";save();render();showLabelStatus((editId?"✅ Libellé modifié : ":"✅ Libellé ajouté : ")+n,false)}
