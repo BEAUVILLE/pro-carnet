@@ -20,6 +20,7 @@ for(const [name,page] of [['admin',admin],['brain',brain]]){
  assert.match(page,/href="\.\/pin\.html"|href="\.\/index\.html"/,'navigation must remain intact');
 }
 assert.match(admin,/clientDueLang/);
+assert.match(admin,/world8\.js\?v=world10-client-due-20261117-v4/,'admin must not reuse the cached eight-language dictionary');
 const debtSelector=(admin.match(/<select id="clientDueLang"[\s\S]*?<\/select>/)||[])[0];
 assert.ok(debtSelector,'active customer-debt language selector');
 assert.deepEqual([...debtSelector.matchAll(/<option value="([^"]+)"/g)].map(m=>m[1]),codes,
