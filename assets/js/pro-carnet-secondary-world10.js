@@ -2426,6 +2426,7 @@ const ADMIN_FORM_ROWS={
     "草稿"
   ]
 };
+ADMIN_FORM_ROWS["f.savingNow"]=["Enregistrement…","Saving…","Guardando…","A guardar…","Wird gespeichert…","Salvataggio…","Opslaan…","جار الحفظ…","Ñuy denc…","正在保存…"];
 Object.assign(ROWS,ADMIN_FORM_ROWS);
 const KEY="digiy_carnet_ui_lang_v1";
 const LOCALES={fr:"fr-FR",en:"en-GB",es:"es-ES",pt:"pt-PT",de:"de-DE",it:"it-IT",nl:"nl-NL",ar:"ar-SA",wo:"wo-SN",zh:"zh-CN"};
