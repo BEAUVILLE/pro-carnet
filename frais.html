@@ -9,6 +9,7 @@
   <title>PRO CARNET — Saisie rapide</title>
   <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
   <script src="./guard.js?v=carnet-minimal-fixes-v11-20260722"></script>
+  <script src="./assets/js/pro-carnet-secondary-world10.js?v=20261117-v2"></script>
   <style>
     *{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:14px 14px 110px;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 35%),linear-gradient(180deg,#06140f,#020806);color:#fff8e8;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:850}.wrap{width:min(560px,100%);margin:0 auto}.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}.back{width:46px;height:46px;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(255,255,255,.07);color:#fff;font-size:22px}.title{flex:1;text-align:center}.title small{display:block;color:rgba(255,255,255,.58);font-size:11px;letter-spacing:.12em}.title b{display:block;color:#f4d27a;font-size:20px}.spacer{width:46px}.card{padding:15px;border:1px solid rgba(255,255,255,.09);border-radius:25px;background:rgba(255,255,255,.06);box-shadow:0 16px 42px rgba(0,0,0,.22)}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.tab{min-height:50px;border:1px solid rgba(255,255,255,.10);border-radius:17px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.72);font:inherit;font-weight:1000}.tab.active{background:linear-gradient(135deg,#f4d27a,#fff2bf);color:#172016}.type.active.income{background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215}.type.active.expense{background:linear-gradient(135deg,#fb923c,#ffedd5);color:#5f220b}.section{margin:14px 0 7px;color:#f4d27a;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chip{min-height:58px;border:1px solid rgba(255,255,255,.10);border-radius:17px;background:#fff7df;color:#172016;font:inherit;font-size:12px;font-weight:1000;padding:8px}.chip.active{outline:3px solid rgba(244,210,122,.52);background:#dcfce7}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mode{min-height:48px;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(255,255,255,.07);color:#fff;font:inherit;font-weight:1000}.mode.active{background:#f4d27a;color:#172016}.field{margin-top:12px}.field label{display:block;margin-bottom:6px;color:rgba(255,255,255,.70);font-size:12px}.field input{width:100%;min-height:54px;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:rgba(0,0,0,.22);color:#fff;padding:12px;font:inherit;font-weight:1000;outline:none}.amount input{min-height:72px;text-align:center;font-size:32px}.save{width:100%;min-height:58px;margin-top:16px;border:0;border-radius:18px;background:linear-gradient(135deg,#22c55e,#f4d27a);color:#102014;font:inherit;font-size:16px;font-weight:1100}.save:disabled{opacity:.45}.note{margin-top:13px;padding:12px;border-radius:16px;background:rgba(244,210,122,.10);border:1px solid rgba(244,210,122,.22);color:#fff4c8;font-size:12px;line-height:1.45}.status{display:none;margin-top:12px;padding:11px;border-radius:15px;font-weight:1000}.status.show{display:block}.status.ok{background:rgba(34,197,94,.13);color:#86efac}.status.err{background:rgba(239,68,68,.13);color:#fca5a5}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.soft{min-height:50px;border:0;border-radius:16px;background:#fff7df;color:#172016;font:inherit;font-weight:1000}
     @media(max-width:390px){.chips{grid-template-columns:1fr 1fr}.modes{grid-template-columns:1fr 1fr 1fr}}
@@ -16,35 +17,36 @@
 </head>
 <body>
   <main class="wrap">
-    <header class="top"><button class="back" id="back" type="button">‹</button><div class="title"><small>PRO CARNET</small><b>Saisie rapide locale</b></div><div class="spacer"></div></header>
+    <header class="top"><button class="back" id="back" type="button">‹</button><div class="title"><small>PRO CARNET</small><b data-pro10="quickTitle">Saisie rapide locale</b></div><div class="spacer"></div></header>
+    <div id="pro10Controls" style="display:flex;justify-content:center;padding:8px 12px"></div>
     <section class="card">
       <div class="tabs" aria-label="Choisir la poche">
         <button class="tab pocket active" data-pocket="pro" type="button">💼 PRO</button>
         <button class="tab pocket" data-pocket="perso" type="button">🏠 PERSO</button>
       </div>
       <div class="tabs" aria-label="Choisir la nature">
-        <button class="tab type income active" data-type="income" type="button">＋ Entrée</button>
-        <button class="tab type expense" data-type="expense" type="button">− Sortie</button>
+        <button class="tab type income active" data-type="income" type="button" data-pro10="income">＋ Entrée</button>
+        <button class="tab type expense" data-type="expense" type="button" data-pro10="expense">− Sortie</button>
       </div>
 
-      <div class="section">Motif</div>
+      <div class="section" data-pro10="reason">Motif</div>
       <div class="chips" id="labels"></div>
 
-      <div class="field"><label for="customLabel">Autre motif</label><input id="customLabel" type="text" placeholder="Ex : client, fournisseur, réparation…"></div>
+      <div class="field"><label for="customLabel" data-pro10="otherReason">Autre motif</label><input id="customLabel" type="text" placeholder="Ex : client, fournisseur, réparation…" data-pro10-placeholder="otherPlaceholder"></div>
 
-      <div class="section">Mode de paiement</div>
+      <div class="section" data-pro10="paymentMode">Mode de paiement</div>
       <div class="modes" id="modes"></div>
 
-      <div class="field amount"><label for="amount">Montant FCFA</label><input id="amount" type="number" inputmode="numeric" min="1" step="1" placeholder="0"></div>
+      <div class="field amount"><label for="amount" data-pro10="amount">Montant FCFA</label><input id="amount" type="number" inputmode="numeric" min="1" step="1" placeholder="0"></div>
 
-      <button class="save" id="save" type="button">Confirmer la trace</button>
+      <button class="save" id="save" type="button" data-pro10="confirmIn">Confirmer la trace</button>
       <div class="status" id="status" role="status" aria-live="polite"></div>
 
       <div class="actions">
-        <button class="soft" id="backup" type="button">💾 Sauvegarde</button>
-        <button class="soft" id="openCarnet" type="button">Voir le carnet</button>
+        <button class="soft" id="backup" type="button" data-pro10="backup">💾 Sauvegarde</button>
+        <button class="soft" id="openCarnet" type="button" data-pro10="openCarnet">Voir le carnet</button>
       </div>
-      <div class="note"><strong>Données locales :</strong> aucune copie cloud automatique. Cette page fonctionne sans télécharger son moteur depuis GitHub.</div>
+      <div class="note"><strong data-pro10="localTitle">Données locales :</strong> <span data-pro10="localCopy">aucune copie cloud automatique. Cette page fonctionne sans télécharger son moteur depuis GitHub.</span></div>
     </section>
   </main>
 <script>
@@ -54,6 +56,7 @@
   if(!session)return;
   document.documentElement.style.visibility="";
 
+  const i18n=window.DIGIY_PRO10;
   const KEY="digiy_pay_baptiste_reel_v2";
   const MODES=["Wave","OM","Cash","Chèque","CB","Virement"];
   const LABELS={
@@ -85,14 +88,16 @@
     return state;
   }
 
+  const escaped=v=>String(v).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   function render(){
     document.querySelectorAll("[data-pocket]").forEach(btn=>btn.classList.toggle("active",btn.dataset.pocket===pocket));
     document.querySelectorAll("[data-type]").forEach(btn=>btn.classList.toggle("active",btn.dataset.type===type));
-    $("labels").innerHTML=LABELS[pocket][type].map(item=>`<button class="chip ${item===label?"active":""}" data-label="${item.replace(/"/g,"&quot;")}" type="button">${item}</button>`).join("");
-    $("modes").innerHTML=MODES.map(item=>`<button class="mode ${item===mode?"active":""}" data-mode="${item}" type="button">${item}</button>`).join("");
-    $("save").textContent=type==="income"?"Confirmer l’entrée":"Confirmer la sortie";
+    $("labels").innerHTML=LABELS[pocket][type].map(item=>`<button class="chip ${item===label?"active":""}" data-label="${item.replace(/"/g,"&quot;")}" type="button">${escaped(i18n.label(item))}</button>`).join("");
+    $("modes").innerHTML=MODES.map(item=>`<button class="mode ${item===mode?"active":""}" data-mode="${item}" type="button">${escaped(i18n.label(item))}</button>`).join("");
+    $("save").textContent=i18n.t(type==="income"?"confirmIn":"confirmOut");
   }
 
+  i18n.onChange(render);
   document.addEventListener("click",event=>{
     const p=event.target.closest("[data-pocket]");
     if(p){pocket=p.dataset.pocket==="perso"?"perso":"pro";label="";render();return}
@@ -111,9 +116,9 @@
   $("save").onclick=()=>{
     const amount=Math.round(Number($("amount").value||0));
     const chosen=String($("customLabel").value||"").trim()||label;
-    if(amount<=0){setStatus("Pose un montant supérieur à zéro.","err");$("amount").focus();return}
-    if(!chosen){setStatus("Choisis ou écris un motif.","err");return}
-    if(!MODES.includes(mode)){setStatus("Choisis un mode de paiement.","err");return}
+    if(amount<=0){setStatus(i18n.t("errAmount"),"err");$("amount").focus();return}
+    if(!chosen){setStatus(i18n.t("errReason"),"err");return}
+    if(!MODES.includes(mode)){setStatus(i18n.t("errMode"),"err");return}
 
     const id=uid();
     try{
@@ -138,13 +143,13 @@
 
       const verified=readState();
       if(!verified.movements.some(item=>item&&item.id===id))throw new Error("Écriture non confirmée.");
-      setStatus("✅ Trace enregistrée dans "+(pocket==="pro"?"PRO":"PERSO")+" · "+mode+".","ok");
+      setStatus(i18n.t("saved",{pocket:pocket==="pro"?"PRO":"PERSO",mode}),"ok");
       $("amount").value="";
       $("customLabel").value="";
       label="";
       render();
     }catch(error){
-      setStatus("❌ Enregistrement impossible : "+(error.message||"stockage indisponible"),"err");
+      setStatus(i18n.t("saveFail",{reason:error.message||i18n.t("invalidStorage")}),"err");
     }
   };
 
@@ -158,9 +163,9 @@
       a.href=url;
       a.download="pro-carnet-"+new Date().toISOString().slice(0,10)+".json";
       document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-      setStatus("✅ Sauvegarde téléchargée.","ok");
+      setStatus(i18n.t("backupDone"),"ok");
     }catch(error){
-      setStatus("❌ "+(error.message||"Sauvegarde impossible."),"err");
+      setStatus("❌ "+(error.message||i18n.t("backupFail")),"err");
     }
   };
 
@@ -171,7 +176,7 @@
   render();
 })().catch(error=>{
   document.documentElement.style.visibility="";
-  document.body.innerHTML="<main class='wrap'><section class='card'><strong>Ouverture impossible.</strong><p>"+String(error.message||error)+"</p><a href='./pin.html' style='color:#f4d27a'>Revenir au PIN</a></section></main>";
+  document.body.innerHTML="<main class='wrap'><section class='card'><strong>"+window.DIGIY_PRO10.t("openFail")+"</strong><p>"+String(error.message||error)+"</p><a href='./pin.html' style='color:#f4d27a'>"+window.DIGIY_PRO10.t("backPin")+"</a></section></main>";
 });
 </script>
 </body>

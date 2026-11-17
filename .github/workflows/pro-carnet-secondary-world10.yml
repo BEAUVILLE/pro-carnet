@@ -1,0 +1,29 @@
+name: PRO CARNET · WORLD10 saisie et session
+on:
+  pull_request:
+    paths:
+      - 'assets/js/pro-carnet-secondary-world10.js'
+      - 'frais.html'
+      - 'session.html'
+      - 'mouvements.html'
+      - 'tests/pro-carnet-secondary-world10.cjs'
+      - '.github/workflows/pro-carnet-secondary-world10.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/pro-carnet-secondary-world10.js'
+      - 'frais.html'
+      - 'session.html'
+      - 'mouvements.html'
+      - 'tests/pro-carnet-secondary-world10.cjs'
+      - '.github/workflows/pro-carnet-secondary-world10.yml'
+permissions:
+  contents: read
+jobs:
+  world10-secondary-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier 10 langues et données métier inchangées
+        run: node tests/pro-carnet-secondary-world10.cjs

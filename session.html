@@ -9,6 +9,7 @@
   <title>PRO CARNET — Ma session</title>
   <script>window.DIGIY_MODULE="PAY";window.DIGIY_LOGIN_URL="./pin.html";</script>
   <script src="./guard.js?v=carnet-minimal-fixes-v11-20260722"></script>
+  <script src="./assets/js/pro-carnet-secondary-world10.js?v=20261117-v2"></script>
   <style>
     *{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:18px;background:radial-gradient(circle at top left,rgba(244,210,122,.14),transparent 35%),linear-gradient(180deg,#07150f,#020806);color:#fff8e8;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:850}.wrap{width:min(520px,100%);margin:0 auto}.card{margin-top:22px;padding:22px;border:1px solid rgba(255,255,255,.10);border-radius:28px;background:rgba(255,255,255,.06);box-shadow:0 20px 55px rgba(0,0,0,.28)}h1{margin:0 0 8px;color:#f4d27a}.muted{color:rgba(255,255,255,.68);line-height:1.5}.info{display:grid;gap:10px;margin:18px 0}.row{padding:13px;border-radius:17px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}.row small{display:block;color:rgba(255,255,255,.58);margin-bottom:4px}.actions{display:grid;gap:10px}.btn{min-height:54px;border:0;border-radius:17px;padding:0 16px;font:inherit;font-weight:1000;cursor:pointer}.primary{background:linear-gradient(135deg,#f4d27a,#22c55e);color:#102014}.soft{background:#fff7df;color:#172016}.danger{background:#7f1d1d;color:#fff}.note{margin-top:16px;padding:13px;border-radius:17px;background:rgba(244,210,122,.12);border:1px solid rgba(244,210,122,.25);color:#fff4c8;line-height:1.45}.status{margin-top:12px;min-height:24px;color:#86efac}.back{display:inline-flex;margin-top:16px;color:#f4d27a;text-decoration:none;font-weight:1000}
   </style>
@@ -16,18 +17,19 @@
 <body>
   <main class="wrap">
     <section class="card">
-      <h1>📒 Ma session PRO CARNET</h1>
-      <div class="muted">Cette page ne supprime jamais les mouvements, les sauvegardes ou les données métier.</div>
+      <h1 data-pro10="sessionTitle">📒 Ma session PRO CARNET</h1>
+      <div id="pro10Controls" style="display:flex;justify-content:center;padding:8px 12px"></div>
+      <div class="muted" data-pro10="sessionDesc">Cette page ne supprime jamais les mouvements, les sauvegardes ou les données métier.</div>
       <div class="info">
-        <div class="row"><small>Compte vérifié</small><strong id="phone">—</strong></div>
-        <div class="row"><small>Expiration de la session</small><strong id="expires">—</strong></div>
+        <div class="row"><small data-pro10="verified">Compte vérifié</small><strong id="phone">—</strong></div>
+        <div class="row"><small data-pro10="expires">Expiration de la session</small><strong id="expires">—</strong></div>
       </div>
       <div class="actions">
-        <button class="btn primary" id="backup" type="button">💾 Télécharger ma sauvegarde JSON</button>
-        <button class="btn soft" id="return" type="button">Retour au carnet</button>
-        <button class="btn danger" id="logout" type="button">Fermer uniquement la session</button>
+        <button class="btn primary" id="backup" type="button" data-pro10="backupJson">💾 Télécharger ma sauvegarde JSON</button>
+        <button class="btn soft" id="return" type="button" data-pro10="return">Retour au carnet</button>
+        <button class="btn danger" id="logout" type="button" data-pro10="logout">Fermer uniquement la session</button>
       </div>
-      <div class="note"><strong>Données locales :</strong> tes chiffres sont dans ce téléphone. Aucune copie cloud automatique. Télécharge une sauvegarde chaque semaine.</div>
+      <div class="note"><strong data-pro10="localTitle">Données locales :</strong> <span data-pro10="sessionLocalCopy">tes chiffres sont dans ce téléphone. Aucune copie cloud automatique. Télécharge une sauvegarde chaque semaine.</span></div>
       <div class="status" id="status" role="status" aria-live="polite"></div>
     </section>
   </main>
@@ -37,16 +39,19 @@
   const session=await window.DIGIY_GUARD.requireSession({redirect:true,to:"./pin.html"});
   if(!session)return;
   document.documentElement.style.visibility="";
+  const i18n=window.DIGIY_PRO10;
   const KEY="digiy_pay_baptiste_reel_v2";
   const mask=phone=>{
     const p=String(phone||"");
     return p.length>6?p.slice(0,5)+" ••• "+p.slice(-2):"Compte vérifié";
   };
   document.getElementById("phone").textContent=mask(session.phone);
-  document.getElementById("expires").textContent=new Date(session.expires_at).toLocaleString("fr-FR",{dateStyle:"medium",timeStyle:"short"});
+  const renderExpiry=()=>{document.getElementById("expires").textContent=new Date(session.expires_at).toLocaleString(i18n.locale(),{dateStyle:"medium",timeStyle:"short"})};
+  renderExpiry();
+  i18n.onChange(renderExpiry);
   document.getElementById("return").onclick=()=>location.href="./index.html";
   document.getElementById("logout").onclick=()=>{
-    if(confirm("Fermer la session ? Tes mouvements resteront dans ce téléphone.")){
+    if(confirm(i18n.t("closeConfirm"))){
       window.DIGIY_GUARD.logout(true);
     }
   };
@@ -54,7 +59,7 @@
     const status=document.getElementById("status");
     try{
       const state=JSON.parse(localStorage.getItem(KEY)||"{}");
-      if(!state||!Array.isArray(state.movements))throw new Error("Carnet illisible ou vide.");
+      if(!state||!Array.isArray(state.movements))throw new Error(i18n.t("emptyLedger"));
       const payload={
         app:"DIGIY_PRO_CARNET",
         version:5,
@@ -71,14 +76,14 @@
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      status.textContent="✅ Sauvegarde téléchargée.";
+      status.textContent=i18n.t("backupDone");
     }catch(error){
-      status.textContent="❌ "+(error.message||"Sauvegarde impossible.");
+      status.textContent="❌ "+(error.message||i18n.t("backupFail"));
     }
   };
 })().catch(error=>{
   document.documentElement.style.visibility="";
-  document.body.innerHTML="<main class='wrap'><section class='card'><h1>Session indisponible</h1><p>"+String(error.message||error)+"</p><a class='back' href='./pin.html'>Revenir au PIN</a></section></main>";
+  document.body.innerHTML="<main class='wrap'><section class='card'><h1>"+window.DIGIY_PRO10.t("sessionMissing")+"</h1><p>"+String(error.message||error)+"</p><a class='back' href='./pin.html'>"+window.DIGIY_PRO10.t("backPin")+"</a></section></main>";
 });
 </script>
 </body>
