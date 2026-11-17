@@ -2381,7 +2381,7 @@
       const btn = $("btnSave");
       if(!btn) return;
       btn.disabled = !!on;
-      btn.textContent = on ? ("⏳ " + (window.DIGIY_PRO10?.t("f.loading") || "Enregistrement…")) : (window.DIGIY_PRO10?.t("f.save") || "💾 Enregistrer");
+      btn.textContent = on ? ("⏳ " + (window.DIGIY_PRO10?.t("f.savingNow") || "Enregistrement…")) : (window.DIGIY_PRO10?.t("f.save") || "💾 Enregistrer");
     }
 
     function resetForm(){
