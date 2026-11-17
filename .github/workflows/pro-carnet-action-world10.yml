@@ -1,0 +1,29 @@
+name: PRO CARNET · ACTION PAY WORLD10
+on:
+  pull_request:
+    paths:
+      - 'assets/js/pro-carnet-secondary-world10.js'
+      - 'action.html'
+      - 'tests/pro-carnet-action-world10.cjs'
+      - 'tests/pro-carnet-secondary-world10.cjs'
+      - '.github/workflows/pro-carnet-action-world10.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/pro-carnet-secondary-world10.js'
+      - 'action.html'
+      - 'tests/pro-carnet-action-world10.cjs'
+      - 'tests/pro-carnet-secondary-world10.cjs'
+      - '.github/workflows/pro-carnet-action-world10.yml'
+permissions:
+  contents: read
+jobs:
+  action-pay-world10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier interface ACTION PAY WORLD10 et intégrité comptable simulée
+        run: |
+          node tests/pro-carnet-secondary-world10.cjs
+          node tests/pro-carnet-action-world10.cjs
