@@ -314,6 +314,7 @@
     const magicTitle=$("btnMagicAdd")?.querySelector("b");if(magicTitle)magicTitle.textContent=t("nav.add",null,"Ajouter");
     refreshMovementLanguage();
     window.DIGIY_ADMIN10?.apply();
+    if($("editLabelPresetId")?.value){const editButton=$("btnAddLabel");if(editButton)editButton.textContent=a10("edit_validate");}
     renderAdmin();
     if(lastAdminMessage)showLabelStatus(a10(lastAdminMessage.key,lastAdminMessage.params),lastAdminMessage.err);
     if($("choiceModal")?.classList.contains("open")&&choiceKind)openPresetPage(choiceKind);
