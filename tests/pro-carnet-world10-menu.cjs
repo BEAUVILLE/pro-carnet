@@ -36,7 +36,7 @@ assert.notEqual(zh.t('menu.backup'),'Sauvegarde');
 
 for(const file of pages){
  const html=fs.readFileSync(file,'utf8');
- assert.match(html,/world8\.js\?v=world10-20261117-menu-v2/,file+' cache invalidation');
+ assert.match(html,/world8\.js\?v=world10-20261117-perso-frais-v3/,file+' cache invalidation');
  assert.match(html,/menuBtn\.textContent="☰ "\+t\("nav\.menu"/,file+' top menu uses translated dictionary');
  assert.match(html,/\$\("btnMenu"\)\.onclick=\(\)=>openModal\("menuModal"\)/,file+' menu click still works');
  for(const id of ['menuFrais','menuActivities','menuContacts','menuAdmin','menuBackup','fabToggle']){
