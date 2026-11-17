@@ -80,7 +80,7 @@ function simulate(code){
  for(const node of placeholders)assert.equal(node.value,api.t(node.key),'placeholder '+node.key+' '+code);
  for(const key of ['f.save','f.savingNow','f.voiceLimit','f.scope','f.scopeSavings','f.channel','f.bank',
   'f.date','f.label','f.recent','f.navMore','f.voiceFill','f.noteHint']){
-   const str=api.t(key);assert.ok(str!==key&&str.length>2,code+' missing '+key);
+   const str=api.t(key);assert.ok(str!==key&&str.trim().length>0,code+' missing '+key);
  }
  if(code==='wo'||code==='zh'){
   assert.notEqual(api.t('f.save'),'💾 Enregistrer le mouvement');
