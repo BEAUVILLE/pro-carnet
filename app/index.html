@@ -346,43 +346,44 @@
   function renderModeSummary(){const p=pocket(),eye=state.settings.eyeOpen;if(p==="pro"){els.modeOneLabel.textContent="Wave entrées jour";els.modeOneValue.textContent=eye?fmt(listFor("pro").filter(m=>m.mode==="Wave"&&m.type==="income"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+Number(m.amount||0),0)):hidden();els.modeTwoLabel.textContent="Wave sorties jour";els.modeTwoValue.textContent=eye?fmt(listFor("pro").filter(m=>m.mode==="Wave"&&m.type==="expense"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+Number(m.amount||0),0)):hidden()}else{els.modeOneLabel.textContent="Cash net jour";els.modeOneValue.textContent=eye?fmt(listFor("perso").filter(m=>m.mode==="Cash"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+amountValue(m),0)):hidden();els.modeTwoLabel.textContent="Wave net jour";els.modeTwoValue.textContent=eye?fmt(listFor("perso").filter(m=>m.mode==="Wave"&&inPeriod(m.ts,"day")).reduce((s,m)=>s+amountValue(m),0)):hidden()}}
   function renderDatalists(){els.labelsList.innerHTML=state.labels.map(x=>`<option value="${esc(x)}"></option>`).join("");els.peopleList.innerHTML=state.people.map(x=>`<option value="${esc(x)}"></option>`).join("");renderModeSelect();renderActivitySelect();els.contactModule.innerHTML=state.activities.map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")} function renderModeSelect(){const p=els.movePocket.value||pocket();els.moveMode.innerHTML=modesFor(p).map(m=>`<option value="${m}">${m}</option>`).join("");els.moveMode.value=cleanMode(p,els.moveMode.value)} function renderActivitySelect(){const p=els.movePocket.value||pocket();els.moveActivity.innerHTML=state.activities.filter(a=>a.pocket===p).map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join("")}
   function presetVisible(pr,p){return pr&&pr.label&&(pr.pocket===p||pr.pocket==="both")} function chipClass(pr){if(pr.category&&pr.category.toLowerCase().includes("banque"))return "bank";return pr.type==="income"?"income":"expense"} function presetGroups(kind){const p=pocket();const order=kind==="income"?["Entrées / modules","Retraits / banques","Mes libellés"]:["Sorties rapides","Retraits / banques","Mes libellés"];const groups={};state.labelPresets.filter(pr=>presetVisible(pr,p)&&pr.type===kind).forEach(pr=>{const cat=pr.category||"Mes libellés";(groups[cat]||(groups[cat]=[])).push(pr)});return {order,groups}}
-  function presetButton(pr){return `<button class="label-chip ${chipClass(pr)}" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(pr.label)}</b><small>${pr.type==="income"?"Entrée":"Sortie"} · ${esc(cleanMode(pr.pocket==="both"?pocket():pr.pocket,pr.mode))}</small></button>`}
+  function presetButton(pr){return `<button class="label-chip ${chipClass(pr)}" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(quickDisplayLabel(pr))}</b><small>${esc(m10(pr.type==="income"?"income":"expense"))} · ${esc(cleanMode(pr.pocket==="both"?pocket():pr.pocket,pr.mode))}</small></button>`}
   function openPresetPage(kind){
     const p=pocket();
-    const title=kind==="income"?"Entrées · sources d’activité":"Sorties · libellés rapides";
+    choiceKind=kind;
+    const title=m10(kind==="income"?"choice_income":"choice_expense");
     const body=document.getElementById("choiceBody"),titleEl=document.getElementById("choiceTitle");
     if(!body||!titleEl)return openMovement(kind);
     titleEl.textContent=title;
     let html="";
 
     if(kind==="income"){
-      html+=`<div class="notice choice-note">Choisis la source d’activité ou la provenance de l’entrée. Ensuite tu poses le chiffre.</div>`;
+      html+=`<div class="notice choice-note">${esc(m10("choice_income_notice"))}</div>`;
       const acts=state.activities.filter(a=>a.pocket==="pro" && !["PRO CARNET","PAY PRO"].includes(a.name));
       if(acts.length){
-        html+=`<div class="quick-label-group"><div class="quick-label-title">Modules qui font rentrer</div><div class="quick-label-grid">`+
-          acts.map(a=>`<button class="label-chip income" type="button" data-add-module="${esc(a.name)}" data-type="income" data-pocket="pro"><b>${esc(a.name)}</b><small>Entrée · Wave</small></button>`).join("")+
+        html+=`<div class="quick-label-group"><div class="quick-label-title">${esc(m10("choice_modules"))}</div><div class="quick-label-grid">`+
+          acts.map(a=>`<button class="label-chip income" type="button" data-add-module="${esc(a.name)}" data-type="income" data-pocket="pro"><b>${esc(a.name)}</b><small>${esc(m10("income"))} · Wave</small></button>`).join("")+
           `</div></div>`;
       }
       const wanted=["Retraite","Virement reçu","Retrait virement","Retrait Sendwave","Retrait distributeur","Retrait Wave / cash out","Remboursement reçu","Aide reçue","Autre entrée"];
       const personal=wanted.map(name=>state.labelPresets.find(pr=>presetVisible(pr,"perso")&&pr.type==="income"&&pr.label===name)).filter(Boolean);
       if(personal.length){
-        html+=`<div class="quick-label-group"><div class="quick-label-title">Retraite · retraits · banques</div><div class="quick-label-grid">`+personal.map(presetButton).join("")+`</div></div>`;
+        html+=`<div class="quick-label-group"><div class="quick-label-title">${esc(m10("choice_bank"))}</div><div class="quick-label-grid">`+personal.map(presetButton).join("")+`</div></div>`;
       }
       const custom=state.labelPresets.filter(pr=>presetVisible(pr,p)&&pr.type==="income"&&!wanted.includes(pr.label)&&!(pr.category||"").includes("Entrées / modules"));
       if(custom.length){
-        html+=`<div class="quick-label-group"><div class="quick-label-title">Mes autres entrées</div><div class="quick-label-grid">`+custom.map(presetButton).join("")+`</div></div>`;
+        html+=`<div class="quick-label-group"><div class="quick-label-title">${esc(m10("choice_other"))}</div><div class="quick-label-grid">`+custom.map(presetButton).join("")+`</div></div>`;
       }
     }else{
-      html+=`<div class="notice choice-note">Choisis le motif : gasoil, Senelec, école, Wi-Fi, frais voiture… Ensuite tu poses le chiffre.</div>`;
+      html+=`<div class="notice choice-note">${esc(m10("choice_expense_notice"))}</div>`;
       const pg=presetGroups(kind);
       pg.order.concat(Object.keys(pg.groups).filter(k=>!pg.order.includes(k))).forEach(cat=>{
         const arr=(pg.groups[cat]||[]).slice(0,18);
         if(!arr.length)return;
-        html+=`<div class="quick-label-group"><div class="quick-label-title">${esc(cat)}</div><div class="quick-label-grid">`+arr.map(presetButton).join("")+`</div></div>`;
+        html+=`<div class="quick-label-group"><div class="quick-label-title">${esc(choiceCategoryLabel(cat))}</div><div class="quick-label-grid">`+arr.map(presetButton).join("")+`</div></div>`;
       });
     }
 
-    if(!html.includes("label-chip"))html+=`<div class="empty">Aucun choix rapide. Ajoute un libellé dans Réglages.</div>`;
+    if(!html.includes("label-chip"))html+=`<div class="empty">${esc(m10("choice_empty"))}</div>`;
     body.innerHTML=html;
     openModal("choiceModal");
   }
