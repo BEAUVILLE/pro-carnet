@@ -7,6 +7,7 @@ on:
       - 'app/index.html'
       - 'pin.html'
       - 'tests/pro-carnet-world10-active.cjs'
+      - 'tests/pro-carnet-world10-menu.cjs'
       - '.github/workflows/pro-carnet-world10.yml'
   push:
     branches: [main]
@@ -16,6 +17,7 @@ on:
       - 'app/index.html'
       - 'pin.html'
       - 'tests/pro-carnet-world10-active.cjs'
+      - 'tests/pro-carnet-world10-menu.cjs'
       - '.github/workflows/pro-carnet-world10.yml'
 permissions:
   contents: read
@@ -26,4 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Tester les dix langues dans le logiciel CARNET
-        run: node tests/pro-carnet-world10-active.cjs
+        run: |
+          node tests/pro-carnet-world10-active.cjs
+          node tests/pro-carnet-world10-menu.cjs
