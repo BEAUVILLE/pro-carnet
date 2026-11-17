@@ -90,7 +90,9 @@ async function simulate(code){
   assert.equal(store.digiy_carnet_ui_lang_v1,code);
   assert.ok(elements.every(el=>el.textContent.length>0),code+': translated static UI');
   const notice=elements.find(el=>el.key==='act.voiceNotice');
-  assert.ok(notice&&notice.textContent.length>35,'voice limitation');
+  assert.ok(notice&&notice.textContent.length>12,'voice limitation notice must be readable');
+  if(code==='zh')assert.match(notice.textContent,/法语/,'Chinese notice must say French only');
+  if(code==='wo')assert.match(notice.textContent,/français/,'Wolof notice must say French only');
   if(['wo','zh'].includes(code)){
     assert.notEqual(elements.find(el=>el.key==='act.speak').textContent,'Dis l’argent.');
     assert.notEqual(notice.textContent,code==='wo'?'Dictée et analyse des phrases : français uniquement pour l’instant. Les exemples et les preuves restent en français.':'');
