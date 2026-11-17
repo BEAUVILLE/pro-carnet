@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-  <script src="../assets/js/world8.js?v=world10-20261117-pro-carnet-v1"></script>
+  <script src="../assets/js/world8.js?v=world10-20261117-menu-v2"></script>
   <script src="./guard.js?v=pay-baptiste-guard-20260610"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>PRO CARNET — Mon activité</title>
@@ -93,7 +93,7 @@
           <span class="magic-chevron" id="magicChevron">⌄</span>
         </button>
         <div class="magic-panel" id="magicPanel" hidden>
-          <div class="magic-actions" aria-label="Menu PRO CARNET rapide">
+          <div class="magic-actions" aria-label="Menu PRO CARNET rapide" data-menu10-aria="quick_aria">
             <button class="magic-action green" type="button" data-pay-voice><span>🎙</span><b>Voix</b><small>parler / corriger</small></button>
             <button class="magic-action green" type="button" data-go-frais><span>⚡</span><b>Saisie</b><small>plein écran</small></button>
             <button class="magic-action green" type="button" data-open-preset-kind="income"><span>＋</span><b>Entrée</b><small>CA modules</small></button>
@@ -133,18 +133,18 @@
 
 
 
-<div class="fab-wrap" id="fabWrap" aria-label="Menu flottant PRO CARNET">
+<div class="fab-wrap" id="fabWrap" aria-label="Menu flottant PRO CARNET" data-menu10-aria="fab_aria">
   <div class="fab-panel" id="fabPanel">
-    <button class="fab-action gold" type="button" data-fab="modules"><span>⠿ Sources</span><small>listing + rentrée</small></button>
-    <button class="fab-action green" type="button" data-fab="frais"><span>⚡ Saisie</span><small>plein écran</small></button>
-    <button class="fab-action green" type="button" data-pay-voice><span>🎙 Voix CARNET</span><small>parler + corriger</small></button>
-    <button class="fab-action gold" type="button" data-fab="contacts"><span>👥 Mes clients</span><small>abonnés · contacts</small></button>
-    <button class="fab-action green" type="button" data-fab="add"><span>＋ Ajouter</span><small>mouvement libre</small></button>
-    <button class="fab-action" type="button" data-fab="admin"><span>⚙ Admin</span><small>modules, libellés</small></button>
-    <button class="fab-action" type="button" data-fab="backup"><span>💾 Sauvegarde</span><small>export / import JSON</small></button>
-    <button class="fab-action" type="button" data-fab="top"><span>🏦 Accueil</span><small>chiffre roi</small></button>
+    <button class="fab-action gold" type="button" data-fab="modules"><span data-menu10="sources" data-menu10-icon="⠿">⠿ Sources</span><small data-menu10="desc_sources">listing + rentrée</small></button>
+    <button class="fab-action green" type="button" data-fab="frais"><span data-menu10="quick_entry" data-menu10-icon="⚡">⚡ Saisie</span><small data-menu10="desc_entry">plein écran</small></button>
+    <button class="fab-action green" type="button" data-pay-voice><span data-menu10="voice" data-menu10-icon="🎙">🎙 Voix CARNET</span><small data-menu10="desc_voice">parler + corriger</small></button>
+    <button class="fab-action gold" type="button" data-fab="contacts"><span data-menu10="clients" data-menu10-icon="👥">👥 Mes clients</span><small data-menu10="desc_clients">abonnés · contacts</small></button>
+    <button class="fab-action green" type="button" data-fab="add"><span data-menu10="add" data-menu10-icon="＋">＋ Ajouter</span><small data-menu10="desc_add">mouvement libre</small></button>
+    <button class="fab-action" type="button" data-fab="admin"><span data-menu10="admin" data-menu10-icon="⚙">⚙ Admin</span><small data-menu10="desc_admin">modules, libellés</small></button>
+    <button class="fab-action" type="button" data-fab="backup"><span data-menu10="backup" data-menu10-icon="💾">💾 Sauvegarde</span><small data-menu10="desc_backup">export / import JSON</small></button>
+    <button class="fab-action" type="button" data-fab="top"><span data-menu10="home" data-menu10-icon="🏦">🏦 Accueil</span><small data-menu10="desc_home">chiffre roi</small></button>
   </div>
-  <button class="fab-main" id="fabToggle" type="button" aria-label="Ouvrir le menu flottant">☰</button>
+  <button class="fab-main" id="fabToggle" type="button" aria-label="Ouvrir le menu flottant" data-menu10-aria="fab_open">☰</button>
 </div>
 
 
@@ -199,7 +199,7 @@
 
 <div class="modal-bg" id="choiceModal"><div class="modal"><div class="modal-head"><strong id="choiceTitle">Choisir</strong><button class="close" type="button" data-close="choiceModal">×</button></div><div class="modal-body" id="choiceBody"></div></div></div>
 <div class="modal-bg" id="activitiesModal"><div class="modal"><div class="modal-head"><strong>Lecture des sources</strong><button class="close" type="button" data-close="activitiesModal">×</button></div><div class="modal-body" id="activitiesBody"></div></div></div>
-<div class="modal-bg" id="menuModal"><div class="modal"><div class="modal-head"><strong>Menu PRO CARNET</strong><button class="close" type="button" data-close="menuModal">×</button></div><div class="modal-body"><div class="menu-grid"><button type="button" data-pay-voice>🎙<br>Voix CARNET</button><button id="menuFrais" type="button">⚡<br>Saisie rapide</button><button id="menuActivities" type="button">⠿<br>Sources</button><button id="menuContacts" type="button">👥<br>Mes clients</button><button id="menuAdmin" type="button">⚙<br>Admin</button><button id="menuBackup" type="button">💾<br>Sauvegarde</button></div></div></div></div>
+<div class="modal-bg" id="menuModal"><div class="modal"><div class="modal-head"><strong data-menu10="title">Menu PRO CARNET</strong><button class="close" type="button" data-close="menuModal">×</button></div><div class="modal-body"><div class="menu-grid"><button type="button" data-pay-voice>🎙<br><span data-menu10="voice">Voix CARNET</span></button><button id="menuFrais" type="button">⚡<br><span data-menu10="quick_entry">Saisie rapide</span></button><button id="menuActivities" type="button">⠿<br><span data-menu10="sources">Sources</span></button><button id="menuContacts" type="button">👥<br><span data-menu10="clients">Mes clients</span></button><button id="menuAdmin" type="button">⚙<br><span data-menu10="admin">Admin</span></button><button id="menuBackup" type="button">💾<br><span data-menu10="backup">Sauvegarde</span></button></div></div></div></div>
 
 <div class="modal-bg" id="reserveModal"><div class="modal"><div class="modal-head"><strong>Réserve DIGIY</strong><button class="close" type="button" data-close="reserveModal">×</button></div><div class="modal-body"><div class="notice">Même esprit que le coffre : tu gardes une part, ou tu reprends une part. PRO CARNET trace, le patron décide.</div><div class="reserve-actions"><button class="reserve-keep" id="btnReserveKeep" type="button">＋ Garder</button><button class="reserve-take" id="btnReserveTake" type="button">− Récupérer</button></div><div class="notice">Lecture conseillée : PROTÈGE LA RÉSERVE quand la trésorerie respire.</div></div></div></div>
 <div class="modal-bg" id="backupModal"><div class="modal"><div class="modal-head"><strong>Sauvegarde CARNET</strong><button class="close" type="button" data-close="backupModal">×</button></div><div class="modal-body"><div class="notice">La sauvegarde contient mouvements + modules + répertoire.</div><div class="backup-actions"><button class="soft" id="btnBackupDownload" type="button">⬇ Télécharger JSON</button><button class="soft" id="btnBackupCopy" type="button">📋 Copier JSON</button></div><div class="backup-actions"><button class="soft" id="btnBackupChoose" type="button">📂 Importer fichier</button><button class="soft danger" id="btnBackupRestoreText" type="button">♻ Restaurer texte</button></div><input id="backupFile" type="file" accept="application/json,.json" style="display:none"><div class="field"><label>Coller une sauvegarde JSON</label><textarea id="backupText" class="backup-area" placeholder="Coller ici une sauvegarde JSON."></textarea></div><div id="backupStatus" class="status"></div></div></div></div>
@@ -258,6 +258,15 @@
     document.documentElement.dir=api.getDir();
     if(els.appTitle)els.appTitle.textContent=t("app.title",null,"Mon activité");
     const menuBtn=$("btnMenu");if(menuBtn)menuBtn.textContent="☰ "+t("nav.menu",null,"Menu");
+    // Le menu modal et le menu flottant partagent le même choix de langue.
+    document.querySelectorAll("[data-menu10]").forEach(el=>{
+      const label=t("menu."+el.dataset.menu10,null,el.textContent);
+      const icon=el.dataset.menu10Icon;
+      el.textContent=icon?icon+" "+label:label;
+    });
+    document.querySelectorAll("[data-menu10-aria]").forEach(el=>{
+      el.setAttribute("aria-label",t("menu."+el.dataset.menu10Aria,null,el.getAttribute("aria-label")));
+    });
     const magicTitle=$("btnMagicAdd")?.querySelector("b");if(magicTitle)magicTitle.textContent=t("nav.add",null,"Ajouter");
     if(els.filterAll)els.filterAll.textContent=t("journal.all",null,"Tout");
     if(els.filterIncome)els.filterIncome.textContent=t("journal.income",null,"Entrées");
