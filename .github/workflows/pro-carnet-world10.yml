@@ -10,6 +10,8 @@ on:
       - 'tests/pro-carnet-world10-menu.cjs'
       - 'tests/pro-carnet-quick-expenses-world10.cjs'
       - 'tests/pro-carnet-movement-journey-world10.cjs'
+      - 'assets/js/pro-carnet-admin-modal-world10.js'
+      - 'tests/pro-carnet-inline-admin-world10.cjs'
       - 'assets/js/pro-carnet-movement-world10.js'
       - '.github/workflows/pro-carnet-world10.yml'
   push:
@@ -23,6 +25,8 @@ on:
       - 'tests/pro-carnet-world10-menu.cjs'
       - 'tests/pro-carnet-quick-expenses-world10.cjs'
       - 'tests/pro-carnet-movement-journey-world10.cjs'
+      - 'assets/js/pro-carnet-admin-modal-world10.js'
+      - 'tests/pro-carnet-inline-admin-world10.cjs'
       - 'assets/js/pro-carnet-movement-world10.js'
       - '.github/workflows/pro-carnet-world10.yml'
 permissions:
@@ -39,3 +43,4 @@ jobs:
           node tests/pro-carnet-world10-menu.cjs
           node tests/pro-carnet-quick-expenses-world10.cjs
           node tests/pro-carnet-movement-journey-world10.cjs
+          node tests/pro-carnet-inline-admin-world10.cjs
