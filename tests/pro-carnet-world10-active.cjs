@@ -41,7 +41,7 @@ for(const [name,html] of [['live',live],['fallback',fallback]]) {
   assert.ok(pick,name+': active selector missing');
   const opts=[...pick.matchAll(/<option value="([a-z]+)"/g)].map(m=>m[1]);
   assert.deepEqual(opts,langs,name+': selector must include all 10 languages');
-  assert.match(html,/world8\.js\?v=world10-20261117-menu-v2/);
+  assert.match(html,/world8\.js\?v=world10-20261117-perso-frais-v3/);
   assert.match(html,/document\.documentElement\.dir=api\.getDir\(\)/);
   assert.match(html,/renderLanguageOnly\(\)/);
 }
