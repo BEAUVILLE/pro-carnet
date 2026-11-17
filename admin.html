@@ -22,7 +22,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./session.js?v=pay-guard-hub-20260531"></script>
   <script src="./pay-tools.js"></script>
-  <script src="./assets/js/world8.js?v=world8-client-due-20261001"></script>
+  <script src="./assets/js/world8.js?v=world10-client-due-20261117-v4"></script>
+  <script src="./assets/js/pro-carnet-secondary-world10.js?v=20261117-admin-v4"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1452,19 +1453,20 @@
       <div class="brand">
         <div class="brand-mark">₣</div>
         <div>
-          <div class="brand-title">MON ARGENT — Ajouter</div>
-          <div class="brand-sub" id="topCompte">Session protégée</div>
+          <div class="brand-title" data-pro10="a.brand">MON ARGENT — Ajouter</div>
+          <div class="brand-sub" id="topCompte" data-pro10="a.protected">Session protégée</div>
         </div>
       </div>
 
+      <div id="pro10Controls" style="display:flex;justify-content:center;padding:6px 8px"></div>
       <nav class="nav">
-        <a class="pill" href="./index.html">← Accueil</a>
+        <a class="pill" href="./index.html">← <span data-pro10="mov.home">Accueil</span></a>
         <a class="pill" href="https://digiy-hub.digiylyfe.com/">🧭 HUB</a>
-        <a class="pill" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">📦 Tarifs</a>
-        <a class="pill" href="./pin.html">🔐 Code</a>
-        <a class="pill primary" href="./cockpit.html" id="topCockpitLink">📊 Mon espace</a>
-        <button class="pill" id="btnRefresh" type="button">🔄 Recharger</button>
-        <button class="pill" id="btnLogout" type="button">🚪 Quitter</button>
+        <a class="pill" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer" data-pro10="a.tariffs">📦 Tarifs</a>
+        <a class="pill" href="./pin.html" data-pro10="a.code">🔐 Code</a>
+        <a class="pill primary" href="./cockpit.html" id="topCockpitLink" data-pro10="a.space">📊 Mon espace</a>
+        <button class="pill" id="btnRefresh" type="button" data-pro10="mov.refresh">🔄 Recharger</button>
+        <button class="pill" id="btnLogout" type="button" data-pro10="a.exit">🚪 Quitter</button>
       </nav>
     </div>
   </header>
@@ -1473,13 +1475,9 @@
     <section class="hero">
       <div class="hero-grid">
         <div class="hero-card">
-          <div class="eyebrow">➕ MON ARGENT — ajouter ou confirmer</div>
-          <h1 class="hero-title">Reçois.<br>Vérifie.<br>Enregistre proprement.</h1>
-          <p class="hero-text">
-            Cette page reçoit les brouillons des modules et permet d’ajouter vite :
-            une entrée, une sortie, une dépense, une épargne ou une note utile,
-            puis laisser l’espace relire le tout proprement.
-          </p>
+          <div class="eyebrow" data-pro10="a.kicker">➕ MON ARGENT — ajouter ou confirmer</div>
+          <h1 class="hero-title"><span data-pro10="a.hero1">Reçois.</span><br><span data-pro10="a.hero2">Vérifie.</span><br><span data-pro10="a.hero3">Enregistre proprement.</span></h1>
+          <p class="hero-text" data-pro10="a.heroLead">Cette page reçoit les brouillons des modules et permet d’ajouter vite : une entrée, une sortie, une dépense, une épargne ou une note utile, puis laisser l’espace relire le tout proprement.</p>
 
           <div class="hero-mini">
             <div class="mini">
@@ -1502,10 +1500,10 @@
           </div>
 
           <div class="mobileFastRow">
-            <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
-            <a id="fastMovements" href="#historyList">📜 Mouvements</a>
-            <a class="primary" id="fastAdd" href="#payForm">➕ Ajouter</a>
-            <a id="fastDrafts" href="#draftPrefillBox">🧾 Brouillons</a>
+            <a id="fastHome" href="./cockpit.html">🏠 <span data-pro10="mov.home">Accueil</span></a>
+            <a id="fastMovements" href="#historyList">📜 <span data-pro10="mov.title">Mouvements</span></a>
+            <a class="primary" id="fastAdd" href="#payForm">➕ <span data-pro10="mov.add">Ajouter</span></a>
+            <a id="fastDrafts" href="#draftPrefillBox" data-pro10="a.drafts">🧾 Brouillons</a>
           </div>
         </div>
 
@@ -1554,13 +1552,13 @@
     <section class="grid">
       <article class="card">
         <div class="card-head">
-          <div class="card-title">➕ Ajouter un mouvement</div>
+          <div class="card-title" data-pro10="a.addMovement">➕ Ajouter un mouvement</div>
         </div>
 
         <div class="card-body">
           <div class="focus-box">
-            <div class="focus-top">Vérifier avant d’enregistrer</div>
-            <div class="focus-main">Sens + montant + canal = base propre</div>
+            <div class="focus-top" data-pro10="a.verify">Vérifier avant d’enregistrer</div>
+            <div class="focus-main" data-pro10="a.formula">Sens + montant + canal = base propre</div>
             <div class="focus-sub">
               Vérifie le brouillon reçu, ou ajoute une trace simple avec canal, activité source et note utile.
             </div>
@@ -1640,7 +1638,7 @@
               </div>
               <label><span data-client-due-key="client_due.language">Langue</span>
                 <select id="clientDueLang" aria-label="Langue">
-                  <option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option><option value="pt">PT</option><option value="de">DE</option><option value="it">IT</option><option value="nl">NL</option><option value="ar">AR</option>
+                  <option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option><option value="pt">PT</option><option value="de">DE</option><option value="it">IT</option><option value="nl">NL</option><option value="ar">AR</option><option value="wo">🇸🇳 WO</option><option value="zh">🇨🇳 中文</option>
                 </select>
               </label>
             </div>
@@ -3844,6 +3842,7 @@
       const select = $("clientDueLang");
       if(select) select.addEventListener("change", () => {
         window.DIGIY_WORLD8?.setLang?.(select.value);
+        window.DIGIY_PRO10?.setLang?.(select.value);
         refreshClientDueLanguage();
       });
       refreshClientDueLanguage();
@@ -3902,7 +3901,7 @@
           return;
         }
 
-        $("topCompte").textContent = "Session protégée";
+        $("topCompte").textContent = window.DIGIY_PRO10?.t("a.protected") || "Session protégée";
         $("badgeCompte").textContent = "Référence protégée";
         $("compteBadge").style.display = "flex";
         $("movementDate").value = todayStr();
@@ -3953,6 +3952,10 @@
     bindQuickPresets();
     bindVoicePay();
     bindClientDebts();
+    window.DIGIY_PRO10?.onChange?.(lang => {
+      window.DIGIY_WORLD8?.setLang?.(lang);
+      refreshClientDueLanguage();
+    });
     resetForm();
     boot();
   </script>

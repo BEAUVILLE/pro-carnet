@@ -13,6 +13,7 @@
 
   <script src="./session.js?v=pay-guard-hub-20260531"></script>
   <script src="./pay-tools.js"></script>
+  <script src="./assets/js/pro-carnet-secondary-world10.js?v=20261117-admin-v4"></script>
 
   <style>
     :root{
@@ -1153,30 +1154,28 @@
       <div class="brand">
         <div class="mark">₣</div>
         <div>
-          <div class="brand-title">MON ARGENT — Réglages utiles</div>
+          <div class="brand-title" data-pro10="b.brand">MON ARGENT — Réglages utiles</div>
           <div class="brand-sub" id="brainMeta">Session protégée · réglages gardés sur cet appareil</div>
         </div>
       </div>
 
+      <div id="pro10Controls" style="display:flex;justify-content:center;padding:6px 8px"></div>
       <nav class="nav">
-        <a class="pill" id="navHomeLink" href="./index.html">← Accueil</a>
+        <a class="pill" id="navHomeLink" href="./index.html">← <span data-pro10="mov.home">Accueil</span></a>
         <a class="pill" href="https://digiy-hub.digiylyfe.com/">🧭 HUB</a>
-        <a class="pill" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">📦 Tarifs</a>
-        <a class="pill" id="navCockpitLink" href="./cockpit.html">🏠 Accueil</a>
-        <a class="pill" id="navAdminLink" href="./admin.html">➕ Ajouter</a>
-        <button class="pill primary" id="btnSaveTop" type="button">💾 Enregistrer</button>
+        <a class="pill" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer" data-pro10="a.tariffs">📦 Tarifs</a>
+        <a class="pill" id="navCockpitLink" href="./cockpit.html">🏠 <span data-pro10="mov.home">Accueil</span></a>
+        <a class="pill" id="navAdminLink" href="./admin.html">➕ <span data-pro10="mov.add">Ajouter</span></a>
+        <button class="pill primary" id="btnSaveTop" type="button" data-pro10="b.save">💾 Enregistrer</button>
       </nav>
     </div>
   </header>
 
   <main class="wrap">
     <section class="hero">
-      <div class="eyebrow">⚙️ PAY PRO — réglages utiles</div>
-      <h1>Choisis ton terrain.<br>DIGIY prépare les réglages.</h1>
-      <p>
-        Ici, le pro ne règle pas comme un technicien. Il choisit un modèle simple :
-        commerce, chauffeur, location, réserve ou projet. DIGIY prépare, le terrain ajuste.
-      </p>
+      <div class="eyebrow" data-pro10="b.kicker">⚙️ PAY PRO — réglages utiles</div>
+      <h1><span data-pro10="b.hero1">Choisis ton terrain.</span><br><span data-pro10="b.hero2">DIGIY prépare les réglages.</span></h1>
+      <p data-pro10="b.lead">Ici, le pro ne règle pas comme un technicien. Il choisit un modèle simple : commerce, chauffeur, location, réserve ou projet. DIGIY prépare, le terrain ajuste.</p>
 
       <div class="hero-grid">
         <div class="mini">
@@ -1202,9 +1201,9 @@
       </div>
 
       <div class="mobileFastRow">
-        <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
-        <a id="fastMovements" href="./cockpit.html#resultList">📜 Mouvements</a>
-        <a id="fastAdd" href="./admin.html">➕ Ajouter</a>
+        <a id="fastHome" href="./cockpit.html">🏠 <span data-pro10="mov.home">Accueil</span></a>
+        <a id="fastMovements" href="./cockpit.html#resultList">📜 <span data-pro10="mov.title">Mouvements</span></a>
+        <a id="fastAdd" href="./admin.html">➕ <span data-pro10="mov.add">Ajouter</span></a>
         <a class="primary" id="fastMore" href="./brain-admin.html">⚙️ Plus</a>
       </div>
     </section>
@@ -1213,7 +1212,7 @@
     <section class="preset-panel" id="brainPresetPanel" aria-label="Réglages rapides PAY">
       <div class="preset-head">
         <div>
-          <div class="preset-title">⚡ Réglages rapides PAY</div>
+          <div class="preset-title" data-pro10="b.quick">⚡ Réglages rapides PAY</div>
           <div class="preset-help">
             Le pro choisit le terrain. DIGIY prépare la réserve, les charges, les règles et les priorités.
             Ensuite le pro ajuste avec sa vérité.
@@ -1223,32 +1222,32 @@
 
       <div class="preset-grid">
         <button class="preset-btn" type="button" data-brain-preset="commerce">
-          <strong>🛒 Petit commerce</strong>
+          <strong data-pro10="b.pCommerce">🛒 Petit commerce</strong>
           <span>Boutique, stock, caisse, charges et réserve terrain.</span>
         </button>
 
         <button class="preset-btn" type="button" data-brain-preset="driver">
-          <strong>🚕 Chauffeur</strong>
+          <strong data-pro10="b.pDriver">🚕 Chauffeur</strong>
           <span>Carburant, entretien, réserve réparation, pression du mois.</span>
         </button>
 
         <button class="preset-btn" type="button" data-brain-preset="loc">
-          <strong>🏠 Location</strong>
+          <strong data-pro10="b.pLoc">🏠 Location</strong>
           <span>Entretien logement, charges, réserve travaux, projet à financer.</span>
         </button>
 
         <button class="preset-btn" type="button" data-brain-preset="resto">
-          <strong>🍽️ Resto / service</strong>
+          <strong data-pro10="b.pResto">🍽️ Resto / service</strong>
           <span>Stock, personnel, livraisons, petits imprévus du terrain.</span>
         </button>
 
         <button class="preset-btn" type="button" data-brain-preset="prudence">
-          <strong>🛟 Prudence</strong>
+          <strong data-pro10="b.pCaution">🛟 Prudence</strong>
           <span>Priorité sécurité : on protège avant d’accélérer.</span>
         </button>
 
         <button class="preset-btn" type="button" data-brain-preset="empty">
-          <strong>🧹 Base simple</strong>
+          <strong data-pro10="b.pSimple">🧹 Base simple</strong>
           <span>On repart propre, sans effacer l’esprit de la page.</span>
         </button>
       </div>
@@ -2151,10 +2150,10 @@
         brain.projects.length
       ].reduce((a,b)=>a+b,0);
 
-      const sessionText = CTX.slug ? "Session protégée" : "Session à ouvrir";
-
+      const i18n = window.DIGIY_PRO10;
+      const sessionText = i18n.t(CTX.slug ? "b.metaProtected" : "b.metaOpen");
       document.getElementById("brainMeta").textContent =
-        `${sessionText} · ${count} élément(s) gardé(s) ici`;
+        sessionText + " · " + i18n.t("b.metaCount", {count});
     }
 
 
@@ -3128,6 +3127,7 @@
       );
     }
 
+    window.DIGIY_PRO10?.onChange?.(() => updateMeta());
     window.removeItem = removeItem;
     window.toggleItem = toggleItem;
   </script>
