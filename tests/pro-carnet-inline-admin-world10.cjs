@@ -79,7 +79,7 @@ for(const file of paths){
       file+' canonical options changed in '+id);
   }
   for(const id of ['btnAddActivity','btnAddLabel','btnAddPerson','adminActivities',
-     'adminLabels','adminPeople','adminLabelStatus','adminModal']){
+     'adminLabels','adminPeople','labelAdminStatus','adminModal']){
     assert.ok(html.includes('id="'+id+'"'),file+' must preserve functioning element '+id);
   }
 
