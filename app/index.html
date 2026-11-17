@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-  <script src="../assets/js/world8.js?v=world10-20261117-menu-v2"></script>
+  <script src="../assets/js/world8.js?v=world10-20261117-perso-frais-v3"></script>
   <script src="./guard.js?v=pay-baptiste-guard-20260610"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>PRO CARNET — Mon activité</title>
@@ -89,19 +89,19 @@
       <section class="magic-zone" aria-label="Bouton Ajouter PRO CARNET">
         <button class="magic-add-btn" id="btnMagicAdd" type="button" aria-expanded="false" aria-controls="magicPanel">
           <span class="magic-plus">＋</span>
-          <span><b>Ajouter</b><small>le bouton magique : saisie rapide, frais, entrées, coffre</small></span>
+          <span><b>Ajouter</b><small data-quick10="subtitle">le bouton magique : saisie rapide, frais, entrées, coffre</small></span>
           <span class="magic-chevron" id="magicChevron">⌄</span>
         </button>
         <div class="magic-panel" id="magicPanel" hidden>
           <div class="magic-actions" aria-label="Menu PRO CARNET rapide" data-menu10-aria="quick_aria">
-            <button class="magic-action green" type="button" data-pay-voice><span>🎙</span><b>Voix</b><small>parler / corriger</small></button>
-            <button class="magic-action green" type="button" data-go-frais><span>⚡</span><b>Saisie</b><small>plein écran</small></button>
-            <button class="magic-action green" type="button" data-open-preset-kind="income"><span>＋</span><b>Entrée</b><small>CA modules</small></button>
-            <button class="magic-action orange" type="button" data-open-preset-kind="expense"><span>−</span><b>Frais</b><small>tout voir</small></button>
-            <button class="magic-action gold" type="button" data-pay-action="reserve"><span>🏦</span><b>Coffre</b><small>réserve</small></button>
-            <button class="magic-action" type="button" data-pay-action="history"><span>🕘</span><b>Historique</b><small>lecture</small></button>
+            <button class="magic-action green" type="button" data-pay-voice><span>🎙</span><b data-quick10="voice">Voix</b><small data-quick10="voice_desc">parler / corriger</small></button>
+            <button class="magic-action green" type="button" data-go-frais><span>⚡</span><b data-quick10="entry">Saisie</b><small data-quick10="entry_desc">plein écran</small></button>
+            <button class="magic-action green" type="button" data-open-preset-kind="income"><span>＋</span><b data-quick10="income">Entrée</b><small data-quick10="income_desc">CA modules</small></button>
+            <button class="magic-action orange" type="button" data-open-preset-kind="expense"><span>−</span><b data-quick10="expense">Frais</b><small data-quick10="expense_desc">tout voir</small></button>
+            <button class="magic-action gold" type="button" data-pay-action="reserve"><span>🏦</span><b data-quick10="reserve">Coffre</b><small data-quick10="reserve_desc">réserve</small></button>
+            <button class="magic-action" type="button" data-pay-action="history"><span>🕘</span><b data-quick10="history">Historique</b><small data-quick10="history_desc">lecture</small></button>
           </div>
-          <div class="quick-label-title">Tous les frais rapides</div>
+          <div class="quick-label-title" data-quick10="fees_heading">Tous les frais rapides</div>
           <div class="magic-chip-grid" id="magicExpenseList"></div>
         </div>
       </section>
@@ -268,6 +268,10 @@
       el.setAttribute("aria-label",t("menu."+el.dataset.menu10Aria,null,el.getAttribute("aria-label")));
     });
     const magicTitle=$("btnMagicAdd")?.querySelector("b");if(magicTitle)magicTitle.textContent=t("nav.add",null,"Ajouter");
+    // Les commandes du panneau PERSO/PRO utilisent le même dictionnaire WORLD10.
+    document.querySelectorAll("[data-quick10]").forEach(el=>{
+      el.textContent=t("quick."+el.dataset.quick10,null,el.textContent);
+    });
     if(els.filterAll)els.filterAll.textContent=t("journal.all",null,"Tout");
     if(els.filterIncome)els.filterIncome.textContent=t("journal.income",null,"Entrées");
     if(els.filterExpense)els.filterExpense.textContent=t("journal.expenses",null,"Sorties");
@@ -284,11 +288,12 @@
       const base=baseMovementsForJournal(),inSum=base.filter(m=>m.type==="income").reduce((a,m)=>a+Number(m.amount||0),0),outSum=base.filter(m=>m.type==="expense").reduce((a,m)=>a+Number(m.amount||0),0);
       els.journalMini.textContent=t("journal.summary",{income:eye?fmt(inSum):"••• F",expenses:eye?fmt(outSum):"••• F",net:eye?fmt(inSum-outSum):"••• F"},eye?`Entrées ${fmt(inSum)} · Sorties ${fmt(outSum)} · Net ${fmt(inSum-outSum)}`:"Entrées ••• F · Sorties ••• F · Net ••• F");
     }
+    renderHomeShortcuts();
   }
   if(els.world8Lang)els.world8Lang.onchange=()=>{window.DIGIY_WORLD8?.setLang?.(els.world8Lang.value);renderLanguageOnly()};
   function syncModalLock(){document.body.classList.toggle("modal-open",!!document.querySelector(".modal-bg.open"))} function openModal(id){$(id).classList.add("open");syncModalLock()} function closeModal(id){$(id).classList.remove("open");syncModalLock()} document.addEventListener("click",e=>{const c=e.target.closest("[data-close]");if(c)closeModal(c.getAttribute("data-close"));if(e.target.classList.contains("modal-bg")){e.target.classList.remove("open");syncModalLock()}});
   function flash(el){if(!el)return;el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash")}
-  function renderHeader(p,eye){p=p||pocket();eye=eye!==undefined?eye:state.settings.eyeOpen;els.tabPro.classList.toggle("active",p==="pro");els.tabPerso.classList.toggle("active",p==="perso");els.walletName.textContent=t("wallet.balance",{pocket:p==="pro"?"PRO":"PERSO"},"Solde "+(p==="pro"?"PRO":"PERSO"));const nb=eye?fmt(balance(p)):hidden();if(els.balanceNumber.textContent!==nb){els.balanceNumber.textContent=nb;flash(els.balanceNumber)}els.btnEye.textContent=eye?("👁 "+t("wallet.open",null,"Ouvert")):("🙈 "+t("wallet.closed",null,"Fermé"));els.todayMini.textContent=t("day.today",{amount:eye?fmt(periodNet(p,"day")):hidden()},"Aujourd’hui "+(eye?fmt(periodNet(p,"day")):hidden()));els.modeMini.textContent="Wave · OM · Cash";els.frontNotice.textContent=p==="pro"?"PRO : choisis le mode, pose le montant, PRO CARNET garde la trace.":"PRIVÉ : choisis le mode, pose le montant, PRO CARNET garde la trace.";const dayIn=periodTotal(p,"day","income"),dayOut=periodTotal(p,"day","expense"),dayNet=dayIn-dayOut;const sd=eye?"+ "+fmt(dayIn):hidden();if(els.sumDay.textContent!==sd){els.sumDay.textContent=sd;flash(els.sumDay)}const sw=eye?"− "+fmt(dayOut):hidden();if(els.sumWeek.textContent!==sw){els.sumWeek.textContent=sw;flash(els.sumWeek)}const sm=eye?(dayNet>=0?"+ ":"− ")+fmt(Math.abs(dayNet)):hidden();if(els.sumMonth.textContent!==sm){els.sumMonth.textContent=sm;els.sumMonth.classList.toggle("plus",dayNet>=0);els.sumMonth.classList.toggle("minus",dayNet<0);flash(els.sumMonth)}renderModeSummary();}
+  function renderHeader(p,eye){p=p||pocket();eye=eye!==undefined?eye:state.settings.eyeOpen;els.tabPro.classList.toggle("active",p==="pro");els.tabPerso.classList.toggle("active",p==="perso");els.walletName.textContent=t("wallet.balance",{pocket:p==="pro"?"PRO":"PERSO"},"Solde "+(p==="pro"?"PRO":"PERSO"));const nb=eye?fmt(balance(p)):hidden();if(els.balanceNumber.textContent!==nb){els.balanceNumber.textContent=nb;flash(els.balanceNumber)}els.btnEye.textContent=eye?("👁 "+t("wallet.open",null,"Ouvert")):("🙈 "+t("wallet.closed",null,"Fermé"));els.todayMini.textContent=t("day.today",{amount:eye?fmt(periodNet(p,"day")):hidden()},"Aujourd’hui "+(eye?fmt(periodNet(p,"day")):hidden()));els.modeMini.textContent="Wave · OM · Cash";els.frontNotice.textContent=t(p==="pro"?"quick.notice_pro":"quick.notice_perso",null,p==="pro"?"PRO : choisis le mode, pose le montant, PRO CARNET garde la trace.":"PRIVÉ : choisis le mode, pose le montant, PRO CARNET garde la trace.");const dayIn=periodTotal(p,"day","income"),dayOut=periodTotal(p,"day","expense"),dayNet=dayIn-dayOut;const sd=eye?"+ "+fmt(dayIn):hidden();if(els.sumDay.textContent!==sd){els.sumDay.textContent=sd;flash(els.sumDay)}const sw=eye?"− "+fmt(dayOut):hidden();if(els.sumWeek.textContent!==sw){els.sumWeek.textContent=sw;flash(els.sumWeek)}const sm=eye?(dayNet>=0?"+ ":"− ")+fmt(Math.abs(dayNet)):hidden();if(els.sumMonth.textContent!==sm){els.sumMonth.textContent=sm;els.sumMonth.classList.toggle("plus",dayNet>=0);els.sumMonth.classList.toggle("minus",dayNet<0);flash(els.sumMonth)}renderModeSummary();}
   function setPocket(p){state.settings.pocket=p;state.settings.visibleCount=10;save();render()}
   function render(){state=normalize(state);const p=pocket(),eye=state.settings.eyeOpen;renderHeader(p,eye);renderDatalists();renderQuickLabels();renderHomeShortcuts();renderModules();renderMovements();renderAdmin();renderContacts();save()}
   setInterval(()=>{renderHeader();renderModules();renderMovements();},60000);
@@ -344,6 +349,26 @@
     body.innerHTML=html;
     openModal("choiceModal");
   }
+  // Traduire uniquement les libellés de nos préréglages d'origine.
+  // Un libellé modifié par le professionnel est affiché tel quel, sans être réécrit.
+  const QUICK_DEFAULT_LABELS=Object.freeze({
+    "lp-ravitaillement":"Ravitaillement","lp-ecole":"École",
+    "lp-vetements":"Vêtements","lp-voiture":"Frais voiture",
+    "lp-senelec":"Senelec","lp-seneau":"SEN’EAU",
+    "lp-woyofal":"Woyofal","lp-credit-tel":"Crédit téléphone",
+    "lp-orange":"Orange","lp-wifi":"Wi-Fi",
+    "lp-gasoil-pro":"Gasoil","lp-internet-pro":"Internet",
+    "lp-prelevement-fr":"Prélèvement banque France",
+    "lp-frais-banque":"Frais bancaire"
+  });
+  function quickDisplayLabel(pr){
+    const base=Object.prototype.hasOwnProperty.call(QUICK_DEFAULT_LABELS,pr.id)?QUICK_DEFAULT_LABELS[pr.id]:null;
+    return base!==null&&pr.label===base?t("quick."+pr.id,null,pr.label):pr.label;
+  }
+  function quickDisplayCategory(category){
+    const k=category==="Sorties rapides"?"cat_fast":category==="Retraits / banques"?"cat_bank":null;
+    return k?t("quick."+k,null,category):category||t("quick.cat_generic",null,"Frais");
+  }
   function renderHomeShortcuts(){
     const grid=$("magicExpenseList");
     if(!grid)return;
@@ -352,7 +377,7 @@
       .filter(pr=>pr&&pr.type==="expense"&&pr.label)
       .filter(pr=>{const k=String(pr.label||"").toLowerCase(); if(seen.has(k))return false; seen.add(k); return true;})
       .sort((a,b)=>String(a.category||"").localeCompare(String(b.category||"")) || String(a.label||"").localeCompare(String(b.label||"")));
-    grid.innerHTML=items.map(pr=>`<button class="magic-chip" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(pr.label)}</b><small>${esc(pr.category||"Frais")} · ${esc(cleanMode(pr.pocket==="both"?pocket():pr.pocket,pr.mode))}</small></button>`).join("") || '<div class="empty">Aucun frais rapide. Ajoute-le dans Réglages.</div>';
+    grid.innerHTML=items.map(pr=>`<button class="magic-chip" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(quickDisplayLabel(pr))}</b><small>${esc(quickDisplayCategory(pr.category))} · ${esc(cleanMode(pr.pocket==="both"?pocket():pr.pocket,pr.mode))}</small></button>`).join("") || '<div class="empty">'+esc(t("quick.empty",null,"Aucun frais rapide. Ajoute-le dans Réglages."))+'</div>';
   }
   function renderQuickLabels(){if(!els.quickLabelWrap)return;const p=pocket();const order=["Sorties rapides","Entrées / modules","Retraits / banques","Mes libellés"];const groups={};state.labelPresets.filter(pr=>presetVisible(pr,p)).forEach(pr=>{const cat=pr.category||"Mes libellés";(groups[cat]||(groups[cat]=[])).push(pr)});let html="";order.concat(Object.keys(groups).filter(k=>!order.includes(k))).forEach(cat=>{const arr=(groups[cat]||[]).slice(0,12);if(!arr.length)return;html+=`<div class="quick-label-group"><div class="quick-label-title">${esc(cat)}</div><div class="quick-label-grid">`+arr.map(pr=>`<button class="label-chip ${chipClass(pr)}" type="button" data-label-preset="${esc(pr.id)}"><b>${esc(pr.label)}</b><small>${pr.type==="income"?"Entrée":"Sortie"} · ${esc(cleanMode(p,pr.mode))}</small></button>`).join("")+`</div></div>`});els.quickLabelWrap.innerHTML=html||'<div class="empty">Aucun libellé rapide. Ajoute-le dans Réglages.</div>'} function openLabelPreset(id){const p=pocket();const pr=state.labelPresets.find(x=>x.id===id);if(!pr)return;closeModal("choiceModal");const pp=pr.pocket==="both"?p:pr.pocket;openMovement(pr.type,{pocket:pp,type:pr.type,mode:cleanMode(pp,pr.mode),amount:"",label:pr.label,activity:defaultActivityFor(pr.activity),person:"",note:pr.note||""})}
   function renderModules(){const p=pocket();const q=String(els.searchInput.value||"").trim().toLowerCase();let arr=state.activities.filter(a=>a.pocket===p);if(q)arr=arr.filter(a=>a.name.toLowerCase().includes(q));els.modulesTitle.textContent=p==="pro"?"Sources d’argent PRO":"Sources PERSO";if(!arr.length){els.moduleList.innerHTML='<div class="empty">Aucun module. Ajoute-le dans Admin.</div>';return}els.moduleList.innerHTML=arr.map(a=>{const total=listFor(p).filter(m=>m.activity===a.name).reduce((s,m)=>s+amountValue(m),0);return `<article class="module-row"><div><div class="module-title">${esc(a.name)}</div><div class="meta">Total : ${state.settings.eyeOpen?fmt(total):hidden()} · ${p==="pro"?"Wave":"Cash/Wave"}</div></div><div class="module-actions"><button class="small-btn plus" data-add-module="${esc(a.name)}" data-type="income">+ Rentrée</button><button class="small-btn minus" data-add-module="${esc(a.name)}" data-type="expense">- Sortie</button></div></article>`}).join("")}
