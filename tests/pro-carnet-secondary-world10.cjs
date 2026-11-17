@@ -4,15 +4,18 @@ const vm=require('node:vm');
 const core=fs.readFileSync('assets/js/pro-carnet-secondary-world10.js','utf8');
 const frais=fs.readFileSync('frais.html','utf8');
 const session=fs.readFileSync('session.html','utf8');
+const movements=fs.readFileSync('mouvements.html','utf8');
 const langs=['fr','en','es','pt','de','it','nl','ar','wo','zh'];
 new vm.Script(core);
-for(const [file,html] of [['frais',frais],['session',session]]){
+for(const [file,html] of [['frais',frais],['session',session],['mouvements',movements]]){
   assert.match(html,/pro-carnet-secondary-world10\.js\?v=20261117-v2/,file+' missing shared runtime');
   assert.match(html,/id="pro10Controls"/,file+' missing language mount');
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(x=>x[1]).filter(s=>s.trim());
   for(const source of scripts)new vm.Script(source,{filename:file+'.html'});
-  assert.match(html,/DIGIY_GUARD\.requireSession\(\{redirect:true,to:"\.\/pin\.html"\}\)/,file+' security guard unchanged');
-  assert.match(html,/digiy_pay_baptiste_reel_v2/,file+' account data key unchanged');
+  if(file!=='mouvements'){
+    assert.match(html,/DIGIY_GUARD\.requireSession\(\{redirect:true,to:"\.\/pin\.html"\}\)/,file+' security guard unchanged');
+    assert.match(html,/digiy_pay_baptiste_reel_v2/,file+' account data key unchanged');
+  }
   const keys=[...html.matchAll(/data-pro10(?:-placeholder|-aria)?="([^"]+)"/g)].map(x=>x[1]);
   assert.ok(keys.length>=7,file+' must translate interface controls');
 }
@@ -56,6 +59,10 @@ for(const code of langs){
  const f=setup(code,frais),s=setup(code,session);
  assert.equal(f.api.getLang(),code);
  assert.equal(s.api.getLang(),code);
+ const m=setup(code,movements);
+ assert.equal(m.api.getLang(),code);
+ assert.equal(m.api.t('mov.title').length>3,true);
+ assert.equal(m.api.t('mov.protected').includes('·'),true);
  assert.equal(f.api.label('Wave'),'Wave','payment brand unchanged');
  assert.equal(f.api.label('Senelec'),'Senelec','provider brand unchanged');
  assert.equal(f.api.label('SEN’EAU'),'SEN’EAU','provider brand unchanged');
@@ -73,4 +80,17 @@ for(const code of ['wo','zh']){
  assert.notEqual(s.api.t('closeConfirm'),'Fermer la session ? Tes mouvements resteront dans ce téléphone.');
 }
 const ar=setup('ar',session);assert.equal(ar.doc.documentElement.dir,'rtl');
-console.log('PRO CARNET WORLD10 : saisie rapide + session, 10 langues, catégories métier préservées — OK');
+
+assert.match(movements,/digiy_pay_pro_list_movements/,'cashbook read-only RPC must be retained');
+assert.match(movements,/p_slug:SLUG,p_phone:PHONE,p_limit:200/,'RPC inputs unchanged');
+assert.match(movements,/lastRows=rows/,'read values retained for language redraw');
+assert.match(movements,/i18n\.onChange\(\(\)=>\{if\(lastRows!==null\)renderRows\(lastRows\)\}\)/,'language redraw without network calls');
+assert.match(movements,/esc\(label\(r\)\)/,'business labels escaped');
+assert.match(movements,/esc\(r\.note_text\|\|''\)/,'notes kept intact and escaped');
+for(const code of ['wo','zh']){
+ const m=setup(code,movements);
+ assert.notEqual(m.api.t('mov.title'),'Mouvements caisse.');
+ assert.notEqual(m.api.label('posted'),'posted');
+ assert.notEqual(m.api.label('pending'),'pending');
+}
+console.log('PRO CARNET WORLD10 : saisie rapide + session + caisse, 10 langues, données métier préservées — OK');
