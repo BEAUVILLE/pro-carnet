@@ -475,6 +475,176 @@
     "资金允许时，请保护储备金。"
   ]
 };
+  const PRESET_NOTES={
+  "lp-ravitaillement": [
+    "Dépense maison / nourriture.",
+    "Household supplies and food.",
+    "Gastos del hogar y comida.",
+    "Despesas da casa e alimentação.",
+    "Haushalt und Lebensmittel.",
+    "Spese domestiche e alimentari.",
+    "Huishoudkosten en voeding.",
+    "مصاريف المنزل والطعام.",
+    "Jënd yi ci kër gi ak lekk.",
+    "家庭用品及食品支出。"
+  ],
+  "lp-ecole": [
+    "Frais école / enfants.",
+    "School and children's costs.",
+    "Gastos de escuela e hijos.",
+    "Despesas de escola e crianças.",
+    "Schul- und Kinderkosten.",
+    "Spese scuola e figli.",
+    "School- en kinderkosten.",
+    "مصاريف المدرسة والأطفال.",
+    "Fayu daara ak xale yi.",
+    "学校及子女费用。"
+  ],
+  "lp-vetements": [
+    "Achat vêtements.",
+    "Clothes purchase.",
+    "Compra de ropa.",
+    "Compra de roupa.",
+    "Kleidungskauf.",
+    "Acquisto vestiti.",
+    "Aankoop kleding.",
+    "شراء ملابس.",
+    "Jënd yére.",
+    "购买服装。"
+  ],
+  "lp-voiture": [
+    "Voiture, entretien, carburant.",
+    "Car costs, maintenance and fuel.",
+    "Coche, mantenimiento y combustible.",
+    "Carro, manutenção e combustível.",
+    "Auto, Wartung und Kraftstoff.",
+    "Auto, manutenzione e carburante.",
+    "Auto, onderhoud en brandstof.",
+    "سيارة وصيانة ووقود.",
+    "Oto, defaraat ak gasoil.",
+    "汽车、保养及燃油。"
+  ],
+  "lp-senelec": [
+    "Facture électricité.",
+    "Electricity bill.",
+    "Factura de electricidad.",
+    "Fatura de eletricidade.",
+    "Stromrechnung.",
+    "Bolletta elettrica.",
+    "Elektriciteitsrekening.",
+    "فاتورة الكهرباء.",
+    "Faktiru kuraŋ.",
+    "电费账单。"
+  ],
+  "lp-seneau": [
+    "Facture eau.",
+    "Water bill.",
+    "Factura de agua.",
+    "Fatura de água.",
+    "Wasserrechnung.",
+    "Bolletta acqua.",
+    "Waterrekening.",
+    "فاتورة الماء.",
+    "Faktiru ndox.",
+    "水费账单。"
+  ],
+  "lp-woyofal": [
+    "Recharge Woyofal / compteur électricité.",
+    "Woyofal electricity meter top-up.",
+    "Recarga Woyofal del contador eléctrico.",
+    "Recarga Woyofal do contador elétrico.",
+    "Woyofal-Stromzähler aufladen.",
+    "Ricarica contatore elettrico Woyofal.",
+    "Woyofal-stroommeter opladen.",
+    "شحن عداد الكهرباء Woyofal.",
+    "Yokk xaalis ci compteur Woyofal.",
+    "Woyofal 电表充值。"
+  ],
+  "lp-credit-tel": [
+    "Recharge crédit téléphone.",
+    "Mobile phone top-up.",
+    "Recarga de saldo telefónico.",
+    "Recarga de saldo do telemóvel.",
+    "Handyguthaben aufladen.",
+    "Ricarica credito telefonico.",
+    "Telefoontegoed opladen.",
+    "شحن رصيد الهاتف.",
+    "Yokk kredii telefon.",
+    "手机话费充值。"
+  ],
+  "lp-orange": [
+    "Téléphone / Orange Money.",
+    "Phone / Orange Money.",
+    "Teléfono / Orange Money.",
+    "Telemóvel / Orange Money.",
+    "Telefon / Orange Money.",
+    "Telefono / Orange Money.",
+    "Telefoon / Orange Money.",
+    "هاتف / Orange Money.",
+    "Telefon / Orange Money.",
+    "电话 / Orange Money。"
+  ],
+  "lp-wifi": [
+    "Internet maison / bureau.",
+    "Home / office internet.",
+    "Internet del hogar / oficina.",
+    "Internet casa / escritório.",
+    "Internet für Haus / Büro.",
+    "Internet casa / ufficio.",
+    "Internet thuis / kantoor.",
+    "إنترنت المنزل / المكتب.",
+    "Internet kër gi / biro.",
+    "家庭 / 办公室网络。"
+  ],
+  "lp-gasoil-pro": [
+    "Carburant activité.",
+    "Business fuel.",
+    "Combustible profesional.",
+    "Combustível profissional.",
+    "Kraftstoff für die Arbeit.",
+    "Carburante per l'attività.",
+    "Zakelijke brandstof.",
+    "وقود النشاط.",
+    "Gasoil liggéey bi.",
+    "业务用燃油。"
+  ],
+  "lp-internet-pro": [
+    "Connexion / téléphone pro.",
+    "Business internet / phone.",
+    "Internet / teléfono profesional.",
+    "Internet / telemóvel profissional.",
+    "Geschäftsinternet / Telefon.",
+    "Internet / telefono professionale.",
+    "Zakelijk internet / telefoon.",
+    "إنترنت / هاتف العمل.",
+    "Internet / telefon liggéey.",
+    "业务网络 / 电话。"
+  ],
+  "lp-prelevement-fr": [
+    "Prélèvement automatique compte France.",
+    "Automatic debit from French bank.",
+    "Cargo automático de banco francés.",
+    "Débito automático de banco francês.",
+    "Lastschrift von französischem Bankkonto.",
+    "Addebito automatico da banca francese.",
+    "Automatische incasso Franse bank.",
+    "خصم تلقائي من بنك فرنسي.",
+    "Bank France dafay génne xaalis boppam.",
+    "法国银行账户自动扣款。"
+  ],
+  "lp-frais-banque": [
+    "Frais de compte / carte.",
+    "Account / card fees.",
+    "Comisiones de cuenta / tarjeta.",
+    "Taxas de conta / cartão.",
+    "Konto- / Kartengebühren.",
+    "Spese conto / carta.",
+    "Kosten rekening / kaart.",
+    "رسوم الحساب / البطاقة.",
+    "Fayu kont / kart bank.",
+    "账户 / 银行卡手续费。"
+  ]
+};
   function lang() {
     const choice=root.DIGIY_WORLD8?.getLang?.() || "fr";
     return LANGS.includes(choice)?choice:"fr";
@@ -486,6 +656,11 @@
     if(params&&typeof params==="object")result=result.replace(/\{([a-z_]+)\}/g,(token,key)=>Object.prototype.hasOwnProperty.call(params,key)?String(params[key]):token);
     return result;
   }
+  function presetNote(id,original) {
+    const row=Object.prototype.hasOwnProperty.call(PRESET_NOTES,id)?PRESET_NOTES[id]:null;
+    if(!row || original!==row[0])return original;
+    return row[LANGS.indexOf(lang())] || row[0];
+  }
   function apply() {
     document.querySelectorAll("[data-move10]").forEach(el=>{
       el.textContent=t(el.getAttribute("data-move10"));
@@ -494,5 +669,5 @@
       el.setAttribute("placeholder",t(el.getAttribute("data-move10-placeholder")));
     });
   }
-  root.DIGIY_MOVE10=Object.freeze({t,lang,apply,keys:Object.freeze(Object.keys(ROWS))});
+  root.DIGIY_MOVE10=Object.freeze({t,lang,apply,presetNote,keys:Object.freeze(Object.keys(ROWS))});
 })(window);
