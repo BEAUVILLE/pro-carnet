@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-  <script src="../assets/js/world8.js?v=world8-20261001-c4"></script>
+  <script src="../assets/js/world8.js?v=world10-20261117-pro-carnet-v1"></script>
   <script src="./guard.js?v=pay-baptiste-guard-20260610"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>PRO CARNET — Mon activité</title>
@@ -80,7 +80,7 @@
 <div class="app">
   <section class="shell" aria-label="PRO CARNET — Mon activité">
     <header class="top">
-      <div class="topline"><button class="round" id="btnBack" type="button">‹</button><div class="title"><small>PRO CARNET</small><b id="appTitle">Mon activité</b><select class="world8-lang" id="world8Lang" aria-label="Langue"><option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option><option value="pt">PT</option><option value="de">DE</option><option value="it">IT</option><option value="nl">NL</option><option value="ar">AR</option></select></div><button class="round" id="btnMenu" type="button">☰ Menu</button></div>
+      <div class="topline"><button class="round" id="btnBack" type="button">‹</button><div class="title"><small>PRO CARNET</small><b id="appTitle">Mon activité</b><select class="world8-lang" id="world8Lang" aria-label="Langue"><option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option><option value="pt">PT</option><option value="de">DE</option><option value="it">IT</option><option value="nl">NL</option><option value="ar">AR</option><option value="wo">🇸🇳 WO</option><option value="zh">🇨🇳 中文</option></select></div><button class="round" id="btnMenu" type="button">☰ Menu</button></div>
       <div class="tabs"><button class="tab active" id="tabPro" type="button">💼 PRO</button><button class="tab" id="tabPerso" type="button">🏠 PERSO</button></div>
       <div class="balance"><div class="balance-label"><span id="walletName">Solde PRO</span><button class="eye" id="btnEye" type="button">👁 Ouvert</button></div><div class="amount-big" id="balanceNumber">0 F</div><div class="mini"><span class="pill" id="todayMini">Aujourd’hui 0 F</span><span class="pill" id="modeMini">Wave</span></div></div>
       <!-- Actions rapides déplacées dans le corps : solde en haut, gestes juste après. -->
@@ -255,6 +255,7 @@
     const lang=api.getLang();
     if(els.world8Lang&&els.world8Lang.value!==lang)els.world8Lang.value=lang;
     document.documentElement.lang=lang;
+    document.documentElement.dir=api.getDir();
     if(els.appTitle)els.appTitle.textContent=t("app.title",null,"Mon activité");
     const menuBtn=$("btnMenu");if(menuBtn)menuBtn.textContent="☰ "+t("nav.menu",null,"Menu");
     const magicTitle=$("btnMagicAdd")?.querySelector("b");if(magicTitle)magicTitle.textContent=t("nav.add",null,"Ajouter");

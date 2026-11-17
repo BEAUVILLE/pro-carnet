@@ -16,27 +16,44 @@
     .head{text-align:center;margin-bottom:22px}.ico{font-size:38px}.badge{display:inline-flex;margin-top:10px;padding:5px 12px;border-radius:999px;border:1px solid rgba(250,204,21,.30);background:rgba(250,204,21,.08);color:#fde68a;font-size:11px;font-weight:900;letter-spacing:.06em}.title{margin-top:9px;font-size:1.3rem;font-weight:1000}
     label{display:block;margin:14px 0 6px;color:var(--muted);font-size:.78rem;font-weight:900;text-transform:uppercase}.input{width:100%;min-height:54px;padding:13px 15px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.22);color:var(--ink);font-size:1.08rem;font-weight:900;outline:none}.input:focus{border-color:rgba(250,204,21,.55);box-shadow:0 0 0 3px rgba(250,204,21,.10)}
     .pin{letter-spacing:.55em;text-align:center;padding-left:calc(15px + .55em)}.btn{width:100%;min-height:54px;margin-top:18px;border:0;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--green));color:#07150f;font-size:1rem;font-weight:1000;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.status{display:none;margin-top:13px;padding:11px 13px;border-radius:12px;font-size:.85rem;font-weight:900;line-height:1.45}.status.show{display:block}.status.err{background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.30);color:#fca5a5}.status.ok{background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.30);color:#86efac}.status.wait{background:rgba(148,163,184,.08);border:1px solid var(--line);color:var(--muted)}.recovery-entry{text-align:center;margin-top:15px}.recovery-entry a{color:#facc15;font-size:14px;font-weight:950;text-decoration:underline;text-underline-offset:4px;display:inline-block;padding:10px;min-height:44px}
-    .note{margin-top:18px;text-align:center;color:rgba(148,163,184,.65);font-size:.75rem;font-weight:800;line-height:1.5}
+    .langPicker{display:block;margin:12px auto 0;padding:8px 12px;width:100%;max-width:220px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);color:var(--ink);font-weight:900}.note{margin-top:18px;text-align:center;color:rgba(148,163,184,.65);font-size:.75rem;font-weight:800;line-height:1.5}
   </style>
 </head>
 <body>
   <main class="card">
-    <div class="head"><div class="ico">📒</div><div class="badge">🔑 ACCÈS DIGIY</div><div class="title">PRO CARNET</div></div>
+    <div class="head"><div class="ico">📒</div><div class="badge" id="accessBadge">🔑 ACCÈS DIGIY</div><div class="title">PRO CARNET</div><select id="pinLang" class="langPicker" aria-label="Langue / Language"><option value="fr">🇫🇷 FR</option><option value="en">🇬🇧 EN</option><option value="es">🇪🇸 ES</option><option value="pt">🇵🇹 PT</option><option value="de">🇩🇪 DE</option><option value="it">🇮🇹 IT</option><option value="nl">🇳🇱 NL</option><option value="ar">🇸🇦 AR</option><option value="wo">🇸🇳 WO</option><option value="zh">🇨🇳 中文</option></select></div>
     <form id="loginForm" novalidate>
-      <label for="phone">📱 Ton numéro de téléphone</label>
+      <label for="phone" id="phoneLabel">📱 Ton numéro de téléphone</label>
       <input class="input" id="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="221 77 XXX XX XX" maxlength="15" required>
-      <label for="pin">🔢 Ton code secret</label>
+      <label for="pin" id="pinLabel">🔢 Ton code secret</label>
       <input class="input pin" id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="••••" maxlength="4" pattern="[0-9]{4}" required>
       <button class="btn" id="submitBtn" type="submit">Ouvrir PRO CARNET →</button>
       <div class="status" id="status" role="status" aria-live="polite"></div>
     </form>
-    <div class="recovery-entry"><a href="https://digiy-carnet-pro.digiylyfe.com/acces-proprietaire.html?recuperation=1">🔐 Code oublié ?</a></div>
-    <div class="note">PIN demandé à chaque entrée · aucune donnée financière dans l’URL.<br>DIGIY · 0% commission · 100% indépendance ∞</div>
+    <div class="recovery-entry"><a id="recoveryLink" href="https://digiy-carnet-pro.digiylyfe.com/acces-proprietaire.html?recuperation=1">🔐 Code oublié ?</a></div>
+    <div class="note"><span id="pinNote">PIN demandé à chaque entrée · aucune donnée financière dans l’URL.</span><br>DIGIY · 0% commission · 100% indépendance ∞</div>
   </main>
 <script>
 (()=>{
   "use strict";
   const ENTRY_KEY="DIGIY_CARNET_ENTRY_OK_V13";
+  const LANGS=["fr","en","es","pt","de","it","nl","ar","wo","zh"];
+  const I18N={"fr":{"badge":"🔑 ACCÈS DIGIY","phone":"📱 Ton numéro de téléphone","pin":"🔢 Ton code secret","open":"Ouvrir PRO CARNET →","recover":"🔐 Code oublié ?","note":"PIN demandé à chaque entrée · aucune donnée financière dans l’URL.","invalid":"Vérifie le numéro et les 4 chiffres du code.","checking":"Vérification sécurisée du code…","bad":"Code incorrect ou accès indisponible.","success":"PRO CARNET ouvert. Redirection…","failed":"Vérification impossible. Réessaie."},"en":{"badge":"🔑 DIGIY ACCESS","phone":"📱 Your phone number","pin":"🔢 Your secret PIN","open":"Open PRO CARNET →","recover":"🔐 Forgot your PIN?","note":"PIN required at every sign-in · no financial data in the URL.","invalid":"Check your number and the 4 PIN digits.","checking":"Secure PIN verification…","bad":"Incorrect PIN or access unavailable.","success":"PRO CARNET opened. Redirecting…","failed":"Verification failed. Please try again."},"es":{"badge":"🔑 ACCESO DIGIY","phone":"📱 Tu número de teléfono","pin":"🔢 Tu código secreto","open":"Abrir PRO CARNET →","recover":"🔐 ¿Olvidaste tu PIN?","note":"PIN requerido en cada acceso · sin datos financieros en la URL.","invalid":"Comprueba el número y los 4 dígitos del PIN.","checking":"Verificando el PIN de forma segura…","bad":"PIN incorrecto o acceso no disponible.","success":"PRO CARNET abierto. Redirigiendo…","failed":"No se pudo verificar. Inténtalo de nuevo."},"pt":{"badge":"🔑 ACESSO DIGIY","phone":"📱 O teu número de telefone","pin":"🔢 O teu código secreto","open":"Abrir PRO CARNET →","recover":"🔐 Esqueceste o PIN?","note":"PIN exigido em cada acesso · sem dados financeiros no URL.","invalid":"Confirma o número e os 4 dígitos do PIN.","checking":"A verificar o PIN de forma segura…","bad":"PIN incorreto ou acesso indisponível.","success":"PRO CARNET aberto. A redirecionar…","failed":"Não foi possível verificar. Tenta novamente."},"de":{"badge":"🔑 DIGIY-ZUGANG","phone":"📱 Deine Telefonnummer","pin":"🔢 Dein Geheimcode","open":"PRO CARNET öffnen →","recover":"🔐 PIN vergessen?","note":"PIN bei jeder Anmeldung nötig · keine Finanzdaten in der URL.","invalid":"Prüfe die Nummer und die vier PIN-Ziffern.","checking":"PIN wird sicher geprüft…","bad":"Falsche PIN oder Zugang nicht verfügbar.","success":"PRO CARNET geöffnet. Weiterleitung…","failed":"Prüfung fehlgeschlagen. Bitte erneut versuchen."},"it":{"badge":"🔑 ACCESSO DIGIY","phone":"📱 Il tuo numero di telefono","pin":"🔢 Il tuo PIN segreto","open":"Apri PRO CARNET →","recover":"🔐 PIN dimenticato?","note":"PIN richiesto a ogni accesso · nessun dato finanziario nell’URL.","invalid":"Controlla il numero e le quattro cifre del PIN.","checking":"Verifica sicura del PIN…","bad":"PIN errato o accesso non disponibile.","success":"PRO CARNET aperto. Reindirizzamento…","failed":"Verifica non riuscita. Riprova."},"nl":{"badge":"🔑 DIGIY-TOEGANG","phone":"📱 Je telefoonnummer","pin":"🔢 Je geheime pincode","open":"Open PRO CARNET →","recover":"🔐 Pincode vergeten?","note":"Pincode vereist bij elk bezoek · geen financiële gegevens in de URL.","invalid":"Controleer het nummer en de vier cijfers.","checking":"Veilige pincodecontrole…","bad":"Onjuiste code of toegang niet beschikbaar.","success":"PRO CARNET geopend. Doorsturen…","failed":"Controle mislukt. Probeer opnieuw."},"ar":{"badge":"🔑 الدخول إلى DIGIY","phone":"📱 رقم هاتفك","pin":"🔢 رمزك السري","open":"فتح PRO CARNET →","recover":"🔐 هل نسيت الرمز؟","note":"الرمز مطلوب عند كل دخول · لا بيانات مالية في الرابط.","invalid":"تحقق من رقم الهاتف والرمز المكوّن من أربعة أرقام.","checking":"جار التحقق الآمن من الرمز…","bad":"رمز غير صحيح أو الخدمة غير متاحة.","success":"تم فتح PRO CARNET. جار التحويل…","failed":"تعذر التحقق. حاول مرة أخرى."},"wo":{"badge":"🔑 DUGGU DIGIY","phone":"📱 Sa nimero telefon","pin":"🔢 Sa PIN bu nëbbu","open":"Ubbil PRO CARNET →","recover":"🔐 Fàtte nga sa PIN?","note":"PIN bi lañu laaj ci bépp duggu · amul say données xaalis ci URL bi.","invalid":"Seetal nimero bi ak 4 xayma yu PIN bi.","checking":"Ñuy seet PIN bi ci anam bu aar…","bad":"PIN bi baaxul walla duggu bi tëj na.","success":"Ubbi nañu PRO CARNET. Ñuy dem ci biir…","failed":"Mëneesul seet. Jéemaatal."},"zh":{"badge":"🔑 DIGIY 登录","phone":"📱 您的电话号码","pin":"🔢 您的私密 PIN 码","open":"打开 PRO CARNET →","recover":"🔐 忘记 PIN 码？","note":"每次登录均需 PIN 码 · 网址中不包含财务数据。","invalid":"请检查电话号码及四位 PIN 码。","checking":"正在安全验证 PIN 码…","bad":"PIN 码错误或无法访问。","success":"PRO CARNET 已打开，正在跳转…","failed":"验证失败，请重试。"}};
+  const LANG_KEY="digiy_carnet_ui_lang_v1";
+  let lang="fr";
+  try {const q=new URLSearchParams(location.search).get("lang");const candidate=String(q||localStorage.getItem(LANG_KEY)||localStorage.getItem("digiy_lang")||"fr").slice(0,2).toLowerCase();if(LANGS.includes(candidate))lang=candidate;}catch(_){}
+  const tr=k=>I18N[lang][k]||I18N.fr[k]||k;
+  const applyLang=()=>{
+    document.documentElement.lang=lang==="zh"?"zh-CN":lang;
+    document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+    document.getElementById("pinLang").value=lang;
+    for(const [key,id] of [["badge","accessBadge"],["phone","phoneLabel"],["pin","pinLabel"],["open","submitBtn"],["recover","recoveryLink"],["note","pinNote"]])document.getElementById(id).textContent=tr(key);
+    const recover=new URL("https://digiy-carnet-pro.digiylyfe.com/acces-proprietaire.html?recuperation=1");recover.searchParams.set("lang",lang);document.getElementById("recoveryLink").href=recover.toString();
+    try {localStorage.setItem(LANG_KEY,lang);localStorage.setItem("digiy_lang",lang)}catch(_){}
+  };
+  document.getElementById("pinLang").addEventListener("change",e=>{if(LANGS.includes(e.target.value)){lang=e.target.value;applyLang()}});
+  applyLang();
+
   const $=id=>document.getElementById(id);
   const setStatus=(text,kind)=>{const box=$("status");box.textContent=text;box.className="status show "+kind};
 
@@ -48,16 +65,16 @@
     event.preventDefault();
     const phone=$("phone").value;
     const pin=String($("pin").value||"").replace(/\D/g,"");
-    if(window.DIGIY_GUARD.normalizePhone(phone).length<9||pin.length!==4){setStatus("Vérifie le numéro et les 4 chiffres du code.","err");return}
+    if(window.DIGIY_GUARD.normalizePhone(phone).length<9||pin.length!==4){setStatus(tr("invalid"),"err");return}
     $("submitBtn").disabled=true;
-    setStatus("Vérification sécurisée du code…","wait");
+    setStatus(tr("checking"),"wait");
     try{
       const result=await window.DIGIY_GUARD.loginWithPin(phone,pin);
-      if(!result?.ok){setStatus(result?.error||"Code incorrect ou accès indisponible.","err");$("pin").value="";$("submitBtn").disabled=false;return}
+      if(!result?.ok){setStatus(result?.error||tr("bad"),"err");$("pin").value="";$("submitBtn").disabled=false;return}
       try{sessionStorage.setItem(ENTRY_KEY,String(Date.now()))}catch(_){}
-      setStatus("PRO CARNET ouvert. Redirection…","ok");
-      location.replace("./app/world8-voice-live.html?v=20261001-newpath");
-    }catch(_){setStatus("Vérification impossible. Réessaie.","err");$("submitBtn").disabled=false}
+      setStatus(tr("success"),"ok");
+      const target=new URL("./app/world8-voice-live.html",location.href);target.searchParams.set("lang",lang);target.searchParams.set("v","20261001-newpath");location.replace(target.pathname+target.search);
+    }catch(_){setStatus(tr("failed"),"err");$("submitBtn").disabled=false}
   });
 })();
 </script>

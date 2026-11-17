@@ -10,7 +10,8 @@
   if (owns.call(root, "DIGIY_WORLD8")) return;
 
   var STORAGE_KEY = "digiy_carnet_ui_lang_v1";
-  var LANGS = ["fr", "en", "es", "pt", "de", "it", "nl", "ar"];
+  var BASE_LANGS = ["fr", "en", "es", "pt", "de", "it", "nl", "ar"];
+  var LANGS = BASE_LANGS.concat(["wo","zh"]);
   var dictionaries = Object.create(null);
   LANGS.forEach(function (lang) { dictionaries[lang] = Object.create(null); });
 
@@ -106,7 +107,196 @@
     "receiver.action.delete": ["Effacer", "Delete", "Borrar", "Apagar", "Löschen", "Elimina", "Verwijderen", "حذف"]
   };
   Object.keys(catalogue).forEach(function (key) {
-    LANGS.forEach(function (lang, index) { dictionaries[lang][key] = catalogue[key][index]; });
+    BASE_LANGS.forEach(function (lang, index) { dictionaries[lang][key] = catalogue[key][index]; });
+  });
+  // Interface métier : extensions WO / ZH, traduction des mêmes 88 clés.
+  // Les libellés sont à faire relire par un locuteur wolof natif.
+  var extendedTranslations = {
+  "wo": {
+    "client_due.preview_warning": "Xaalis bii dañu koy jot ci ëllëg; du dugg ci caisse bi.",
+    "client_due.title": "Boroom ñi ñu amee ci xaalis",
+    "client_due.subtitle": "Kredii jëykat · Xaalis bu ñu war a jot",
+    "client_due.protection": "Aar PAY",
+    "client_due.receivable": "Xaalis bii ñu war a jot.",
+    "client_due.cash_warning": "Du dugg ci caisse bi ba keroog kiliyaan bi fayee.",
+    "client_due.name": "Tur",
+    "client_due.phone": "Telefon",
+    "client_due.amount": "Xaalis bu ñu war",
+    "client_due.date": "Bis",
+    "client_due.add": "📒 Yokkal boroom xaalis",
+    "client_due.clear": "🧹 Far",
+    "client_due.warning": "Xaalis bu kiliyaan bi war a fay, du dugg ci xaalis bi léegi.",
+    "client_due.empty": "Amul boroom xaalis bu ñu denc ci telefon bii.",
+    "client_due.status.open": "Ñu war a jot",
+    "client_due.status.partial": "Fay na ab xaaj",
+    "client_due.status.settled": "Fay na lépp",
+    "client_due.client": "Kiliyaan",
+    "client_due.status": "Nekkin",
+    "client_due.paid": "Li mu fay ba léegi",
+    "client_due.remaining": "Li des",
+    "client_due.payment_received": "Fayee na",
+    "client_due.missing_name": "Tur u kiliyaan bi manqu na",
+    "client_due.invalid_amount": "Xaalis bi baaxul",
+    "client_due.added": "📒 Yokkal na boroom xaalis",
+    "client_due.no_phone": "Amul telefon",
+    "client_due.saved": "📒 Denc nañu ko",
+    "client_due.delete_confirm": "Ndax danga bëgg far boroom xaalis bii?",
+    "client_due.deleted": "Far nañu boroom xaalis bi",
+    "client_due.already_settled": "Fay na lépp ba noppi",
+    "client_due.payment_prompt": "Ban xaalis nga jot ci boroom xaalis bii?",
+    "client_due.invalid_received": "Xaalis bi ñu jot baaxul",
+    "client_due.total_confirm": "Ndax jot nga lépp?\nOK = lépp / Annuler = ab xaaj",
+    "client_due.payment_prepared": "✅ Waajal nañu fay bi. Seetal te denc ko.",
+    "client_due.cleared": "Far nañu boroom xaalis bi",
+    "client_due.voice_prepared": "📒 Baat bi waajal na xaalis bu ñu war a jot",
+    "client_due.voice_title": "📒 Xaalis bu ñu war a jot, waajal na:",
+    "client_due.voice_filled": "📒 Bind nañu xaalis bi. Seetal te bës Yokkal.",
+    "client_due.amount_missing": "Dugal xaalis bi",
+    "client_due.name_missing": "Dugal tur bi",
+    "client_due.phone_optional": "Telefon bi manees na koo bàyyi",
+    "client_due.date_missing": "Waxal bis bi",
+    "client_due.voice_amount_warning": "⚠️ Xaalis bi kenn gisuko: dugal ko bala ngay yokk.",
+    "client_due.voice_name_warning": "⚠️ Tur u kiliyaan bi kenn gisuko: dugal ko bala ngay yokk.",
+    "client_due.module": "Modil bi ñu wax",
+    "client_due.phrase": "Wax ji",
+    "client_due.language": "Làkk",
+    "app.title": "Sama liggéey",
+    "wallet.balance": "Solde {pocket}",
+    "wallet.open": "Ubbiku",
+    "wallet.closed": "Tëj na",
+    "day.today": "Tey {amount}",
+    "nav.home": "Dalal jàmm",
+    "nav.sources": "Cosaan yi",
+    "nav.entry": "Bind",
+    "nav.add": "Yokk",
+    "nav.admin": "Admin",
+    "nav.menu": "Menu",
+    "journal.all": "Lépp",
+    "journal.income": "Xaalis bu dugg",
+    "journal.expenses": "Xaalis bu génn",
+    "journal.net": "Li des",
+    "journal.empty": "Amul dara ci dencukaay bi. Yokkal sa jëkkëru mouvement.",
+    "journal.summary": "Dugg {income} · Génn {expenses} · Li des {net}",
+    "journal.more": "Gis 10 mouvement yu ci des",
+    "action.history": "Jaar-jaar",
+    "action.settings": "Jubanti yi",
+    "action.reserve": "Reserve",
+    "wallet.reserve": "Reserve {amount}",
+    "oreille.title": "Noppu PAY",
+    "oreille.subtitle": "Xaalis · anam fay · bérab · kiliyaan/cosaan · telefon · leeral · firnde.",
+    "oreille.action.listen": "Waxal",
+    "oreille.action.formulate": "Waajal",
+    "oreille.action.copy": "Duppi",
+    "oreille.action.save": "Denc",
+    "oreille.action.guide": "Tëral",
+    "oreille.action.stop": "Taxaw",
+    "oreille.ready": "Nopp bi waajal na. Boroom liggéey bi man naa wax walla bës.",
+    "oreille.suggestions": "Xalaat yi",
+    "oreille.notes.empty_title": "Amul note bu ñu denc",
+    "oreille.notes.empty_hint": "Jéemal benn xalaat, nga bës Denc.",
+    "receiver.received": "Jot nañu ko ci ACTION DIGIY",
+    "receiver.draft_title": "DIGIY waajal na draft.",
+    "receiver.action.validate": "Wóoral",
+    "receiver.action.prefill": "Dugal bi mu war",
+    "receiver.action.copy": "Duppi",
+    "receiver.action.keep": "Denc",
+    "receiver.action.delete": "Far"
+  },
+  "zh": {
+    "client_due.preview_warning": "这笔款项尚待收取，不计入现金余额。",
+    "client_due.title": "客户欠款",
+    "client_due.subtitle": "卖方赊账 · 待收款项",
+    "client_due.protection": "PAY 保障",
+    "client_due.receivable": "这笔款项尚待收取。",
+    "client_due.cash_warning": "只有客户实际付款后才能计入现金余额。",
+    "client_due.name": "姓名",
+    "client_due.phone": "电话",
+    "client_due.amount": "应收金额",
+    "client_due.date": "日期",
+    "client_due.add": "📒 添加客户欠款",
+    "client_due.clear": "🧹 清空",
+    "client_due.warning": "客户欠款只是应收款，尚非实际收入。",
+    "client_due.empty": "本机尚未保存客户欠款。",
+    "client_due.status.open": "待收款",
+    "client_due.status.partial": "部分已付",
+    "client_due.status.settled": "已结清",
+    "client_due.client": "客户",
+    "client_due.status": "状态",
+    "client_due.paid": "已支付",
+    "client_due.remaining": "剩余",
+    "client_due.payment_received": "已收到付款",
+    "client_due.missing_name": "缺少客户姓名",
+    "client_due.invalid_amount": "应收金额无效",
+    "client_due.added": "📒 已添加客户欠款",
+    "client_due.no_phone": "未填写电话",
+    "client_due.saved": "📒 已保存客户欠款",
+    "client_due.delete_confirm": "确定删除这笔客户欠款？",
+    "client_due.deleted": "已删除客户欠款",
+    "client_due.already_settled": "欠款已经结清",
+    "client_due.payment_prompt": "这笔客户欠款收到了多少？",
+    "client_due.invalid_received": "收到金额无效",
+    "client_due.total_confirm": "是否收到全部款项？\n确定 = 全部 / 取消 = 部分",
+    "client_due.payment_prepared": "✅ 收款记录已准备好，请检查并保存。",
+    "client_due.cleared": "客户欠款已清空",
+    "client_due.voice_prepared": "📒 已通过语音准备客户欠款",
+    "client_due.voice_title": "📒 准备好的客户欠款：",
+    "client_due.voice_filled": "📒 欠款信息已填写。请核对后点击添加客户欠款。",
+    "client_due.amount_missing": "请补充欠款金额",
+    "client_due.name_missing": "请补充姓名",
+    "client_due.phone_optional": "电话选填",
+    "client_due.date_missing": "请补充日期",
+    "client_due.voice_amount_warning": "⚠️ 未识别到欠款金额，请补充后再添加。",
+    "client_due.voice_name_warning": "⚠️ 未识别到客户姓名，请补充后再添加。",
+    "client_due.module": "提及的模块",
+    "client_due.phrase": "句子",
+    "client_due.language": "语言",
+    "app.title": "我的业务",
+    "wallet.balance": "{pocket} 余额",
+    "wallet.open": "已显示",
+    "wallet.closed": "已隐藏",
+    "day.today": "今天 {amount}",
+    "nav.home": "首页",
+    "nav.sources": "来源",
+    "nav.entry": "录入",
+    "nav.add": "添加",
+    "nav.admin": "管理",
+    "nav.menu": "菜单",
+    "journal.all": "全部",
+    "journal.income": "收入",
+    "journal.expenses": "支出",
+    "journal.net": "净额",
+    "journal.empty": "目前没有记录。请添加第一笔真实流水。",
+    "journal.summary": "收入 {income} · 支出 {expenses} · 净额 {net}",
+    "journal.more": "再看 10 条记录",
+    "action.history": "历史记录",
+    "action.settings": "设置",
+    "action.reserve": "储备金",
+    "wallet.reserve": "储备金 {amount}",
+    "oreille.title": "PAY 语音助手",
+    "oreille.subtitle": "金额 · 支付方式 · 地点 · 客户/来源 · 电话 · 详情 · 凭证。",
+    "oreille.action.listen": "说话",
+    "oreille.action.formulate": "整理",
+    "oreille.action.copy": "复制",
+    "oreille.action.save": "保存",
+    "oreille.action.guide": "指南",
+    "oreille.action.stop": "停止",
+    "oreille.ready": "语音助手已准备好。经营者可以说话或点击，DIGIY 会整理内容。",
+    "oreille.suggestions": "建议",
+    "oreille.notes.empty_title": "尚无保存的笔记",
+    "oreille.notes.empty_hint": "试用一条建议，然后点击保存。",
+    "receiver.received": "来自 ACTION DIGIY",
+    "receiver.draft_title": "DIGIY 已准备一份草稿。",
+    "receiver.action.validate": "确认",
+    "receiver.action.prefill": "预填",
+    "receiver.action.copy": "复制",
+    "receiver.action.keep": "保留",
+    "receiver.action.delete": "删除"
+  }
+};
+  ["wo","zh"].forEach(function (lang) {
+    Object.keys(catalogue).forEach(function (key) {
+      dictionaries[lang][key] = extendedTranslations[lang][key];
+    });
   });
   // Reference-only copy deliberately falls back to French until translated.
   dictionaries.fr["app.description"] = "PRO CARNET : encaissements, dépenses, réserve, preuves, historique et sauvegarde de l’activité professionnelle.";
@@ -120,7 +310,12 @@
   }
 
   var currentLang = "fr";
-  try { currentLang = normalizeLang(root.localStorage.getItem(STORAGE_KEY)); } catch (_) {}
+  try {
+    var queryLang = new URLSearchParams(root.location.search).get("lang");
+    currentLang = normalizeLang(queryLang || root.localStorage.getItem(STORAGE_KEY) || root.localStorage.getItem("digiy_lang") || root.localStorage.getItem("digiy-lang"));
+  } catch (_) {
+    try { currentLang = normalizeLang(root.localStorage.getItem(STORAGE_KEY)); } catch (__) {}
+  }
 
   function t(key, params) {
     if (typeof key !== "string" || !key) return "[world8:invalid-key]";

@@ -1,0 +1,29 @@
+name: PRO CARNET · WORLD10 logiciel actif
+on:
+  pull_request:
+    paths:
+      - 'assets/js/world8.js'
+      - 'app/world8-voice-live.html'
+      - 'app/index.html'
+      - 'pin.html'
+      - 'tests/pro-carnet-world10-active.cjs'
+      - '.github/workflows/pro-carnet-world10.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/world8.js'
+      - 'app/world8-voice-live.html'
+      - 'app/index.html'
+      - 'pin.html'
+      - 'tests/pro-carnet-world10-active.cjs'
+      - '.github/workflows/pro-carnet-world10.yml'
+permissions:
+  contents: read
+jobs:
+  validate-world10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tester les dix langues dans le logiciel CARNET
+        run: node tests/pro-carnet-world10-active.cjs
