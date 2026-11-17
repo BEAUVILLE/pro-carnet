@@ -16,7 +16,7 @@ for(const [name,page] of [['admin',admin],['brain',brain]]){
  srcs.forEach(src=>new vm.Script(src));
  const attrs=[...page.matchAll(/data-pro10="([^"]+)"/g)].map(m=>m[1]);
  assert.ok(attrs.length>=18,name+': at least 18 translated visible UI controls');
- assert.ok(attrs.every(x=>/^(?:a|b|mov)\.[A-Za-z0-9_.]+$/.test(x)));
+ assert.ok(attrs.every(x=>/^(?:a|b|mov|f)\.[A-Za-z0-9_.]+$/.test(x)));
  assert.match(page,/href="\.\/pin\.html"|href="\.\/index\.html"/,'navigation must remain intact');
 }
 assert.match(admin,/clientDueLang/);
