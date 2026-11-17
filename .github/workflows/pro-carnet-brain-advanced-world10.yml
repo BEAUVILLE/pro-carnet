@@ -1,0 +1,29 @@
+name: PRO CARNET · WORLD10 réglages avancés
+on:
+  pull_request:
+    paths:
+      - 'brain-admin.html'
+      - 'assets/js/pro-carnet-brain-advanced-world10.js'
+      - 'tests/pro-carnet-brain-advanced-world10.cjs'
+      - '.github/workflows/pro-carnet-brain-advanced-world10.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'brain-admin.html'
+      - 'assets/js/pro-carnet-brain-advanced-world10.js'
+      - 'tests/pro-carnet-brain-advanced-world10.cjs'
+      - '.github/workflows/pro-carnet-brain-advanced-world10.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier les 10 langues sans toucher aux données
+        run: |
+          node tests/pro-carnet-brain-advanced-world10.cjs
+          node tests/pro-carnet-admin-world10.cjs
+          node tests/pro-carnet-secondary-world10.cjs
+          node tests/pro-carnet-admin-form-world10.cjs
