@@ -98,7 +98,7 @@ for(const file of files){
    labels:[],people:[],movements:[]};
   const title={textContent:'',hidden:true};
   let saves=0;
-  const ctx={window:win,document:{querySelectorAll(){return[]}},els,state,
+  const ctx={window:win,document:{querySelectorAll(){return[]}},els:elems,state,
    movementFullEntry:false,
    $:id=>id==='movementModal'?{}:id==='movePresetHeadline'?title:null,
    m10:(key,args)=>api.t(key,args),
