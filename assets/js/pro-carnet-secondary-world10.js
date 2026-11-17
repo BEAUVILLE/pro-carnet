@@ -739,6 +739,302 @@ const LABELS={
     "Cash": "现金"
   }
 };
+
+// Page caisse PAY : libellés d'affichage seulement, jamais les données reçues du serveur.
+const MOV_ROWS={
+  "mov.cash": [
+    "Caisse PAY",
+    "PAY cashbook",
+    "Caja PAY",
+    "Caixa PAY",
+    "PAY-Kasse",
+    "Cassa PAY",
+    "PAY-kasboek",
+    "سجل صندوق PAY",
+    "Caisse PAY",
+    "PAY 收银账本"
+  ],
+  "mov.loadSession": [
+    "Chargement session…",
+    "Loading session…",
+    "Cargando sesión…",
+    "A carregar sessão…",
+    "Sitzung wird geladen…",
+    "Caricamento sessione…",
+    "Sessie laden…",
+    "جار تحميل الجلسة…",
+    "Ñuy yebbi session bi…",
+    "正在加载会话…"
+  ],
+  "mov.cockpit": [
+    "← Cockpit",
+    "← Dashboard",
+    "← Panel",
+    "← Painel",
+    "← Dashboard",
+    "← Pannello",
+    "← Dashboard",
+    "لوحة التحكم →",
+    "← Cockpit",
+    "← 工作台"
+  ],
+  "mov.title": [
+    "Mouvements caisse.",
+    "Cash transactions.",
+    "Movimientos de caja.",
+    "Movimentos de caixa.",
+    "Kassenbewegungen.",
+    "Movimenti di cassa.",
+    "Kastransacties.",
+    "حركات الصندوق.",
+    "Mouvements caisse bi.",
+    "收银流水。"
+  ],
+  "mov.lead": [
+    "Ici tu vois les vraies lignes inscrites dans PAY : recettes, dépenses, restes à recevoir. Si une preuve dit “INSCRIT”, elle doit remonter ici après rechargement.",
+    "This page shows actual PAY records: income, expenses and receivables. A receipt marked “RECORDED” should appear here after refreshing.",
+    "Aquí se ven los movimientos reales de PAY: ingresos, gastos y cobros pendientes. Si un comprobante dice «REGISTRADO», debe aparecer al actualizar.",
+    "Aqui vês os registos reais do PAY: entradas, saídas e valores a receber. Se uma prova disser «REGISTADO», deve aparecer após atualizar.",
+    "Hier siehst du echte PAY-Buchungen: Einnahmen, Ausgaben und offene Forderungen. Ein Beleg mit „ERFASST“ muss nach dem Aktualisieren erscheinen.",
+    "Qui vedi le registrazioni reali di PAY: entrate, uscite e crediti. Una prova segnata «REGISTRATO» deve apparire dopo l’aggiornamento.",
+    "Hier zie je echte PAY-boekingen: inkomsten, uitgaven en vorderingen. Een bewijs met 'GEREGISTREERD' moet na vernieuwen verschijnen.",
+    "هنا تظهر قيود PAY الفعلية: الإيرادات والمصروفات والمبالغ المستحقة. يجب أن تظهر المعاملة المسجلة بعد التحديث.",
+    "Fii nga mën a gis mouvements yu dëgg yi ñu bind ci PAY: xaalis bu dugg, bu génn ak li ñuy xaar. Bu preuve bi waxee «INSCRIT», dina feeñ gannaaw yeesal.",
+    "此处显示 PAY 中真实登记的收入、支出和应收款。标记为“已登记”的凭证应在刷新后显示。"
+  ],
+  "mov.in": [
+    "Entrées",
+    "Income",
+    "Ingresos",
+    "Entradas",
+    "Einnahmen",
+    "Entrate",
+    "Inkomsten",
+    "الإيرادات",
+    "Xaalis bu dugg",
+    "收入"
+  ],
+  "mov.out": [
+    "Sorties",
+    "Expenses",
+    "Gastos",
+    "Saídas",
+    "Ausgaben",
+    "Uscite",
+    "Uitgaven",
+    "المصروفات",
+    "Xaalis bu génn",
+    "支出"
+  ],
+  "mov.net": [
+    "Net",
+    "Net",
+    "Neto",
+    "Líquido",
+    "Netto",
+    "Netto",
+    "Netto",
+    "الصافي",
+    "Li des",
+    "净额"
+  ],
+  "mov.count": [
+    "Lignes",
+    "Entries",
+    "Registros",
+    "Registos",
+    "Buchungen",
+    "Righe",
+    "Boekingen",
+    "السجلات",
+    "Mbind yi",
+    "条目"
+  ],
+  "mov.refresh": [
+    "🔄 Recharger caisse",
+    "🔄 Refresh cashbook",
+    "🔄 Actualizar caja",
+    "🔄 Atualizar caixa",
+    "🔄 Kasse aktualisieren",
+    "🔄 Aggiorna cassa",
+    "🔄 Kasboek vernieuwen",
+    "🔄 تحديث الصندوق",
+    "🔄 Yeesal caisse bi",
+    "🔄 刷新账本"
+  ],
+  "mov.manual": [
+    "➕ Ajouter manuel",
+    "➕ Add manually",
+    "➕ Añadir manualmente",
+    "➕ Adicionar manualmente",
+    "➕ Manuell hinzufügen",
+    "➕ Aggiungi a mano",
+    "➕ Handmatig toevoegen",
+    "➕ إضافة يدوية",
+    "➕ Yokk ci loxo",
+    "➕ 手动添加"
+  ],
+  "mov.load": [
+    "Chargement des mouvements…",
+    "Loading transactions…",
+    "Cargando movimientos…",
+    "A carregar movimentos…",
+    "Buchungen werden geladen…",
+    "Caricamento movimenti…",
+    "Transacties laden…",
+    "جار تحميل المعاملات…",
+    "Ñuy yebbi mouvements yi…",
+    "正在加载流水…"
+  ],
+  "mov.home": [
+    "Accueil",
+    "Home",
+    "Inicio",
+    "Início",
+    "Startseite",
+    "Home",
+    "Start",
+    "الرئيسية",
+    "Dalal jàmm",
+    "首页"
+  ],
+  "mov.add": [
+    "Ajouter",
+    "Add",
+    "Añadir",
+    "Adicionar",
+    "Hinzufügen",
+    "Aggiungi",
+    "Toevoegen",
+    "إضافة",
+    "Yokk",
+    "添加"
+  ],
+  "mov.supabaseNot": [
+    "Supabase non chargé.",
+    "Supabase not loaded.",
+    "Supabase no cargado.",
+    "Supabase não carregado.",
+    "Supabase nicht geladen.",
+    "Supabase non caricato.",
+    "Supabase niet geladen.",
+    "لم يتم تحميل Supabase.",
+    "Supabase bi yebbewul.",
+    "Supabase 未加载。"
+  ],
+  "mov.sessionNot": [
+    "Session PAY non reconnue. Repasse par le code.",
+    "PAY session not recognized. Sign in again with your PIN.",
+    "Sesión PAY no reconocida. Accede con tu PIN de nuevo.",
+    "Sessão PAY não reconhecida. Volta a entrar com o PIN.",
+    "PAY-Sitzung nicht erkannt. Bitte erneut mit PIN anmelden.",
+    "Sessione PAY non riconosciuta. Accedi di nuovo con il PIN.",
+    "PAY-sessie niet herkend. Meld je opnieuw aan met de pincode.",
+    "جلسة PAY غير معروفة. سجّل الدخول مجددًا بالرمز.",
+    "Session PAY bi ñu xamul. Dellul ci sa PIN.",
+    "无法识别 PAY 会话，请重新用 PIN 登录。"
+  ],
+  "mov.protected": [
+    "Session protégée · ",
+    "Protected session · ",
+    "Sesión protegida · ",
+    "Sessão protegida · ",
+    "Geschützte Sitzung · ",
+    "Sessione protetta · ",
+    "Beveiligde sessie · ",
+    "جلسة محمية · ",
+    "Session bu aar · ",
+    "受保护的会话 · "
+  ],
+  "mov.sessionMissing": [
+    "Session PAY incomplète : slug ou téléphone manquant.",
+    "Incomplete PAY session: account ID or phone missing.",
+    "Sesión PAY incompleta: falta identificador o teléfono.",
+    "Sessão PAY incompleta: falta identificador ou telefone.",
+    "PAY-Sitzung unvollständig: Konto-ID oder Telefon fehlt.",
+    "Sessione PAY incompleta: ID account o telefono mancante.",
+    "Onvolledige PAY-sessie: account-ID of telefoon ontbreekt.",
+    "جلسة PAY غير مكتملة: المعرّف أو الهاتف مفقود.",
+    "Session PAY bi matul: slug walla telefon manqu na.",
+    "PAY 会话不完整：缺少账户标识或电话。"
+  ],
+  "mov.empty": [
+    "Aucun mouvement trouvé dans la caisse PAY.",
+    "No transactions found in PAY.",
+    "No hay movimientos en PAY.",
+    "Não há movimentos na caixa PAY.",
+    "Keine Buchungen in PAY gefunden.",
+    "Nessun movimento trovato in PAY.",
+    "Geen transacties gevonden in PAY.",
+    "لم يتم العثور على معاملات في PAY.",
+    "Amul mouvement bu ñu gis ci caisse PAY.",
+    "PAY 中未找到流水。"
+  ],
+  "mov.denied": [
+    "Lecture caisse refusée : ",
+    "Cashbook access refused: ",
+    "Acceso a caja denegado: ",
+    "Acesso à caixa recusado: ",
+    "Zugriff auf Kasse verweigert: ",
+    "Accesso alla cassa negato: ",
+    "Toegang tot kasboek geweigerd: ",
+    "رُفض الوصول إلى الصندوق: ",
+    "Dañu tere jàng caisse bi: ",
+    "读取账本被拒绝："
+  ],
+  "mov.fallbackLabel": [
+    "Mouvement PAY",
+    "PAY transaction",
+    "Movimiento PAY",
+    "Movimento PAY",
+    "PAY-Buchung",
+    "Movimento PAY",
+    "PAY-transactie",
+    "معاملة PAY",
+    "Mouvement PAY",
+    "PAY 流水"
+  ]
+};
+Object.assign(ROWS,MOV_ROWS);
+const STATUS_ROWS={
+  "posted": [
+    "Comptabilisé",
+    "Recorded",
+    "Registrado",
+    "Registado",
+    "Erfasst",
+    "Registrato",
+    "Geboekt",
+    "مسجل",
+    "Bind nañu ko",
+    "已登记"
+  ],
+  "pending": [
+    "En attente",
+    "Pending",
+    "Pendiente",
+    "Pendente",
+    "Ausstehend",
+    "In attesa",
+    "In afwachting",
+    "قيد الانتظار",
+    "Ñuy xaar",
+    "待处理"
+  ],
+  "closed": [
+    "Fermé",
+    "Closed",
+    "Cerrado",
+    "Fechado",
+    "Geschlossen",
+    "Chiuso",
+    "Gesloten",
+    "مغلق",
+    "Tëj na",
+    "已关闭"
+  ]
+};
+LANGS.forEach((code,index)=>Object.keys(STATUS_ROWS).forEach(status=>{LABELS[code][status]=STATUS_ROWS[status][index]}));
 const KEY="digiy_carnet_ui_lang_v1";
 const LOCALES={fr:"fr-FR",en:"en-GB",es:"es-ES",pt:"pt-PT",de:"de-DE",it:"it-IT",nl:"nl-NL",ar:"ar-SA",wo:"wo-SN",zh:"zh-CN"};
 const NAMES={fr:"🇫🇷 FR",en:"🇬🇧 EN",es:"🇪🇸 ES",pt:"🇵🇹 PT",de:"🇩🇪 DE",it:"🇮🇹 IT",nl:"🇳🇱 NL",ar:"🇸🇦 AR",wo:"🇸🇳 WO",zh:"🇨🇳 中文"};
