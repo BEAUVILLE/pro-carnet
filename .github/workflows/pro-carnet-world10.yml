@@ -8,6 +8,7 @@ on:
       - 'pin.html'
       - 'tests/pro-carnet-world10-active.cjs'
       - 'tests/pro-carnet-world10-menu.cjs'
+      - 'tests/pro-carnet-quick-expenses-world10.cjs'
       - '.github/workflows/pro-carnet-world10.yml'
   push:
     branches: [main]
@@ -18,6 +19,7 @@ on:
       - 'pin.html'
       - 'tests/pro-carnet-world10-active.cjs'
       - 'tests/pro-carnet-world10-menu.cjs'
+      - 'tests/pro-carnet-quick-expenses-world10.cjs'
       - '.github/workflows/pro-carnet-world10.yml'
 permissions:
   contents: read
@@ -31,3 +33,4 @@ jobs:
         run: |
           node tests/pro-carnet-world10-active.cjs
           node tests/pro-carnet-world10-menu.cjs
+          node tests/pro-carnet-quick-expenses-world10.cjs
